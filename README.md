@@ -9,6 +9,10 @@ Check if an IPv4 or IPv6 address is contained in the given [CIDR](https://en.wik
 * TypeScript-friendly
 * Zero dependencies
 
+## Installation
+
+`npm i is-in-subnet`
+
 ## Usage
 
 ```typescript
