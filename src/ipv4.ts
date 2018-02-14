@@ -1,5 +1,4 @@
 import * as net from 'net';
-import { IpAddressError } from './error';
 
 /**
  * Given an IPv4 address, convert it to a 32-bit long integer.
@@ -8,7 +7,7 @@ import { IpAddressError } from './error';
  */
 function ipv4ToLong(ip) {
   if (!net.isIPv4(ip)) {
-    throw new IpAddressError(`not a valid IPv4 address: ${ip}`);
+    throw new Error(`not a valid IPv4 address: ${ip}`);
   }
 
   return (
@@ -34,14 +33,12 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
 
   const [subnetAddress, prefixLengthString] = subnet.split('/');
   if (!subnetAddress || !Number.isInteger(parseInt(prefixLengthString, 10))) {
-    throw new IpAddressError(`not a valid IPv4 subnet: ${subnet}`);
+    throw new Error(`not a valid IPv4 subnet: ${subnet}`);
   }
 
   const prefixLength = parseInt(prefixLengthString, 10);
   if (prefixLength < 0 || prefixLength > 32) {
-    throw new IpAddressError(
-      `not a valid IPv4 prefix length: ${prefixLength} (from ${subnet})`
-    );
+    throw new Error(`not a valid IPv4 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
   const maskLong = parseInt('1'.repeat(prefixLength) + '0'.repeat(32 - prefixLength), 2);

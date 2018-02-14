@@ -23,10 +23,15 @@ test('ipv4 subnet membership (one-at-a-time)', async t => {
 test('ipv4 subnet membership (array)', async t => {
   const ip = ipv4Tests[0][0];
   const inSubnets = ipv4Tests.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-  t.is(IPv4.isInSubnet(ip, inSubnets), true);
+  t.true(IPv4.isInSubnet(ip, inSubnets));
 
   const notInSubnets = ipv4Tests.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
-  t.is(IPv4.isInSubnet(ip, notInSubnets), false);
+  t.false(IPv4.isInSubnet(ip, notInSubnets));
+});
+
+test('handles empty subnet array', async t => {
+  const ip = ipv4Tests[0][0];
+  t.false(IPv4.isInSubnet(ip, []));
 });
 
 test('invalid subnets', async t => {
@@ -43,28 +48,28 @@ test('invalid ipv4', async t => {
 });
 
 test('ipv4 localhost', async t => {
-  t.is(IPv4.isLocalhost('127.0.0.1'), true);
-  t.is(IPv4.isLocalhost('127.99.88.77'), true);
-  t.is(IPv4.isLocalhost('192.168.0.1'), false);
+  t.true(IPv4.isLocalhost('127.0.0.1'));
+  t.true(IPv4.isLocalhost('127.99.88.77'));
+  t.false(IPv4.isLocalhost('192.168.0.1'));
 });
 
 test('ipv4 private', async t => {
-  t.is(IPv4.isPrivate('127.0.0.1'), false);
-  t.is(IPv4.isPrivate('192.168.0.1'), true);
-  t.is(IPv4.isPrivate('10.11.12.13'), true);
-  t.is(IPv4.isPrivate('172.16.0.1'), true);
+  t.false(IPv4.isPrivate('127.0.0.1'));
+  t.true(IPv4.isPrivate('192.168.0.1'));
+  t.true(IPv4.isPrivate('10.11.12.13'));
+  t.true(IPv4.isPrivate('172.16.0.1'));
 });
 
 test('ipv4 reserved', async t => {
-  t.is(IPv4.isReserved('127.0.0.1'), false);
-  t.is(IPv4.isReserved('169.254.100.200'), true);
-  t.is(IPv4.isReserved('0.0.0.0'), true);
-  t.is(IPv4.isReserved('255.255.255.255'), true);
+  t.false(IPv4.isReserved('127.0.0.1'));
+  t.true(IPv4.isReserved('169.254.100.200'));
+  t.true(IPv4.isReserved('0.0.0.0'));
+  t.true(IPv4.isReserved('255.255.255.255'));
 });
 
 test('ipv4 special', async t => {
-  t.is(IPv4.isSpecial('127.0.0.1'), true);
-  t.is(IPv4.isSpecial('192.168.0.1'), true);
-  t.is(IPv4.isSpecial('169.254.100.200'), true);
-  t.is(IPv4.isSpecial('8.8.8.8'), false);
+  t.true(IPv4.isSpecial('127.0.0.1'));
+  t.true(IPv4.isSpecial('192.168.0.1'));
+  t.true(IPv4.isSpecial('169.254.100.200'));
+  t.false(IPv4.isSpecial('8.8.8.8'));
 });

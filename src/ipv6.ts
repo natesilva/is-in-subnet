@@ -1,5 +1,4 @@
 import * as net from 'net';
-import { IpAddressError } from './error';
 
 const hasDot = /\./;
 const mappedIpv4 = /(.+):ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})($|%.+)/;
@@ -34,7 +33,7 @@ function mappedIpv4ToIpv6(ip: string) {
  */
 function getIpv6Segments(ip: string): string[] {
   if (!net.isIPv6(ip)) {
-    throw new IpAddressError(`not a valid IPv6 address: ${ip}`);
+    throw new Error(`not a valid IPv6 address: ${ip}`);
   }
 
   if (hasDot.test(ip)) {
@@ -69,7 +68,7 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
   const prefixLength = parseInt(prefixLengthString, 10);
 
   if (!subnetAddress || !Number.isInteger(prefixLength)) {
-    throw new IpAddressError(`not a valid IPv6 CIDR subnet: ${subnet}`);
+    throw new Error(`not a valid IPv6 CIDR subnet: ${subnet}`);
   }
 
   // the next two lines throw if the addresses are not valid IPv6 addresses
@@ -77,9 +76,7 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
   const subnetSegments = getIpv6Segments(subnetAddress);
 
   if (prefixLength < 0 || prefixLength > 128) {
-    throw new IpAddressError(
-      `not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`
-    );
+    throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
   for (let i = 0; i < 8; ++i) {

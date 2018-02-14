@@ -22,10 +22,15 @@ test('ipv6 subnet membership (one-at-a-time)', async t => {
 test('ipv6 subnet membership (array)', async t => {
   const ip = ipv6Tests[0][0];
   const inSubnets = ipv6Tests.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-  t.is(IPv6.isInSubnet(ip, inSubnets), true);
+  t.true(IPv6.isInSubnet(ip, inSubnets));
 
   const notInSubnets = ipv6Tests.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
-  t.is(IPv6.isInSubnet(ip, notInSubnets), false);
+  t.false(IPv6.isInSubnet(ip, notInSubnets));
+});
+
+test('handles empty subnet array', async t => {
+  const ip = ipv6Tests[0][0];
+  t.false(IPv6.isInSubnet(ip, []));
 });
 
 test('invalid subnets', async t => {
@@ -39,20 +44,20 @@ test('invalid ipv6', async t => {
 });
 
 test('ipv6 localhost', async t => {
-  t.is(IPv6.isLocalhost('::1'), true);
-  t.is(IPv6.isLocalhost('::2'), false);
+  t.true(IPv6.isLocalhost('::1'));
+  t.false(IPv6.isLocalhost('::2'));
 });
 
 test('ipv6 private', async t => {
-  t.is(IPv6.isPrivate('::1'), false);
-  t.is(IPv6.isPrivate('fe80::5555:1111:2222:7777%utun2'), true);
-  t.is(IPv6.isPrivate('fdc5:3c04:80bf:d9ee::1'), true);
+  t.false(IPv6.isPrivate('::1'));
+  t.true(IPv6.isPrivate('fe80::5555:1111:2222:7777%utun2'));
+  t.true(IPv6.isPrivate('fdc5:3c04:80bf:d9ee::1'));
 });
 
 test('ipv6 mapped', async t => {
-  t.is(IPv6.isIPv4MappedAddress('::1'), false);
-  t.is(IPv6.isIPv4MappedAddress('fe80::5555:1111:2222:7777%utun2'), false);
-  t.is(IPv6.isIPv4MappedAddress('::ffff:192.168.0.1'), true);
+  t.false(IPv6.isIPv4MappedAddress('::1'));
+  t.false(IPv6.isIPv4MappedAddress('fe80::5555:1111:2222:7777%utun2'));
+  t.true(IPv6.isIPv4MappedAddress('::ffff:192.168.0.1'));
 
   // THIS FORMAT IS DEPRECATED AND WE DO NOT SUPPORT IT: SEE RFC5156 SECTION 2.3
   // https://tools.ietf.org/html/rfc5156#section-2.3
@@ -60,14 +65,14 @@ test('ipv6 mapped', async t => {
 });
 
 test('ipv6 reserved', async t => {
-  t.is(IPv6.isReserved('2001:db8:f53a::1'), true);
-  t.is(IPv6.isReserved('2001:4860:4860::8888'), false);
-  t.is(IPv6.isReserved('::'), true);
+  t.true(IPv6.isReserved('2001:db8:f53a::1'));
+  t.false(IPv6.isReserved('2001:4860:4860::8888'));
+  t.true(IPv6.isReserved('::'));
 });
 
 test('ipv6 special', async t => {
-  t.is(IPv6.isSpecial('2001:4860:4860::8888'), false);
-  t.is(IPv6.isSpecial('::1'), true);
-  t.is(IPv6.isSpecial('::ffff:192.168.0.1'), false);
-  t.is(IPv6.isSpecial('2001:db8:f53a::1'), true);
+  t.false(IPv6.isSpecial('2001:4860:4860::8888'));
+  t.true(IPv6.isSpecial('::1'));
+  t.false(IPv6.isSpecial('::ffff:192.168.0.1'));
+  t.true(IPv6.isSpecial('2001:db8:f53a::1'));
 });
