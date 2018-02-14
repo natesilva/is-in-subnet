@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/ipv4.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">All files</a> / <a href="index.html">src</a> ipv4.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>29/29</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>15/15</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>28/28</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">200220x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">200218x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">800872x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">100136x</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100115x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100115x</span>
+<span class="cline-any cline-yes">100115x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100113x</span>
+<span class="cline-any cline-yes">100113x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100110x</span>
+<span class="cline-any cline-yes">100110x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100110x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100108x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as net from 'net';
+import { IpAddressError } from './error';
+&nbsp;
+/**
+ * Given an IPv4 address, convert it to a 32-bit long integer.
+ * @param ip the IPv4 address to expand
+ * @throws if the string is not a valid IPv4 address
+ */
+function ipv4ToLong(ip) {
+  if (!net.isIPv4(ip)) {
+    throw new IpAddressError(`not a valid IPv4 address: ${ip}`);
+  }
+&nbsp;
+  return (
+    ip.split('.').reduce(function(ipInt, octet) {
+      return (ipInt &lt;&lt; 8) + parseInt(octet, 10);
+    }, 0) &gt;&gt;&gt; 0
+  );
+}
+&nbsp;
+/**
+ * Test if the given IPv4 address is contained in the specified subnet.
+ * @param address the IPv4 address to check
+ * @param subnet the IPv4 CIDR to test (or an array of them)
+ * @throws if the address or subnet are not valid IP addresses, or the CIDR prefix length
+ *  is not valid
+ */
+export function isInSubnet(address: string, subnetOrSubnets: string | string[]) {
+  if (Array.isArray(subnetOrSubnets)) {
+    return subnetOrSubnets.some(subnet =&gt; isInSubnet(address, subnet));
+  }
+&nbsp;
+  const subnet = subnetOrSubnets;
+&nbsp;
+  const [subnetAddress, prefixLengthString] = subnet.split('/');
+  if (!subnetAddress || !Number.isInteger(parseInt(prefixLengthString, 10))) {
+    throw new IpAddressError(`not a valid IPv4 subnet: ${subnet}`);
+  }
+&nbsp;
+  const prefixLength = parseInt(prefixLengthString, 10);
+  if (prefixLength &lt; 0 || prefixLength &gt; 32) {
+    throw new IpAddressError(
+      `not a valid IPv4 prefix length: ${prefixLength} (from ${subnet})`
+    );
+  }
+&nbsp;
+  const maskLong = parseInt('1'.repeat(prefixLength) + '0'.repeat(32 - prefixLength), 2);
+  const mask = ipv4ToLong(subnetAddress) &amp; maskLong;
+&nbsp;
+  const long = ipv4ToLong(address);
+&nbsp;
+  return (long &amp; maskLong) === mask;
+}
+&nbsp;
+/** Test if the given IP address is a private/internal IP address. */
+export function isPrivate(address: string) {
+  return isInSubnet(address, ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
+}
+&nbsp;
+/** Test if the given IP address is a localhost address. */
+export function isLocalhost(address: string) {
+  return isInSubnet(address, '127.0.0.0/8');
+}
+&nbsp;
+/** Test if the given IP address is in a known reserved range and not a normal host IP */
+export function isReserved(address: string) {
+  return isInSubnet(address, [
+    '0.0.0.0/8', // broadcast "this"
+    '100.64.0.0/10', // carrier-grade NAT
+    '169.254.0.0/16', // DHCP fallback
+    '192.0.0.0/24', // IANA Special Purpose Address Registry
+    '192.0.2.0/24', // TEST-NET-1 for documentation examples
+    '192.88.99.0/24', // deprecated 6to4 anycast relays
+    '198.18.0.0/15', // for testing inter-network comms between two subnets
+    '198.51.100.0/24', // TEST-NET-2 for documentation examples
+    '203.0.113.0/24', // TEST-NET-3 for documentation examples
+    '224.0.0.0/4', // multicast
+    '240.0.0.0/4', // reserved unspecified
+    '255.255.255.255/32' // limited broadcast address
+  ]);
+}
+&nbsp;
+/**
+ * Test if the given IP address is a special address of any kind (private, reserved,
+ * localhost)
+ */
+export function isSpecial(address: string) {
+  return isPrivate(address) || isLocalhost(address) || isReserved(address);
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Feb 14 2018 14:31:52 GMT-0800 (PST)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
