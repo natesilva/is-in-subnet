@@ -5,6 +5,7 @@ coverage
 # editor settings
 .vscode
 .editorconfig
+.prettierrc.json
 
 # unit tests
 test/
