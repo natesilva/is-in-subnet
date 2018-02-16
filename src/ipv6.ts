@@ -1,5 +1,7 @@
 import * as net from 'net';
 
+// Note: Profiling shows that on recent versions of Node, string.split(RegExp) is faster
+// than string.split(string).
 const dot = /\./;
 const mappedIpv4 = /^(.+:ffff:)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:%.+)?$/;
 const colon = /:/;
