@@ -1,6 +1,6 @@
 {
   "name": "is-in-subnet",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Check if an IPv4 or IPv6 address is contained in the given CIDR subnet",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
