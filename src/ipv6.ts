@@ -10,7 +10,6 @@ const doubleColon = /::/;
 function mappedIpv4ToIpv6(ip: string) {
   const matches = ip.match(mappedIpv4);
 
-  /* istanbul ignore if */
   if (!matches) {
     throw new Error(`not a mapped IPv4 address: ${ip}`);
   }
