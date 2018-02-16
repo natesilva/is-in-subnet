@@ -10,14 +10,17 @@ test('ipv4 subnet membership (one-at-a-time)', async t => {
 });
 
 test('ipv4 subnet membership (array)', async t => {
-  const ip = ipv4fixtures[0][0];
-  const inSubnets = ipv4fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-  if (inSubnets.length) {
-    t.true(IPv4.isInSubnet(ip, inSubnets));
-  }
+  const uniqueIps = new Set<string>(ipv4fixtures.map(f => f[0]));
 
-  const notInSubnets = ipv4fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
-  t.false(IPv4.isInSubnet(ip, notInSubnets));
+  uniqueIps.forEach(ip => {
+    const inSubnets = ipv4fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
+    if (inSubnets.length) {
+      t.true(IPv4.isInSubnet(ip, inSubnets));
+    }
+
+    const notInSubnets = ipv4fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
+    t.false(IPv4.isInSubnet(ip, notInSubnets));
+  });
 });
 
 test('handles empty subnet array', async t => {

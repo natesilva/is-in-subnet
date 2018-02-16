@@ -10,14 +10,17 @@ test('ipv6 subnet membership (one-at-a-time)', async t => {
 });
 
 test('ipv6 subnet membership (array)', async t => {
-  const ip = ipv6fixtures[0][0];
-  const inSubnets = ipv6fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-  if (inSubnets.length) {
-    t.true(IPv6.isInSubnet(ip, inSubnets));
-  }
+  const uniqueIps = new Set<string>(ipv6fixtures.map(f => f[0]));
 
-  const notInSubnets = ipv6fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
-  t.false(IPv6.isInSubnet(ip, notInSubnets));
+  uniqueIps.forEach(ip => {
+    const inSubnets = ipv6fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
+    if (inSubnets.length) {
+      t.true(IPv6.isInSubnet(ip, inSubnets));
+    }
+
+    const notInSubnets = ipv6fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
+    t.false(IPv6.isInSubnet(ip, notInSubnets));
+  });
 });
 
 test('handles empty subnet array', async t => {
