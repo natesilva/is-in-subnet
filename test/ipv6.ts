@@ -37,6 +37,7 @@ test('invalid subnets', async t => {
 test('invalid ipv6', async t => {
   t.throws(() => IPv6.isInSubnet('10.5.0.1', '2001:db8:f53a::1:1/64'));
   t.throws(() => IPv6.isInSubnet('::ffff:22.33', '2001:db8:f53a::1:1/64'));
+  t.throws(() => IPv6.isInSubnet('::ffff:192.168.0.256', '2001:db8:f53a::1:1/64'));
 });
 
 test('ipv6 localhost', async t => {

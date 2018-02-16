@@ -7,10 +7,15 @@ const mappedIpv4 = /^(.+:ffff:)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:%.+)?$/;
 const colon = /:/;
 const doubleColon = /::/;
 
+/**
+ * Given a mapped IPv4 address (e.g. ::ffff:203.0.113.38 or similar), convert it to the
+ * equivalent standard IPv6 address.
+ * @param ip the IPv4-to-IPv6 mapped address
+ */
 function mappedIpv4ToIpv6(ip: string) {
   const matches = ip.match(mappedIpv4);
 
-  if (!matches) {
+  if (!matches || !net.isIPv4(matches[2])) {
     throw new Error(`not a mapped IPv4 address: ${ip}`);
   }
 
@@ -23,8 +28,7 @@ function mappedIpv4ToIpv6(ip: string) {
   const segment7 = ((parts[0] << 8) + parts[1]).toString(16);
   const segment8 = ((parts[2] << 8) + parts[3]).toString(16);
 
-  const ipv6Version = `${prefix}${segment7}:${segment8}`;
-  return getIpv6Segments(ipv6Version);
+  return `${prefix}${segment7}:${segment8}`;
 }
 
 /**
@@ -40,7 +44,7 @@ function getIpv6Segments(ip: string): string[] {
   }
 
   if (dot.test(ip)) {
-    return mappedIpv4ToIpv6(ip);
+    return getIpv6Segments(mappedIpv4ToIpv6(ip));
   }
 
   // break it into an array, including missing "::" segments
