@@ -1,7 +1,9 @@
 import * as net from 'net';
 
-const hasDot = /\./;
-const mappedIpv4 = /(.+):ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})($|%.+)/;
+const dot = /\./;
+const mappedIpv4 = /^(.+:ffff:)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:%.+)?$/;
+const colon = /:/;
+const doubleColon = /::/;
 
 function mappedIpv4ToIpv6(ip: string) {
   const matches = ip.match(mappedIpv4);
@@ -15,12 +17,12 @@ function mappedIpv4ToIpv6(ip: string) {
   const prefix = matches[1];
   const ipv4 = matches[2];
 
-  const parts = ipv4.split('.').map(x => parseInt(x, 10));
+  const parts = ipv4.split(dot).map(x => parseInt(x, 10));
 
   const segment7 = ((parts[0] << 8) + parts[1]).toString(16);
   const segment8 = ((parts[2] << 8) + parts[3]).toString(16);
 
-  const ipv6Version = `${prefix}:ffff:${segment7}:${segment8}`;
+  const ipv6Version = `${prefix}${segment7}:${segment8}`;
   return getIpv6Segments(ipv6Version);
 }
 
@@ -36,15 +38,15 @@ function getIpv6Segments(ip: string): string[] {
     throw new Error(`not a valid IPv6 address: ${ip}`);
   }
 
-  if (hasDot.test(ip)) {
+  if (dot.test(ip)) {
     return mappedIpv4ToIpv6(ip);
   }
 
   // break it into an array, including missing "::" segments
-  const [beforeChunk, afterChunk] = ip.split('::');
+  const [beforeChunk, afterChunk] = ip.split(doubleColon);
 
-  const beforeParts = (beforeChunk && beforeChunk.split(':')) || [];
-  const afterParts: string[] = (afterChunk && afterChunk.split(':')) || [];
+  const beforeParts = (beforeChunk && beforeChunk.split(colon)) || [];
+  const afterParts = (afterChunk && afterChunk.split(colon)) || [];
   const missingSegments = new Array<string>(8 - (beforeParts.length + afterParts.length));
 
   return beforeParts.concat(missingSegments, afterParts);
@@ -86,11 +88,13 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
       break;
     }
 
-    const maskPart = parseInt('1'.repeat(bitCount) + '0'.repeat(16 - bitCount), 2);
-    if (
-      (((addressSegments[i] && parseInt(addressSegments[i], 16)) || 0) & maskPart) !==
-      (((subnetSegments[i] && parseInt(subnetSegments[i], 16)) || 0) & maskPart)
-    ) {
+    const subnetPrefix =
+      ((subnetSegments[i] && parseInt(subnetSegments[i], 16)) || 0) >> (16 - bitCount);
+
+    const addressPrefix =
+      ((addressSegments[i] && parseInt(addressSegments[i], 16)) || 0) >> (16 - bitCount);
+
+    if (subnetPrefix !== addressPrefix) {
       return false;
     }
   }

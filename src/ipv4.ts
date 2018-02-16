@@ -44,10 +44,18 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
     throw new Error(`not a valid IPv4 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
-  const maskLong = ((2 ** prefixLength - 1) << (32 - prefixLength)) >>> 0;
-  const mask = ipv4ToLong(subnetAddress) & maskLong;
-  const long = ipv4ToLong(address);
-  return (long & maskLong) === mask;
+  // the next two lines throw if the addresses are not valid IPv4 addresses
+  const subnetLong = ipv4ToLong(subnetAddress);
+  const addressLong = ipv4ToLong(address);
+
+  if (prefixLength === 0) {
+    return true;
+  }
+
+  const subnetPrefix = subnetLong >> (32 - prefixLength);
+  const addressPrefix = addressLong >> (32 - prefixLength);
+
+  return subnetPrefix === addressPrefix;
 }
 
 /** Test if the given IP address is a private/internal IP address. */

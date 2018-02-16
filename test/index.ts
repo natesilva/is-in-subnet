@@ -75,39 +75,3 @@ test('special addresses', async t => {
   t.true(isSpecial('127.0.0.1'));
   t.true(isSpecial('::'));
 });
-
-test.serial(
-  'should be able to test 100,000 ipv4 addresses in less than 5 seconds',
-  async t => {
-    const ipv4Tests = fixtures.filter(f => net.isIPv4(f[0]));
-    // approximately 100K test runs
-    let testCount = Math.floor(100_000 / ipv4Tests.length);
-
-    const start = process.hrtime();
-    for (let index = 0; index < testCount; ++index) {
-      ipv4Tests.forEach(([ip, subnet, expected]) => {
-        t.is(isInSubnet(ip, subnet), expected);
-      });
-    }
-    const elapsed = process.hrtime(start);
-    t.true(elapsed[0] < 5);
-  }
-);
-
-test.serial(
-  'should be able to test 100,000 ipv6 addresses in less than 5 seconds',
-  async t => {
-    const ipv6Tests = fixtures.filter(f => net.isIPv6(f[0]));
-    // approximately 100K test runs
-    let testCount = Math.floor(100_000 / ipv6Tests.length);
-
-    const start = process.hrtime();
-    for (let index = 0; index < testCount; ++index) {
-      ipv6Tests.forEach(([ip, subnet, expected]) => {
-        t.is(isInSubnet(ip, subnet), expected);
-      });
-    }
-    const elapsed = process.hrtime(start);
-    t.true(elapsed[0] < 5);
-  }
-);
