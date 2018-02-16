@@ -9,11 +9,13 @@ function ipv4ToLong(ip) {
   if (!net.isIPv4(ip)) {
     throw new Error(`not a valid IPv4 address: ${ip}`);
   }
-
+  const octets = ip.split('.');
   return (
-    ip.split('.').reduce(function(ipInt, octet) {
-      return (ipInt << 8) + parseInt(octet, 10);
-    }, 0) >>> 0
+    ((parseInt(octets[0], 10) << 24) +
+      (parseInt(octets[1], 10) << 16) +
+      (parseInt(octets[2], 10) << 8) +
+      parseInt(octets[3], 10)) >>>
+    0
   );
 }
 
@@ -32,20 +34,19 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
   const subnet = subnetOrSubnets;
 
   const [subnetAddress, prefixLengthString] = subnet.split('/');
-  if (!subnetAddress || !Number.isInteger(parseInt(prefixLengthString, 10))) {
+  const prefixLength = parseInt(prefixLengthString, 10);
+
+  if (!subnetAddress || !Number.isInteger(prefixLength)) {
     throw new Error(`not a valid IPv4 subnet: ${subnet}`);
   }
 
-  const prefixLength = parseInt(prefixLengthString, 10);
   if (prefixLength < 0 || prefixLength > 32) {
     throw new Error(`not a valid IPv4 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
-  const maskLong = parseInt('1'.repeat(prefixLength) + '0'.repeat(32 - prefixLength), 2);
+  const maskLong = ((2 ** prefixLength - 1) << (32 - prefixLength)) >>> 0;
   const mask = ipv4ToLong(subnetAddress) & maskLong;
-
   const long = ipv4ToLong(address);
-
   return (long & maskLong) === mask;
 }
 
