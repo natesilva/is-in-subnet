@@ -6,7 +6,8 @@
     "module": "commonjs",
     "sourceMap": true,
     "noImplicitReturns": true,
-    "experimentalDecorators": true,
-    "declaration": true
+    "declaration": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

@@ -5,7 +5,7 @@ import * as net from 'net';
  * @param ip the IPv4 address to expand
  * @throws if the string is not a valid IPv4 address
  */
-function ipv4ToLong(ip) {
+function ipv4ToLong(ip: string) {
   if (!net.isIPv4(ip)) {
     throw new Error(`not a valid IPv4 address: ${ip}`);
   }
@@ -26,7 +26,7 @@ function ipv4ToLong(ip) {
  * @throws if the address or subnet are not valid IP addresses, or the CIDR prefix length
  *  is not valid
  */
-export function isInSubnet(address: string, subnetOrSubnets: string | string[]) {
+export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
   if (Array.isArray(subnetOrSubnets)) {
     return subnetOrSubnets.some(subnet => isInSubnet(address, subnet));
   }

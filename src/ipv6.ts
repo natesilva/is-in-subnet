@@ -59,7 +59,7 @@ function getIpv6Segments(ip: string): string[] {
  * @throws if the address or subnet are not valid IP addresses, or the CIDR prefix length
  *  is not valid
  */
-export function isInSubnet(address: string, subnetOrSubnets: string | string[]) {
+export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
   if (Array.isArray(subnetOrSubnets)) {
     return subnetOrSubnets.some(subnet => isInSubnet(address, subnet));
   }
