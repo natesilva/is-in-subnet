@@ -15,7 +15,10 @@ const fixtures: [string, string, boolean][] = [
   ['::ffff:0:0', '::ffff:0:0/96', true],
   ['::ffff:ffff:ffff', '::ffff:0:0/96', true],
   ['::fffe:0:0', '::ffff:0:0/96', false],
-  ['::ffff:127.0.0.1', '::ffff:0:0/96', true]
+  ['::ffff:127.0.0.1', '::ffff:0:0/96', true],
+  ['2001:db8:f53a::1', '2001:db8:f53a::1/128', true],
+  ['2001:db8:f53a::2', '2001:db8:f53a::1/128', false],
+  ['2002:db8:f53a::1', '2001:db8:f53a::1/128', false]
 ];
 
 export default fixtures;
