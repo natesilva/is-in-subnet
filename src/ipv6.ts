@@ -74,13 +74,13 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
     throw new Error(`not a valid IPv6 CIDR subnet: ${subnet}`);
   }
 
-  // the next two lines throw if the addresses are not valid IPv6 addresses
-  const addressSegments = getIpv6Segments(address);
-  const subnetSegments = getIpv6Segments(subnetAddress);
-
   if (prefixLength < 0 || prefixLength > 128) {
     throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
   }
+
+  // the next two lines throw if the addresses are not valid IPv6 addresses
+  const addressSegments = getIpv6Segments(address);
+  const subnetSegments = getIpv6Segments(subnetAddress);
 
   for (let i = 0; i < 8; ++i) {
     const bitCount = Math.min(prefixLength - i * 16, 16);
