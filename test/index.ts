@@ -9,29 +9,11 @@ import {
   isSpecial
 } from '../src/index';
 
+import ipv4fixtures from './fixtures/ipv4';
+import ipv6fixtures from './fixtures/ipv6';
 import test from 'ava';
 
-const fixtures: [string, string, boolean][] = [
-  ['10.5.0.1', '0.0.0.0/0', true],
-  ['10.5.0.1', '11.0.0.0/8', false],
-  ['10.5.0.1', '10.0.0.0/8', true],
-  ['10.5.0.1', '10.0.0.1/8', true],
-  ['10.5.0.1', '10.0.0.10/8', true],
-  ['10.5.0.1', '10.5.5.0/16', true],
-  ['10.5.0.1', '10.4.5.0/16', false],
-  ['10.5.0.1', '10.4.5.0/15', true],
-  ['10.5.0.1', '10.5.0.2/32', false],
-  ['10.5.0.1', '10.5.0.1/32', true],
-  ['2001:db8:f53a::1', '::/0', true],
-  ['2001:db8:f53a::1', '2001:db8:f53a::1:1/64', true],
-  ['2001:db8:f53a::1', '2001:db8:f53b::1:1/48', false],
-  ['2001:db8:f53a::1', '2001:db8:f531::1:1/44', true],
-  ['2001:db8:f53a::1', '2001:db8:f500::1/40', true],
-  ['2001:db8:f53a::1', '2001:db8:f500::1%z/40', true],
-  ['2001:db8:f53a::1', '2001:db9:f500::1/40', false],
-  ['2001:db8:f53a::1', '2001:db9:f500::1%z/40', false],
-  ['2001:db8:f53a:0:0:0:0:1', '2001:db8:f500:0:0:0:0:1%z/40', true]
-];
+const fixtures = ipv4fixtures.slice().concat(ipv6fixtures);
 
 test('subnet membership (one-at-a-time)', async t => {
   fixtures.forEach(([ip, subnet, expected]) => {
@@ -44,7 +26,9 @@ test('subnet membership (array)', async t => {
 
   uniqueIps.forEach(ip => {
     const inSubnets = fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-    t.true(isInSubnet(ip, inSubnets));
+    if (inSubnets.length) {
+      t.true(isInSubnet(ip, inSubnets));
+    }
 
     const notInSubnets = fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
     t.false(isInSubnet(ip, notInSubnets));

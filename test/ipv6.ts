@@ -1,35 +1,27 @@
 import * as IPv6 from '../src/ipv6';
+
+import ipv6fixtures from './fixtures/ipv6';
 import test from 'ava';
 
-const ipv6Tests: [string, string, boolean][] = [
-  ['2001:db8:f53a::1', '::/0', true],
-  ['2001:db8:f53a::1', '2001:db8:f53a::1:1/64', true],
-  ['2001:db8:f53a::1', '2001:db8:f53b::1:1/48', false],
-  ['2001:db8:f53a::1', '2001:db8:f531::1:1/44', true],
-  ['2001:db8:f53a::1', '2001:db8:f500::1/40', true],
-  ['2001:db8:f53a::1', '2001:db8:f500::1%z/40', true],
-  ['2001:db8:f53a::1', '2001:db9:f500::1/40', false],
-  ['2001:db8:f53a::1', '2001:db9:f500::1%z/40', false],
-  ['2001:db8:f53a:0:0:0:0:1', '2001:db8:f500:0:0:0:0:1%z/40', true]
-];
-
 test('ipv6 subnet membership (one-at-a-time)', async t => {
-  ipv6Tests.forEach(([ip, subnet, expected]) => {
+  ipv6fixtures.forEach(([ip, subnet, expected]) => {
     t.is(IPv6.isInSubnet(ip, subnet), expected);
   });
 });
 
 test('ipv6 subnet membership (array)', async t => {
-  const ip = ipv6Tests[0][0];
-  const inSubnets = ipv6Tests.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-  t.true(IPv6.isInSubnet(ip, inSubnets));
+  const ip = ipv6fixtures[0][0];
+  const inSubnets = ipv6fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
+  if (inSubnets.length) {
+    t.true(IPv6.isInSubnet(ip, inSubnets));
+  }
 
-  const notInSubnets = ipv6Tests.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
+  const notInSubnets = ipv6fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
   t.false(IPv6.isInSubnet(ip, notInSubnets));
 });
 
 test('handles empty subnet array', async t => {
-  const ip = ipv6Tests[0][0];
+  const ip = ipv6fixtures[0][0];
   t.false(IPv6.isInSubnet(ip, []));
 });
 

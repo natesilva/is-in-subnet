@@ -5,7 +5,8 @@
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
-    "test": "npm run prepare && nyc --reporter lcov --reporter text ava ./build/test",
+    "test": "npm run prepare && ava --verbose ./build/test",
+    "coverage": "npm run prepare && nyc --reporter lcov --reporter text ava ./build/test",
     "prepare": "del-cli build && tsc"
   },
   "engines": {
