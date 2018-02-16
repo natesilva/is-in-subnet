@@ -55,8 +55,8 @@ test('ipv6 mapped', async t => {
   t.false(IPv6.isIPv4MappedAddress('fe80::5555:1111:2222:7777%utun2'));
   t.true(IPv6.isIPv4MappedAddress('::ffff:192.168.0.1'));
 
-  // THIS FORMAT IS DEPRECATED AND WE DO NOT SUPPORT IT: SEE RFC5156 SECTION 2.3
-  // https://tools.ietf.org/html/rfc5156#section-2.3
+  // THIS FORMAT IS DEPRECATED AND WE DO NOT SUPPORT IT: SEE RFC4291 SECTION 2.5.5.1
+  // https://tools.ietf.org/html/rfc4291#section-2.5.5.1
   t.throws(() => IPv6.isIPv4MappedAddress('::192.168.0.1'));
 });
 
