@@ -20,6 +20,9 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]) 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
   if (net.isIPv6(address)) {
+    if (IPv6.isIPv4MappedAddress(address)) {
+      return IPv4.isPrivate(IPv6.extractMappedIpv4(address));
+    }
     return IPv6.isPrivate(address);
   } else {
     return IPv4.isPrivate(address);
@@ -29,6 +32,9 @@ export function isPrivate(address: string) {
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
   if (net.isIPv6(address)) {
+    if (IPv6.isIPv4MappedAddress(address)) {
+      return IPv4.isLocalhost(IPv6.extractMappedIpv4(address));
+    }
     return IPv6.isLocalhost(address);
   } else {
     return IPv4.isLocalhost(address);
@@ -47,6 +53,9 @@ export function isIPv4MappedAddress(address: string) {
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
   if (net.isIPv6(address)) {
+    if (IPv6.isIPv4MappedAddress(address)) {
+      return IPv4.isReserved(IPv6.extractMappedIpv4(address));
+    }
     return IPv6.isReserved(address);
   } else {
     return IPv4.isReserved(address);
@@ -59,6 +68,9 @@ export function isReserved(address: string) {
  */
 export function isSpecial(address: string) {
   if (net.isIPv6(address)) {
+    if (IPv6.isIPv4MappedAddress(address)) {
+      return IPv4.isSpecial(IPv6.extractMappedIpv4(address));
+    }
     return IPv6.isSpecial(address);
   } else {
     return IPv4.isSpecial(address);

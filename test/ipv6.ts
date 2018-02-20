@@ -73,3 +73,13 @@ test('ipv6 special', async t => {
   t.false(IPv6.isSpecial('::ffff:192.168.0.1'));
   t.true(IPv6.isSpecial('2001:db8:f53a::1'));
 });
+
+test('extract mapped ipv4', async t => {
+  t.is(IPv6.extractMappedIpv4('::ffff:127.0.0.1'), '127.0.0.1');
+
+  // bogus IP should throw
+  t.throws(() => IPv6.extractMappedIpv4('::ffff:444.333.2.1'));
+
+  // invalid address format should throw
+  t.throws(() => IPv6.extractMappedIpv4('::192.168.0.1'));
+});

@@ -32,6 +32,19 @@ function mappedIpv4ToIpv6(ip: string) {
 }
 
 /**
+ * Given a mapped IPv4 address, return the bare IPv4 equivalent.
+ */
+export function extractMappedIpv4(ip: string) {
+  const matches = ip.match(mappedIpv4);
+
+  if (!matches || !net.isIPv4(matches[2])) {
+    throw new Error(`not a mapped IPv4 address: ${ip}`);
+  }
+
+  return matches[2];
+}
+
+/**
  * Given an IP address that may have double-colons, expand all segments and return them
  * as an array of 8 segments (16-bit words). As a peformance enhancement (indicated by
  * profiling), for any segment that was missing but should be a '0', returns undefined.

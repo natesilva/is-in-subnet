@@ -38,11 +38,13 @@ test('subnet membership (array)', async t => {
 test('private addresses', async t => {
   t.true(isPrivate('192.168.0.1'));
   t.true(isPrivate('fe80::5555:1111:2222:7777%utun2'));
+  t.true(isPrivate('::ffff:192.168.0.1'));
 });
 
 test('localhost addresses', async t => {
   t.true(isLocalhost('127.0.0.1'));
   t.true(isLocalhost('::1'));
+  t.true(isLocalhost('::ffff:127.0.0.1'));
 });
 
 test('IPv4 mapped addresses', async t => {
@@ -53,9 +55,11 @@ test('IPv4 mapped addresses', async t => {
 test('reserved addresses', async t => {
   t.true(isReserved('169.254.100.200'));
   t.true(isReserved('2001:db8:f53a::1'));
+  t.true(isReserved('::ffff:169.254.100.200'));
 });
 
 test('special addresses', async t => {
   t.true(isSpecial('127.0.0.1'));
   t.true(isSpecial('::'));
+  t.true(isSpecial('::ffff:127.0.0.1'));
 });
