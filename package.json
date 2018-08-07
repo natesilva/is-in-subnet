@@ -24,11 +24,11 @@
   "license": "MIT",
   "author": "Nate Silva <nate@natesilva.com>",
   "devDependencies": {
-    "@types/node": "^9.4.6",
+    "@types/node": "^10.5.7",
     "ava": "^0.25.0",
     "del-cli": "^1.1.0",
-    "nyc": "^11.5.0",
-    "tslint": "^5.9.1",
-    "typescript": "^2.7.1"
+    "nyc": "^12.0.2",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
   }
 }
