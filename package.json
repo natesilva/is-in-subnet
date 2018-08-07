@@ -7,7 +7,8 @@
   "scripts": {
     "test": "npm run prepare && ava --verbose ./build/test",
     "coverage": "npm run prepare && nyc --reporter lcov --reporter text ava ./build/test",
-    "prepare": "del-cli build && tsc"
+    "prepare": "del-cli build && tsc",
+    "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\""
   },
   "engines": {
     "node": ">=6.10.3"
@@ -28,6 +29,7 @@
     "ava": "^0.25.0",
     "del-cli": "^1.1.0",
     "nyc": "^12.0.2",
+    "prettier": "^1.14.0",
     "tslint": "^5.11.0",
     "typescript": "^3.0.1"
   }

@@ -14,5 +14,9 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "files.eol": "\n",
   "editor.wordWrapColumn": 90,
-  "editor.rulers": [90]
+  "editor.rulers": [90],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
 }

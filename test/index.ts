@@ -1,17 +1,14 @@
-import * as net from 'net';
-
+import test from 'ava';
 import {
-  isIPv4MappedAddress,
   isInSubnet,
+  isIPv4MappedAddress,
   isLocalhost,
   isPrivate,
   isReserved,
   isSpecial
 } from '../src/index';
-
 import ipv4fixtures from './fixtures/ipv4';
 import ipv6fixtures from './fixtures/ipv6';
-import test from 'ava';
 
 const fixtures = ipv4fixtures.slice().concat(ipv6fixtures);
 

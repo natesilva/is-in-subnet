@@ -1,6 +1,6 @@
+import * as net from 'net';
 import * as IPv4 from './ipv4';
 import * as IPv6 from './ipv6';
-import * as net from 'net';
 
 /**
  * Test if the given IP address is contained in the specified subnet.

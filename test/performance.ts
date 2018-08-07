@@ -1,10 +1,7 @@
-import * as net from 'net';
-
-import { IPv4, IPv6, isInSubnet } from '../src/index';
-
+import test from 'ava';
+import { IPv4, IPv6 } from '../src/index';
 import ipv4fixtures from './fixtures/ipv4';
 import ipv6fixtures from './fixtures/ipv6';
-import test from 'ava';
 
 // ***************************************************************************************
 //
@@ -29,7 +26,7 @@ test.serial(
     t.true(elapsed[0] < 4);
 
     const friendlyElapsed = elapsed[0] + elapsed[1] / 1_000_000_000;
-    const average = Math.floor(cycleCount * ipv4fixtures.length / friendlyElapsed);
+    const average = Math.floor((cycleCount * ipv4fixtures.length) / friendlyElapsed);
     t.log(`average IPv4 performance was ${average.toLocaleString()} per second`);
   }
 );
@@ -50,7 +47,7 @@ test.serial(
     t.true(elapsed[0] < 4);
 
     const friendlyElapsed = elapsed[0] + elapsed[1] / 1_000_000_000;
-    const average = Math.floor(cycleCount * ipv6fixtures.length / friendlyElapsed);
+    const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);
     t.log(`average IPv6 performance was ${average.toLocaleString()} per second`);
   }
 );

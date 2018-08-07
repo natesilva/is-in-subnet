@@ -1,7 +1,6 @@
-import * as IPv4 from '../src/ipv4';
-
-import ipv4fixtures from './fixtures/ipv4';
 import test from 'ava';
+import * as IPv4 from '../src/ipv4';
+import ipv4fixtures from './fixtures/ipv4';
 
 test('ipv4 subnet membership (one-at-a-time)', async t => {
   ipv4fixtures.forEach(([ip, subnet, expected]) => {

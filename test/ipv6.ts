@@ -1,7 +1,6 @@
-import * as IPv6 from '../src/ipv6';
-
-import ipv6fixtures from './fixtures/ipv6';
 import test from 'ava';
+import * as IPv6 from '../src/ipv6';
+import ipv6fixtures from './fixtures/ipv6';
 
 test('ipv6 subnet membership (one-at-a-time)', async t => {
   ipv6fixtures.forEach(([ip, subnet, expected]) => {
