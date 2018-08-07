@@ -1,6 +1,7 @@
 {
   "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "build",
     "target": "ES2015",
     "module": "commonjs",
