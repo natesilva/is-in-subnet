@@ -32,6 +32,17 @@ test('subnet membership (array)', async t => {
   });
 });
 
+test('subnet membership (mixed IPv4 and IPv6 array)', async t => {
+  const TRUSTED_ADDRESSES = ['127.0.0.1/8', '::1/128', '10.0.0.0/8', 'fc00::/7'];
+  t.true(isInSubnet('127.1.2.3', TRUSTED_ADDRESSES));
+  t.true(isInSubnet('10.254.254.254', TRUSTED_ADDRESSES));
+  t.false(isInSubnet('1.2.3.4', TRUSTED_ADDRESSES));
+
+  t.true(isInSubnet('::1', TRUSTED_ADDRESSES));
+  t.true(isInSubnet('fc00::1', TRUSTED_ADDRESSES));
+  t.false(isInSubnet('fe80::5555:1111:2222:7777', TRUSTED_ADDRESSES));
+});
+
 test('private addresses', async t => {
   t.true(isPrivate('192.168.0.1'));
   t.true(isPrivate('fe80::5555:1111:2222:7777%utun2'));

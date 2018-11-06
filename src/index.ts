@@ -9,11 +9,21 @@ import * as IPv6 from './ipv6';
  * @throws if the address or subnet are not valid IP addresses, or the CIDR prefix length
  *  is not valid
  */
-export function isInSubnet(address: string, subnetOrSubnets: string | string[]) {
+export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
+  if (!Array.isArray(subnetOrSubnets)) {
+    return isInSubnet(address, [subnetOrSubnets]);
+  }
+
   if (net.isIPv6(address)) {
-    return IPv6.isInSubnet(address, subnetOrSubnets);
+    return IPv6.isInSubnet(
+      address,
+      subnetOrSubnets.filter(subnet => net.isIPv6(subnet.split('/')[0]))
+    );
   } else {
-    return IPv4.isInSubnet(address, subnetOrSubnets);
+    return IPv4.isInSubnet(
+      address,
+      subnetOrSubnets.filter(subnet => net.isIPv4(subnet.split('/')[0]))
+    );
   }
 }
 
