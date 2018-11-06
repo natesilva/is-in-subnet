@@ -5,8 +5,8 @@
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
-    "test": "npm run prepare && ava --verbose ./build/test",
-    "coverage": "npm run prepare && nyc --reporter lcov --reporter text ava ./build/test",
+    "test": "ava --verbose",
+    "coverage": "nyc --reporter lcov --reporter text --extension .ts ava",
     "prepare": "del-cli build && tsc",
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\""
   },
@@ -25,12 +25,22 @@
   "license": "MIT",
   "author": "Nate Silva <nate@natesilva.com>",
   "devDependencies": {
-    "@types/node": "^10.5.7",
-    "ava": "^0.25.0",
+    "@types/node": "^10.12.2",
+    "ava": "^1.0.0-rc.1",
     "del-cli": "^1.1.0",
-    "nyc": "^12.0.2",
-    "prettier": "^1.14.0",
+    "nyc": "^13.1.0",
+    "prettier": "^1.14.3",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.1.6"
+  },
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register/transpile-only"
+    ]
   }
 }
