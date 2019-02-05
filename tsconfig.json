@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
-    "target": "ES2015",
+    "target": "ES5",
+    "lib": ["ES5", "ES2015.Core", "ES2015.Promise", "ES2015.Collection"],
     "module": "commonjs",
     "sourceMap": true,
     "noImplicitReturns": true,
