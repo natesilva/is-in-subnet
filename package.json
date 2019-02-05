@@ -5,6 +5,7 @@
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
+    "clean": "del-cli build .nyc_output coverage",
     "test": "ava --verbose",
     "coverage": "nyc --reporter lcov --reporter text --extension .ts ava",
     "prepare": "del-cli build && tsc",
