@@ -61,7 +61,9 @@ function getIpv6Segments(ip: string): string[] {
   }
 
   // break it into an array, including missing "::" segments
-  const [beforeChunk, afterChunk] = ip.split(doubleColon);
+  const parts = ip.split(doubleColon);
+  const beforeChunk = parts[0];
+  const afterChunk = parts[1];
 
   const beforeParts = (beforeChunk && beforeChunk.split(colon)) || [];
   const afterParts = (afterChunk && afterChunk.split(colon)) || [];
@@ -84,7 +86,9 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
 
   const subnet = subnetOrSubnets;
 
-  const [subnetAddress, prefixLengthString] = subnet.split('/');
+  const parts = subnet.split('/');
+  const subnetAddress = parts[0];
+  const prefixLengthString = parts[1];
   const prefixLength = parseInt(prefixLengthString, 10);
 
   if (!subnetAddress || !Number.isInteger(prefixLength)) {

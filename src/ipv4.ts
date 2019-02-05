@@ -33,7 +33,9 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
 
   const subnet = subnetOrSubnets;
 
-  const [subnetAddress, prefixLengthString] = subnet.split('/');
+  const parts = subnet.split('/');
+  const subnetAddress = parts[0];
+  const prefixLengthString = parts[1];
   const prefixLength = parseInt(prefixLengthString, 10);
 
   if (!subnetAddress || !Number.isInteger(prefixLength)) {
