@@ -25,14 +25,14 @@
   "license": "MIT",
   "author": "Nate Silva <nate@natesilva.com>",
   "devDependencies": {
-    "@types/node": "^10.12.2",
-    "ava": "^1.0.0-rc.1",
+    "@types/node": "^10.12.21",
+    "ava": "^1.2.1",
     "del-cli": "^1.1.0",
-    "nyc": "^13.1.0",
-    "prettier": "^1.14.3",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.6"
+    "nyc": "^13.2.0",
+    "prettier": "^1.16.4",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1"
   },
   "ava": {
     "compileEnhancements": false,
