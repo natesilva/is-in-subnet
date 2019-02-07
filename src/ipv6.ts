@@ -135,7 +135,11 @@ export function isLocalhost(address: string) {
 
 /** Test if the given IP address is an IPv4 address mapped onto IPv6 */
 export function isIPv4MappedAddress(address: string) {
-  return isInSubnet(address, '::ffff:0:0/96');
+  if (isInSubnet(address, '::ffff:0:0/96')) {
+    const matches = address.match(mappedIpv4);
+    return Boolean(matches && net.isIPv4(matches[2]));
+  }
+  return false;
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
