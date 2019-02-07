@@ -43,6 +43,13 @@ test('subnet membership (mixed IPv4 and IPv6 array)', async t => {
   t.false(isInSubnet('fe80::5555:1111:2222:7777', TRUSTED_ADDRESSES));
 });
 
+test('ipv4 encapsulated in ipv6', async t => {
+  t.true(isInSubnet('::ffff:172.16.10.10', '172.16.0.0/16'));
+  t.true(isInSubnet('::ffff:172.16.10.10', '::ffff:172.16.0.0/112'));
+  t.false(isInSubnet('::ffff:192.168.10.10', '172.16.0.0/16'));
+  t.false(isInSubnet('::ffff:192.168.10.10', '::ffff:172.16.0.0/112'));
+});
+
 test('private addresses', async t => {
   t.true(isPrivate('192.168.0.1'));
   t.true(isPrivate('fe80::5555:1111:2222:7777%utun2'));

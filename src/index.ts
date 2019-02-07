@@ -14,6 +14,20 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
     return isInSubnet(address, [subnetOrSubnets]);
   }
 
+  // for mapped IPv4 addresses, compare against both IPv6 and IPv4 subnets
+  if (net.isIPv6(address) && IPv6.isIPv4MappedAddress(address)) {
+    return (
+      IPv6.isInSubnet(
+        address,
+        subnetOrSubnets.filter(subnet => net.isIPv6(subnet.split('/')[0]))
+      ) ||
+      IPv4.isInSubnet(
+        IPv6.extractMappedIpv4(address),
+        subnetOrSubnets.filter(subnet => net.isIPv4(subnet.split('/')[0]))
+      )
+    );
+  }
+
   if (net.isIPv6(address)) {
     return IPv6.isInSubnet(
       address,
