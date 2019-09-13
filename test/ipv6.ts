@@ -1,84 +1,90 @@
-import test from 'ava';
+import * as assert from 'assert';
+import { describe, it } from 'mocha';
 import * as IPv6 from '../src/ipv6';
 import ipv6fixtures from './fixtures/ipv6';
 
-test('ipv6 subnet membership (one-at-a-time)', async t => {
-  ipv6fixtures.forEach(([ip, subnet, expected]) => {
-    t.is(IPv6.isInSubnet(ip, subnet), expected);
+describe('IPv6 tests', () => {
+  it('should check ipv6 subnet membership (one-at-a-time)', () => {
+    ipv6fixtures.forEach(([ip, subnet, expected]) => {
+      assert.strictEqual(IPv6.isInSubnet(ip, subnet), expected);
+    });
   });
-});
 
-test('ipv6 subnet membership (array)', async t => {
-  const uniqueIps = new Set<string>(ipv6fixtures.map(f => f[0]));
+  it('should check ipv6 subnet membership (array)', () => {
+    const uniqueIps = new Set<string>(ipv6fixtures.map(f => f[0]));
 
-  uniqueIps.forEach(ip => {
-    const inSubnets = ipv6fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
-    if (inSubnets.length) {
-      t.true(IPv6.isInSubnet(ip, inSubnets));
-    }
+    uniqueIps.forEach(ip => {
+      const inSubnets = ipv6fixtures.filter(t => t[0] === ip && t[2]).map(t => t[1]);
+      if (inSubnets.length) {
+        assert.strictEqual(IPv6.isInSubnet(ip, inSubnets), true);
+      }
 
-    const notInSubnets = ipv6fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
-    t.false(IPv6.isInSubnet(ip, notInSubnets));
+      const notInSubnets = ipv6fixtures.filter(t => t[0] === ip && !t[2]).map(t => t[1]);
+      assert.strictEqual(IPv6.isInSubnet(ip, notInSubnets), false);
+    });
   });
-});
 
-test('handles empty subnet array', async t => {
-  const ip = ipv6fixtures[0][0];
-  t.false(IPv6.isInSubnet(ip, []));
-});
+  it('should handle an empty subnet array', () => {
+    const ip = ipv6fixtures[0][0];
+    assert.strictEqual(IPv6.isInSubnet(ip, []), false);
+  });
 
-test('invalid subnets', async t => {
-  t.throws(() => IPv6.isInSubnet('2001:db8:f53a::1', '2001:db8:f53a::1'));
-  t.throws(() => IPv6.isInSubnet('2001:db8:f53a::1', '2001:db8:f53a::1/-1'));
-  t.throws(() => IPv6.isInSubnet('2001:db8:f53a::1', '2001:db8:f53a::1/129'));
-});
+  it('should throw on invalid subnets', () => {
+    assert.throws(() => IPv6.isInSubnet('2001:db8:f53a::1', '2001:db8:f53a::1'));
+    assert.throws(() => IPv6.isInSubnet('2001:db8:f53a::1', '2001:db8:f53a::1/-1'));
+    assert.throws(() => IPv6.isInSubnet('2001:db8:f53a::1', '2001:db8:f53a::1/129'));
+  });
 
-test('invalid ipv6', async t => {
-  t.throws(() => IPv6.isInSubnet('10.5.0.1', '2001:db8:f53a::1:1/64'));
-  t.throws(() => IPv6.isInSubnet('::ffff:22.33', '2001:db8:f53a::1:1/64'));
-  t.throws(() => IPv6.isInSubnet('::ffff:192.168.0.256', '2001:db8:f53a::1:1/64'));
-});
+  it('should throw on invalid ipv6', () => {
+    assert.throws(() => IPv6.isInSubnet('10.5.0.1', '2001:db8:f53a::1:1/64'));
+    assert.throws(() => IPv6.isInSubnet('::ffff:22.33', '2001:db8:f53a::1:1/64'));
+    assert.throws(() => IPv6.isInSubnet('::ffff:192.168.0.256', '2001:db8:f53a::1:1/64'));
+  });
 
-test('ipv6 localhost', async t => {
-  t.true(IPv6.isLocalhost('::1'));
-  t.false(IPv6.isLocalhost('::2'));
-});
+  it('should handle ipv6 localhost', () => {
+    assert.strictEqual(IPv6.isLocalhost('::1'), true);
+    assert.strictEqual(IPv6.isLocalhost('::2'), false);
+  });
 
-test('ipv6 private', async t => {
-  t.false(IPv6.isPrivate('::1'));
-  t.true(IPv6.isPrivate('fe80::5555:1111:2222:7777%utun2'));
-  t.true(IPv6.isPrivate('fdc5:3c04:80bf:d9ee::1'));
-});
+  it('should handle ipv6 private', () => {
+    assert.strictEqual(IPv6.isPrivate('::1'), false);
+    assert.strictEqual(IPv6.isPrivate('fe80::5555:1111:2222:7777%utun2'), true);
+    assert.strictEqual(IPv6.isPrivate('fdc5:3c04:80bf:d9ee::1'), true);
+  });
 
-test('ipv6 mapped', async t => {
-  t.false(IPv6.isIPv4MappedAddress('::1'));
-  t.false(IPv6.isIPv4MappedAddress('fe80::5555:1111:2222:7777%utun2'));
-  t.true(IPv6.isIPv4MappedAddress('::ffff:192.168.0.1'));
+  it('should handle ipv6 mapped', () => {
+    assert.strictEqual(IPv6.isIPv4MappedAddress('::1'), false);
+    assert.strictEqual(
+      IPv6.isIPv4MappedAddress('fe80::5555:1111:2222:7777%utun2'),
+      false
+    );
+    assert.strictEqual(IPv6.isIPv4MappedAddress('::ffff:192.168.0.1'), true);
 
-  // THIS FORMAT IS DEPRECATED AND WE DO NOT SUPPORT IT: SEE RFC4291 SECTION 2.5.5.1
-  // https://tools.ietf.org/html/rfc4291#section-2.5.5.1
-  t.throws(() => IPv6.isIPv4MappedAddress('::192.168.0.1'));
-});
+    // THIS FORMAT IS DEPRECATED AND WE DO NOT SUPPORT IT: SEE RFC4291 SECTION 2.5.5.1
+    // https://tools.ietf.org/html/rfc4291#section-2.5.5.1
+    assert.throws(() => IPv6.isIPv4MappedAddress('::192.168.0.1'));
+  });
 
-test('ipv6 reserved', async t => {
-  t.true(IPv6.isReserved('2001:db8:f53a::1'));
-  t.false(IPv6.isReserved('2001:4860:4860::8888'));
-  t.true(IPv6.isReserved('::'));
-});
+  it('should handle ipv6 reserved', () => {
+    assert.strictEqual(IPv6.isReserved('2001:db8:f53a::1'), true);
+    assert.strictEqual(IPv6.isReserved('2001:4860:4860::8888'), false);
+    assert.strictEqual(IPv6.isReserved('::'), true);
+  });
 
-test('ipv6 special', async t => {
-  t.false(IPv6.isSpecial('2001:4860:4860::8888'));
-  t.true(IPv6.isSpecial('::1'));
-  t.false(IPv6.isSpecial('::ffff:192.168.0.1'));
-  t.true(IPv6.isSpecial('2001:db8:f53a::1'));
-});
+  it('should handle ipv6 special', () => {
+    assert.strictEqual(IPv6.isSpecial('2001:4860:4860::8888'), false);
+    assert.strictEqual(IPv6.isSpecial('::1'), true);
+    assert.strictEqual(IPv6.isSpecial('::ffff:192.168.0.1'), false);
+    assert.strictEqual(IPv6.isSpecial('2001:db8:f53a::1'), true);
+  });
 
-test('extract mapped ipv4', async t => {
-  t.is(IPv6.extractMappedIpv4('::ffff:127.0.0.1'), '127.0.0.1');
+  it('should extract mapped ipv4', () => {
+    assert.strictEqual(IPv6.extractMappedIpv4('::ffff:127.0.0.1'), '127.0.0.1');
 
-  // bogus IP should throw
-  t.throws(() => IPv6.extractMappedIpv4('::ffff:444.333.2.1'));
+    // bogus IP should throw
+    assert.throws(() => IPv6.extractMappedIpv4('::ffff:444.333.2.1'));
 
-  // invalid address format should throw
-  t.throws(() => IPv6.extractMappedIpv4('::192.168.0.1'));
+    // invalid address format should throw
+    assert.throws(() => IPv6.extractMappedIpv4('::192.168.0.1'));
+  });
 });
