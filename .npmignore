@@ -16,6 +16,7 @@ src/
 
 # transpiler settings
 tsconfig.json
-tslint.json
 
+.eslintrc
+.eslintignore
 **/test.*

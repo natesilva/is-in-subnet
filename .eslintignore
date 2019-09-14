@@ -1,0 +1,6 @@
+npm-debug.log*
+coverage
+.nyc_output
+**/test.ts
+**/build
+**/*.js

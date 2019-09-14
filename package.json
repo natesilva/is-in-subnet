@@ -6,8 +6,10 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "clean": "del-cli build .nyc_output coverage",
+    "build": "tsc",
     "prepare": "del-cli build && tsc",
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\"",
+    "lint": "eslint --ext .ts .",
     "test": "mocha \"./test/**/*.ts\"",
     "test:watch": "mocha \"./test/**/*.ts\"  -w --watch-extensions ts",
     "coverage": "nyc --reporter lcov --reporter text --extension .ts mocha \"./test/**/*.ts\""
@@ -29,12 +31,15 @@
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.14.18",
+    "@typescript-eslint/eslint-plugin": "^2.2.0",
+    "@typescript-eslint/parser": "^2.2.0",
     "del-cli": "^3.0.0",
+    "eslint": "^6.3.0",
+    "eslint-config-prettier": "^6.3.0",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
-    "tslint": "^5.20.0",
     "typescript": "^3.6.3"
   }
 }

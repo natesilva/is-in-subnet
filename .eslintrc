@@ -1,0 +1,35 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    // the following two lines *dis*able rules in eslint that conflict with prettier:
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    // more accurate and less maintenance to let the type be deduced by TypeScript
+    "@typescript-eslint/explicit-function-return-type": 0,
+    // “hoisting” is not an issue with ES6
+    "@typescript-eslint/no-use-before-define": 0,
+    // database model properties are never camelcase
+    "@typescript-eslint/camelcase": 0,
+    // false positives in idiomatic code https://github.com/eslint/eslint/issues/11899
+    "require-atomic-updates": 0,
+    // makes code less clear, no evidence it’s faster: https://bit.ly/2kAohRM
+    "@typescript-eslint/prefer-regexp-exec": 0,
+    // for this specific use case, we don’t prefer includes
+    "@typescript-eslint/prefer-includes": 0
+  }
+}
