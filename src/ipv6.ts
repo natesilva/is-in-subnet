@@ -1,4 +1,4 @@
-import * as net from 'net';
+import * as util from './util';
 
 // Note: Profiling shows that on recent versions of Node, string.split(RegExp) is faster
 // than string.split(string).
@@ -15,7 +15,7 @@ const doubleColon = /::/;
 function mappedIpv4ToIpv6(ip: string) {
   const matches = ip.match(mappedIpv4);
 
-  if (!matches || !net.isIPv4(matches[2])) {
+  if (!matches || !util.isIPv4(matches[2])) {
     throw new Error(`not a mapped IPv4 address: ${ip}`);
   }
 
@@ -37,7 +37,7 @@ function mappedIpv4ToIpv6(ip: string) {
 export function extractMappedIpv4(ip: string) {
   const matches = ip.match(mappedIpv4);
 
-  if (!matches || !net.isIPv4(matches[2])) {
+  if (!matches || !util.isIPv4(matches[2])) {
     throw new Error(`not a mapped IPv4 address: ${ip}`);
   }
 
@@ -52,7 +52,7 @@ export function extractMappedIpv4(ip: string) {
  * @throws if the string is not a valid IPv6 address
  */
 function getIpv6Segments(ip: string): string[] {
-  if (!net.isIPv6(ip)) {
+  if (!util.isIPv6(ip)) {
     throw new Error(`not a valid IPv6 address: ${ip}`);
   }
 
@@ -137,7 +137,7 @@ export function isLocalhost(address: string) {
 export function isIPv4MappedAddress(address: string) {
   if (isInSubnet(address, '::ffff:0:0/96')) {
     const matches = address.match(mappedIpv4);
-    return Boolean(matches && net.isIPv4(matches[2]));
+    return Boolean(matches && util.isIPv4(matches[2]));
   }
   return false;
 }

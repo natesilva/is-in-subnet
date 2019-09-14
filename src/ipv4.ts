@@ -1,4 +1,4 @@
-import * as net from 'net';
+import * as util from './util';
 
 /**
  * Given an IPv4 address, convert it to a 32-bit long integer.
@@ -6,7 +6,7 @@ import * as net from 'net';
  * @throws if the string is not a valid IPv4 address
  */
 function ipv4ToLong(ip: string) {
-  if (!net.isIPv4(ip)) {
+  if (!util.isIPv4(ip)) {
     throw new Error(`not a valid IPv4 address: ${ip}`);
   }
   const octets = ip.split('.');
