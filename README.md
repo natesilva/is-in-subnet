@@ -2,27 +2,32 @@
 
 Check if an IPv4 or IPv6 address is contained in the given [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) subnet.
 
-* Small
-* Fast
-* Simple syntax
-* Full test coverage
-* TypeScript-friendly
-* Zero dependencies
+- Small
+- Fast
+- Simple syntax
+- Full test coverage
+- TypeScript-friendly
+- Zero dependencies
+- 🆕 Browser-friendly
 
 ## Installation
 
 `npm i is-in-subnet`
+
+For browser use, if you prefer to load this module as a single file from a CDN:
+
+\<placeholder: coming soon\>
 
 ## Usage
 
 ```javascript
 const { isInSubnet } = require('is-in-subnet');
 
-console.log( isInSubnet('10.5.0.1', '10.4.5.0/16') );   // false
-console.log( isInSubnet('10.5.0.1', '10.4.5.0/15') );   // true
+console.log(isInSubnet('10.5.0.1', '10.4.5.0/16')); // false
+console.log(isInSubnet('10.5.0.1', '10.4.5.0/15')); // true
 
-console.log( isInSubnet('2001:db8:f53a::1', '2001:db8:f53b::1:1/48') );   // false
-console.log( isInSubnet('2001:db8:f53a::1', '2001:db8:f531::1:1/44') );   // true
+console.log(isInSubnet('2001:db8:f53a::1', '2001:db8:f53b::1:1/48')); // false
+console.log(isInSubnet('2001:db8:f53a::1', '2001:db8:f531::1:1/44')); // true
 ```
 
 ## More ways to use it
@@ -32,7 +37,7 @@ console.log( isInSubnet('2001:db8:f53a::1', '2001:db8:f531::1:1/44') );   // tru
 You can pass an array instead of a single subnet.
 
 ```javascript
-const inAnySubnet = isInSubnet('10.5.0.1', [ '10.4.5.0/16', '192.168.1.0/24' ]);
+const inAnySubnet = isInSubnet('10.5.0.1', ['10.4.5.0/16', '192.168.1.0/24']);
 ```
 
 This module recognizes several special classes of addresses.
