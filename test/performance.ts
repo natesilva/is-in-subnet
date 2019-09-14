@@ -17,7 +17,7 @@ describe('performance', function() {
 
   it('should be able to test 100,000 ipv4 addresses in less than 4 seconds', () => {
     // approximately 100K test runs
-    let cycleCount = Math.floor(100_000 / ipv4fixtures.length);
+    const cycleCount = Math.floor(100_000 / ipv4fixtures.length);
 
     const start = process.hrtime();
     for (let index = 0; index < cycleCount; ++index) {
@@ -35,7 +35,7 @@ describe('performance', function() {
 
   it('should be able to test 100,000 ipv6 addresses in less than 4 seconds', () => {
     // approximately 100K test runs
-    let cycleCount = Math.floor(100_000 / ipv6fixtures.length);
+    const cycleCount = Math.floor(100_000 / ipv6fixtures.length);
 
     const start = process.hrtime();
     for (let index = 0; index < cycleCount; ++index) {
