@@ -8,15 +8,15 @@ Check if an IPv4 or IPv6 address is contained in the given [CIDR](https://en.wik
 - Full test coverage
 - TypeScript-friendly
 - Zero dependencies
-- 🆕 Browser-friendly
+- 🆕 [Browser-friendly](#loading-in-a-browser-from-a-cdn)
 
 ## Installation
 
 `npm i is-in-subnet`
 
-### Loading in a browser from a CDN
+### Using this module in a browser
 
-For browser use, if you prefer to load this module as a single file from a CDN:
+This module is compatible with Browserify and other bundling tools. If you prefer to load this module as a single file from a CDN:
 
 - <https://cdn.jsdelivr.net/npm/is-in-subnet@latest/browser/isInSubnet.js>
 - <https://cdn.jsdelivr.net/npm/is-in-subnet@latest/browser/isInSubnet.min.js>
