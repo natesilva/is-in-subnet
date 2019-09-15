@@ -42,6 +42,7 @@ describe('util', () => {
     it('should recognize valid ipv6 addresses', () => {
       valid.forEach(ip => {
         // `as any` so we can test values convertible to string
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual(util.isIPv6(ip as any), true, `testing ${ip}`);
       });
     });
@@ -49,12 +50,14 @@ describe('util', () => {
     it('should not recognize invalid ipv6 addresses', () => {
       invalid.forEach(ip => {
         // `as any` so we can test non-string values
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual(util.isIPv6(ip as any), false, `testing ${ip}`);
       });
     });
 
     it('should return false if no address is provided', () => {
       // `as any` so we can test non-string values
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       assert.strictEqual((util.isIPv6 as any)(), false);
     });
   });
@@ -85,6 +88,7 @@ describe('util', () => {
     it('should recognize valid ipv4 addresses', () => {
       valid.forEach(ip => {
         // `as any` so we can test values convertible to string
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual(util.isIPv4(ip as any), true, `testing ${ip}`);
       });
     });
@@ -92,12 +96,14 @@ describe('util', () => {
     it('should not recognize invalid ipv4 addresses', () => {
       invalid.forEach(ip => {
         // `as any` so we can test non-string values
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual(util.isIPv4(ip as any), false, `testing ${ip}`);
       });
     });
 
     it('should return false if no address is provided', () => {
       // `as any` so we can test non-string values
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       assert.strictEqual((util.isIPv4 as any)(), false);
     });
   });
