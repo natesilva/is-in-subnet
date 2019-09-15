@@ -1,4 +1,5 @@
 import * as util from './util';
+import ipRange from './ipRange';
 
 // Note: Profiling shows that on recent versions of Node, string.split(RegExp) is faster
 // than string.split(string).
@@ -122,15 +123,12 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return isInSubnet(address, [
-    'fe80::/10', // link-local address
-    'fc00::/7' // unique local address
-  ]);
+  return isInSubnet(address, ipRange.private.ipv6);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return isInSubnet(address, '::1/128');
+  return isInSubnet(address, ipRange.localhost.ipv6);
 }
 
 /** Test if the given IP address is an IPv4 address mapped onto IPv6 */
@@ -144,17 +142,7 @@ export function isIPv4MappedAddress(address: string) {
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return isInSubnet(address, [
-    '::/128', // unspecified address
-    '64:ff9b::/96', // IPv4/IPv6 translation
-    '100::/64', // discard prefix
-    '2001::/32', // Teredo tunneling
-    '2001:10::/28', // deprecated
-    '2001:20::/28', // ORCHIDv2
-    '2001:db8::/32', // for documentation and examples
-    '2002::/16', // 6to4
-    'ff00::/8' // multicast
-  ]);
+  return isInSubnet(address, ipRange.reserved.ipv6);
 }
 
 /**

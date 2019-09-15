@@ -1,4 +1,5 @@
 import * as util from './util';
+import ipRange from './ipRange';
 
 /**
  * Given an IPv4 address, convert it to a 32-bit long integer.
@@ -60,30 +61,17 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return isInSubnet(address, ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
+  return isInSubnet(address, ipRange.private.ipv4);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return isInSubnet(address, '127.0.0.0/8');
+  return isInSubnet(address, ipRange.localhost.ipv4);
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return isInSubnet(address, [
-    '0.0.0.0/8', // broadcast "this"
-    '100.64.0.0/10', // carrier-grade NAT
-    '169.254.0.0/16', // DHCP fallback
-    '192.0.0.0/24', // IANA Special Purpose Address Registry
-    '192.0.2.0/24', // TEST-NET-1 for documentation examples
-    '192.88.99.0/24', // deprecated 6to4 anycast relays
-    '198.18.0.0/15', // for testing inter-network comms between two subnets
-    '198.51.100.0/24', // TEST-NET-2 for documentation examples
-    '203.0.113.0/24', // TEST-NET-3 for documentation examples
-    '224.0.0.0/4', // multicast
-    '240.0.0.0/4', // reserved unspecified
-    '255.255.255.255/32' // limited broadcast address
-  ]);
+  return isInSubnet(address, ipRange.reserved.ipv4);
 }
 
 /**
