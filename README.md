@@ -10,20 +10,26 @@ Check if an IPv4 or IPv6 address is contained in the given [CIDR](https://en.wik
 - Zero dependencies
 - 🆕 [Browser-friendly](#using-this-module-in-a-browser)
 
+See the 📖 [Reference](doc/reference.md) page for complete documentation.
+
 ## Installation
 
-`npm i is-in-subnet`
+### With Node.js
 
-### Using this module in a browser
+`npm install is-in-subnet`
 
-This module is compatible with Browserify and other bundling tools. If you prefer to load this module as a single file from a CDN:
+### In a browser
 
-- <https://cdn.jsdelivr.net/npm/is-in-subnet@2.0.0/browser/isInSubnet.js>
-- <https://cdn.jsdelivr.net/npm/is-in-subnet@2.0.0/browser/isInSubnet.min.js>
+This module is compatible with Browserify and other bundling tools. If you prefer to load it as a single file from a CDN:
+
+- <https://cdn.jsdelivr.net/npm/is-in-subnet@2.1.0/browser/isInSubnet.js>
+- <https://cdn.jsdelivr.net/npm/is-in-subnet@2.1.0/browser/isInSubnet.min.js>
 
 The module is loaded as a global named `isInSubnet`.
 
-## Usage
+## Basic Usage
+
+### Node.js
 
 ```javascript
 const { isInSubnet } = require('is-in-subnet');
@@ -35,42 +41,31 @@ console.log(isInSubnet('2001:db8:f53a::1', '2001:db8:f53b::1:1/48')); // false
 console.log(isInSubnet('2001:db8:f53a::1', '2001:db8:f531::1:1/44')); // true
 ```
 
-## More ways to use it
-
-### `check` is an alias for `isInSubnet`
-
-The `check` function is an alias for the `isInSubnet` function. This makes browser usage a
-bit nicer:
+### Browser
 
 ```javascript
-// if you don’t like this syntax in the browser:
 console.log(isInSubnet.isInSubnet('10.5.0.1', '10.4.5.0/16'));
-// you may use this instead:
+// if you don’t like that syntax, you may use this instead:
 console.log(isInSubnet.check('10.5.0.1', '10.4.5.0/16'));
 ```
 
+## More ways to use it
+
 ### Test multiple subnets at once
 
-You can pass an array instead of a single subnet.
+- You can pass an array instead of a single subnet.
 
 ```javascript
 const inAnySubnet = isInSubnet('10.5.0.1', ['10.4.5.0/16', '192.168.1.0/24']);
 ```
 
-This module recognizes several special classes of addresses.
+### Test for special types of addresses
 
-### Private addresses
+- `isPrivate(address)` — Private addresses (like `192.168.0.0`)
+- `isLocalhost(address)` — Localhost addresses (like `::1`)
 
-```javascript
-isPrivate(address);
-```
+And more. See the documentation.
 
-True if the address is in a private/internal address range, such as `192.168.1.1` or similar, or an IPv6 Unique Local Address.
+### Check if an address is valid
 
-### Localhost addresses
-
-```javascript
-isLocalhost(address);
-```
-
-True if the address represents the localhost, such as `127.0.0.1` or `::1`.
+- `isIPv4(address)`, `isIPv6(address)`, `isIP(address)` — works just like the similarly-named functions in Node’s `net` module.
