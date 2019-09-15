@@ -64,7 +64,7 @@ const inAnySubnet = isInSubnet('10.5.0.1', ['10.4.5.0/16', '192.168.1.0/24']);
 - `isPrivate(address)` — Private addresses (like `192.168.0.0`)
 - `isLocalhost(address)` — Localhost addresses (like `::1`)
 
-And more. See the documentation.
+And more. See the [documentation](doc/reference.md#testing-for-special-address-ranges).
 
 ### Check if an address is valid
 
