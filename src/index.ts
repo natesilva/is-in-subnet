@@ -2,6 +2,9 @@ import * as IPv4 from './ipv4';
 import * as IPv6 from './ipv6';
 import * as util from './util';
 
+export { isIP, isIPv4, isIPv6 } from './util';
+export { IPv4, IPv6 };
+
 /**
  * Test if the given IP address is contained in the specified subnet.
  * @param address the IPv4 or IPv6 address to check
@@ -100,7 +103,5 @@ export function isSpecial(address: string) {
     return IPv4.isSpecial(address);
   }
 }
-
-export { IPv4, IPv6 };
 
 export const check = isInSubnet;
