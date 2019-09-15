@@ -1,6 +1,6 @@
 # is-in-subnet
 
-## `isInSubnet`
+## Checking if an address is in a subnet
 
 `isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean`
 
