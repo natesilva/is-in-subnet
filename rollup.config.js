@@ -12,7 +12,8 @@ export default [
       file: 'browser/isInSubnet.js',
       format: 'umd',
       noConflict: true,
-      sourcemap: true
+      sourcemap: true,
+      sourcemapExcludeSources: true
     },
     plugins: [resolve(), commonjs(), typescript()]
   },
@@ -25,7 +26,8 @@ export default [
       file: 'browser/isInSubnet.min.js',
       format: 'umd',
       noConflict: true,
-      sourcemap: true
+      sourcemap: true,
+      sourcemapExcludeSources: true
     },
     plugins: [resolve(), commonjs(), typescript(), uglify()]
   }
