@@ -33,7 +33,7 @@ Will `throw` an `Error` if the address or subnet are not valid IP addresses, or 
     * Test if the given IP address is a localhost address.
 
 * `isReserved(address: string): boolean`
-    * Test if the given IP address is in a reserved range. These addresses are not expected to be seen in public internet traffic.
+    * Test if the given IP address is in a reserved range. This includes addresses that are not expected to be seen in public internet traffic, deprecated, and other special-use addresses.
 
 * `isSpecial(address: string): boolean`
     * A combined test that checks if the given IP address matches any of the above categories (private, localhost, or reserved).
