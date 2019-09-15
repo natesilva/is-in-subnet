@@ -41,6 +41,7 @@
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.3.0",
     "mocha": "^6.2.0",
+    "np": "^5.1.0",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "tinyify": "^2.5.1",
