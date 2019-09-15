@@ -8,7 +8,7 @@ Check if an IPv4 or IPv6 address is contained in the given [CIDR](https://en.wik
 - Full test coverage
 - TypeScript-friendly
 - Zero dependencies
-- 🆕 [Browser-friendly](#loading-in-a-browser-from-a-cdn)
+- 🆕 [Browser-friendly](#using-this-module-in-a-browser)
 
 ## Installation
 
