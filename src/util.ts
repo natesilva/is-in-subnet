@@ -33,3 +33,9 @@ export function isIPv4(s: string) {
 export function isIPv6(s: string) {
   return IPv6Reg.test(s);
 }
+
+export function isIP(s: string) {
+  if (isIPv4(s)) return 4;
+  if (isIPv6(s)) return 6;
+  return 0;
+}

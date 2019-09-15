@@ -107,4 +107,68 @@ describe('util', () => {
       assert.strictEqual((util.isIPv4 as any)(), false);
     });
   });
+
+  describe('isIP', () => {
+    const valid: [string | { toString: () => string }, number][] = [
+      ['127.0.0.1', 4],
+      ['0000:0000:0000:0000:0000:0000:0000:0000', 6],
+      ['1050:0:0:0:5:600:300c:326b', 6],
+      ['2001:252:0:1::2008:6', 6],
+      ['2001:dead:beef:1::2008:6', 6],
+      ['2001::', 6],
+      ['2001:dead::', 6],
+      ['2001:dead:beef::', 6],
+      ['2001:dead:beef:1::', 6],
+      ['ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 6],
+      ['::2001:252:1:2008:6', 6],
+      ['::2001:252:1:1.1.1.1', 6],
+      ['::2001:252:1:255.255.255.255', 6],
+      ['::1', 6],
+      ['::', 6],
+      [{ toString: () => '::2001:252:1:255.255.255.255' }, 6],
+      [{ toString: () => '127.0.0.1' }, 4]
+    ];
+
+    const invalid = [
+      'x127.0.0.1',
+      'example.com',
+      '0000:0000:0000:0000:0000:0000:0000:0000::0000',
+      ':2001:252:0:1::2008:6:',
+      ':2001:252:0:1::2008:6',
+      '2001:252:0:1::2008:6:',
+      '2001:252::1::2008:6',
+      '::2001:252:1:255.255.255.255.76',
+      '::anything',
+      '0000:0000:0000:0000:0000:0000:12345:0000',
+      '0',
+      '',
+      null,
+      123,
+      true,
+      {},
+      { toString: () => 'bla' }
+    ];
+
+    it('should recognize valid addresses', () => {
+      valid.forEach(([ip, version]) => {
+        // `as any` so we can test values convertible to string
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        assert.strictEqual(util.isIP(ip as any), version, `testing ${ip}`);
+      });
+    });
+
+    it('should not recognize invalid addresses', () => {
+      invalid.forEach(ip => {
+        // `as any` so we can test non-string values
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        assert.strictEqual(util.isIP(ip as any), 0, `testing ${ip}`);
+      });
+    });
+
+    it('should return 0 if no address is provided', () => {
+      // `as any` so we can test non-string values
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      assert.strictEqual((util.isIP as any)(), 0);
+    });
+  });
 });
