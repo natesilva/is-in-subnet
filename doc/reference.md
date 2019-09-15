@@ -38,4 +38,4 @@ Will `throw` an `Error` if the address or subnet are not valid IP addresses, or 
 * `isSpecial(address: string): boolean`
     * A combined test that checks if the given IP address matches any of the above categories (private, localhost, or reserved).
 
-The complete list can be seen in the source code: [ipRanges.ts](../src/ipRanges.ts)
+The complete list can be seen in the source code: [ipRange.ts](../src/ipRange.ts)
