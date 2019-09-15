@@ -21,6 +21,5 @@ tsconfig.json
 .eslintignore
 **/test.*
 .mocharc.json
-node-v4-test.sh
 *.sublime-*
 rollup.config.js
