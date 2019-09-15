@@ -14,9 +14,14 @@ Check if an IPv4 or IPv6 address is contained in the given [CIDR](https://en.wik
 
 `npm i is-in-subnet`
 
+### Loading in a browser from a CDN
+
 For browser use, if you prefer to load this module as a single file from a CDN:
 
-\<placeholder: coming soon\>
+- <https://cdn.jsdelivr.net/npm/is-in-subnet@latest/browser/isInSubnet.js>
+- <https://cdn.jsdelivr.net/npm/is-in-subnet@latest/browser/isInSubnet.min.js>
+
+The module is loaded as a global named `isInSubnet`.
 
 ## Usage
 
@@ -31,6 +36,18 @@ console.log(isInSubnet('2001:db8:f53a::1', '2001:db8:f531::1:1/44')); // true
 ```
 
 ## More ways to use it
+
+### `check` is an alias for `isInSubnet`
+
+The `check` function is an alias for the `isInSubnet` function. This makes browser usage a
+bit nicer:
+
+```javascript
+// if you don’t like this syntax in the browser:
+console.log(isInSubnet.isInSubnet('10.5.0.1', '10.4.5.0/16'));
+// you may use this instead:
+console.log(isInSubnet.check('10.5.0.1', '10.4.5.0/16'));
+```
 
 ### Test multiple subnets at once
 

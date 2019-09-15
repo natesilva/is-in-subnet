@@ -7,8 +7,8 @@
   "scripts": {
     "clean": "del-cli build",
     "build": "tsc",
-    "build-browser": "browserify build/src/index.js -o browser/isInSubnet.js",
-    "build-browser-min": "browserify build/src/index.js -p tinyify -o browser/isInSubnet.min.js",
+    "build-browser": "browserify build/src/index.js -s isInSubnet -o browser/isInSubnet.js",
+    "build-browser-min": "browserify build/src/index.js -p tinyify -s isInSubnet -o browser/isInSubnet.min.js",
     "browserify": "npm run clean && npm run build && npm run build-browser && npm run build-browser-min",
     "prepare": "npm run clean && npm run build && npm run browserify",
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\"",

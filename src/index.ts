@@ -102,3 +102,5 @@ export function isSpecial(address: string) {
 }
 
 export { IPv4, IPv6 };
+
+export const check = isInSubnet;
