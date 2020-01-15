@@ -16,7 +16,9 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
   if (!Array.isArray(subnetOrSubnets)) {
     return isInSubnet(address, [subnetOrSubnets]);
   }
-
+  if (!util.isIP(address)) {
+    throw new Error(`not a valid IPv4 or IPv6 address: ${address}`);
+  }
   const subnetsByVersion = subnetOrSubnets.reduce(
     (acc, subnet) => {
       const ip = subnet.split('/')[0];
