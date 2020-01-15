@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "del-cli build",
     "build": "tsc && rollup --config",
-    "prepare": "npm run clean && npm run build",
+    "prepare": "contributors && npm run clean && npm run build",
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\"",
     "lint": "eslint --ext .ts .",
     "test": "mocha \"./test/**/*.ts\"",
@@ -29,6 +29,7 @@
   "license": "MIT",
   "author": "Nate Silva <nate@natesilva.com>",
   "devDependencies": {
+    "@mocha/contributors": "^1.0.4",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.13",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
@@ -47,5 +48,15 @@
     "rollup-plugin-uglify": "^6.0.4",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.4"
-  }
+  },
+  "@mocha/contributors": {
+    "exclude": [
+      "Nate Silva <natesilva@users.noreply.github.com>"
+    ]
+  },
+  "contributors": [
+    "dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "Nate Silva <nate@natesilva.com>",
+    "Spencer Wilson <spencer.wilson@optimizely.com>"
+  ]
 }
