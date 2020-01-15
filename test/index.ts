@@ -96,9 +96,4 @@ describe('general tests', () => {
       )
     );
   });
-
-  it('should throw on invalid addresses', () => {
-    assert.throws(() => isInSubnet('1.2.233333.4', '2001:db8::/32'));
-    assert.throws(() => isInSubnet('11:22:33:44:55', '2001:db8::/32'));
-  });
 });
