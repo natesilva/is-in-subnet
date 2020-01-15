@@ -83,4 +83,17 @@ describe('general tests', () => {
     assert.strictEqual(isSpecial('::'), true);
     assert.strictEqual(isSpecial('::ffff:127.0.0.1'), true);
   });
+
+  it('should throw on invalid subnets', () => {
+    assert.throws(() => isInSubnet('1.3.3.4', '1.352352352/32'));
+    assert.throws(() =>
+      isInSubnet('::ffff:1.3.3.4', '11:22:33:44:55:66:77:88:99:1010/32')
+    );
+    assert.throws(() =>
+      isInSubnet(
+        '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+        '11:22:33:44:55:66:77:88:99:1010/32'
+      )
+    );
+  });
 });
