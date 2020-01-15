@@ -40,8 +40,10 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
 
   if (util.isIPv6(address)) {
     return IPv6.isInSubnet(address, subnetsByVersion[6]);
-  } else {
+  } else if (util.isIPv4(address)) {
     return IPv4.isInSubnet(address, subnetsByVersion[4]);
+  } else {
+    throw new Error(`address is not valid as v4 or v6: ${address}`);
   }
 }
 
