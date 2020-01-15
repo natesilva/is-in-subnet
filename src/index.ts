@@ -9,8 +9,8 @@ export { IPv4, IPv6 };
  * Test if the given IP address is contained in the specified subnet.
  * @param address the IPv4 or IPv6 address to check
  * @param subnet the IPv4 or IPv6 CIDR to test (or an array of them)
- * @throws if any of the address or subnet(s) are not valid IP addresses, or the CIDR prefix length
- *  is not valid
+ * @throws if any of the address or subnet(s) are not valid IP addresses, or the CIDR
+ *  prefix length is not valid
  */
 export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
   if (!Array.isArray(subnetOrSubnets)) {
