@@ -9,38 +9,41 @@ export { IPv4, IPv6 };
  * Test if the given IP address is contained in the specified subnet.
  * @param address the IPv4 or IPv6 address to check
  * @param subnet the IPv4 or IPv6 CIDR to test (or an array of them)
- * @throws if the address or subnet are not valid IP addresses, or the CIDR prefix length
- *  is not valid
+ * @throws if any of the address or subnet(s) are not valid IP addresses, or the CIDR
+ *  prefix length is not valid
  */
 export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
   if (!Array.isArray(subnetOrSubnets)) {
     return isInSubnet(address, [subnetOrSubnets]);
   }
+  if (!util.isIP(address)) {
+    throw new Error(`not a valid IPv4 or IPv6 address: ${address}`);
+  }
+  const subnetsByVersion = subnetOrSubnets.reduce(
+    (acc, subnet) => {
+      const ip = subnet.split('/')[0];
+      (acc[util.isIP(ip)] as string[]).push(subnet);
+      return acc;
+    },
+    { 0: [], 4: [], 6: [] }
+  );
+
+  if (subnetsByVersion[0].length !== 0) {
+    throw new Error(`some subnets are not valid IP addresses: ${subnetsByVersion[0]}`);
+  }
 
   // for mapped IPv4 addresses, compare against both IPv6 and IPv4 subnets
   if (util.isIPv6(address) && IPv6.isIPv4MappedAddress(address)) {
     return (
-      IPv6.isInSubnet(
-        address,
-        subnetOrSubnets.filter(subnet => util.isIPv6(subnet.split('/')[0]))
-      ) ||
-      IPv4.isInSubnet(
-        IPv6.extractMappedIpv4(address),
-        subnetOrSubnets.filter(subnet => util.isIPv4(subnet.split('/')[0]))
-      )
+      IPv6.isInSubnet(address, subnetsByVersion[6]) ||
+      IPv4.isInSubnet(IPv6.extractMappedIpv4(address), subnetsByVersion[4])
     );
   }
 
   if (util.isIPv6(address)) {
-    return IPv6.isInSubnet(
-      address,
-      subnetOrSubnets.filter(subnet => util.isIPv6(subnet.split('/')[0]))
-    );
+    return IPv6.isInSubnet(address, subnetsByVersion[6]);
   } else {
-    return IPv4.isInSubnet(
-      address,
-      subnetOrSubnets.filter(subnet => util.isIPv4(subnet.split('/')[0]))
-    );
+    return IPv4.isInSubnet(address, subnetsByVersion[4]);
   }
 }
 
