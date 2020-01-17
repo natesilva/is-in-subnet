@@ -28,15 +28,37 @@ function ipv4ToLong(ip: string) {
  *  is not valid
  */
 export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
+  return createChecker(subnetOrSubnets)(address);
+}
+
+/**
+ * The functional version, creates a checking function that takes an IPv4 Address and
+ * returns whether or not it is contained in (one of) the subnet(s).
+ * @param subnet the IPv4 CIDR to test (or an array of them)
+ * @throws if the subnet is not a valid IP addresses, or the CIDR prefix length
+ *  is not valid
+ */
+export function createChecker(
+  subnetOrSubnets: string | string[]
+): (address: string) => boolean {
   if (Array.isArray(subnetOrSubnets)) {
-    return subnetOrSubnets.some(subnet => isInSubnet(address, subnet));
+    const checks = subnetOrSubnets.map(subnet => createLongChecker(subnet));
+    return address => {
+      const addressLong = ipv4ToLong(address);
+      return checks.some(check => check(addressLong));
+    };
   }
+  const check = createLongChecker(subnetOrSubnets);
+  return address => {
+    const addressLong = ipv4ToLong(address);
+    return check(addressLong);
+  };
+}
 
-  const subnet = subnetOrSubnets;
-
+// this is the most optimised checker.
+function createLongChecker(subnet: string): (addressLong: number) => boolean {
   const [subnetAddress, prefixLengthString] = subnet.split('/');
   const prefixLength = parseInt(prefixLengthString, 10);
-
   if (!subnetAddress || !Number.isInteger(prefixLength)) {
     throw new Error(`not a valid IPv4 subnet: ${subnet}`);
   }
@@ -45,33 +67,46 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
     throw new Error(`not a valid IPv4 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
-  // the next two lines throw if the addresses are not valid IPv4 addresses
   const subnetLong = ipv4ToLong(subnetAddress);
-  const addressLong = ipv4ToLong(address);
+  return addressLong => {
+    if (prefixLength === 0) {
+      return true;
+    }
+    const subnetPrefix = subnetLong >> (32 - prefixLength);
+    const addressPrefix = addressLong >> (32 - prefixLength);
 
-  if (prefixLength === 0) {
-    return true;
+    return subnetPrefix === addressPrefix;
+  };
+}
+
+// cache these special subnet checkers
+const specialNetsCache: Record<string, (address: string) => boolean> = {};
+function getSpecialChecker(
+  kind: 'private' | 'localhost' | 'reserved' | 'special'
+): (address: string) => boolean {
+  if (kind in specialNetsCache === false) {
+    const subnets =
+      kind === 'special'
+        ? [...ipRange.private.ipv4, ...ipRange.localhost.ipv4, ...ipRange.reserved.ipv4]
+        : ipRange[kind].ipv4;
+    specialNetsCache[kind] = createChecker(subnets);
   }
-
-  const subnetPrefix = subnetLong >> (32 - prefixLength);
-  const addressPrefix = addressLong >> (32 - prefixLength);
-
-  return subnetPrefix === addressPrefix;
+  return specialNetsCache[kind];
 }
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return isInSubnet(address, ipRange.private.ipv4);
+  return getSpecialChecker('private')(address);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return isInSubnet(address, ipRange.localhost.ipv4);
+  return getSpecialChecker('localhost')(address);
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return isInSubnet(address, ipRange.reserved.ipv4);
+  return getSpecialChecker('reserved')(address);
 }
 
 /**
@@ -79,5 +114,5 @@ export function isReserved(address: string) {
  * localhost)
  */
 export function isSpecial(address: string) {
-  return isPrivate(address) || isLocalhost(address) || isReserved(address);
+  return getSpecialChecker('special')(address);
 }

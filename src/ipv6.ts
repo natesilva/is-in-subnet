@@ -121,19 +121,108 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
   return true;
 }
 
+/**
+ * Create a function to test if a given IPv6 address is contained in the specified subnet.
+ * @param subnet the IPv6 CIDR to test (or an array of them)
+ * @throws if the subnet(s) are not valid IP addresses, or the CIDR prefix lengths
+ *  are not valid
+ */
+export function createChecker(
+  subnetOrSubnets: string | string[]
+): (address: string) => boolean {
+  if (Array.isArray(subnetOrSubnets)) {
+    const checks = subnetOrSubnets.map(subnet => createSegmentChecker(subnet));
+    return address => {
+      const segments = getIpv6Segments(address);
+      return checks.some(check => check(segments));
+    };
+  }
+  const check = createSegmentChecker(subnetOrSubnets);
+  return address => {
+    const segments = getIpv6Segments(address);
+    return check(segments);
+  };
+}
+
+// This creates the last function that works on the most deconstructed data
+function createSegmentChecker(subnet: string): (segments: string[]) => boolean {
+  const [subnetAddress, prefixLengthString] = subnet.split('/');
+  const prefixLength = parseInt(prefixLengthString, 10);
+
+  if (!subnetAddress || !Number.isInteger(prefixLength)) {
+    throw new Error(`not a valid IPv6 CIDR subnet: ${subnet}`);
+  }
+
+  if (prefixLength < 0 || prefixLength > 128) {
+    throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
+  }
+
+  // the next line throws if the address is not a valid IPv6 addresse
+  const subnetSegments = getIpv6Segments(subnetAddress);
+
+  return addressSegments => {
+    for (let i = 0; i < 8; ++i) {
+      const bitCount = Math.min(prefixLength - i * 16, 16);
+
+      if (bitCount <= 0) {
+        break;
+      }
+
+      const subnetPrefix =
+        ((subnetSegments[i] && parseInt(subnetSegments[i], 16)) || 0) >> (16 - bitCount);
+
+      const addressPrefix =
+        ((addressSegments[i] && parseInt(addressSegments[i], 16)) || 0) >>
+        (16 - bitCount);
+
+      if (subnetPrefix !== addressPrefix) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+}
+
+// cache these special subnet checkers
+const specialNetsCache: Record<string, (address: string) => boolean> = {};
+function getSpecialChecker(
+  kind: 'private' | 'localhost' | 'reserved' | 'special' | 'mapped'
+): (address: string) => boolean {
+  if (kind in specialNetsCache === false) {
+    let subnets;
+    switch (kind) {
+      case 'special':
+        subnets = [
+          ...ipRange.private.ipv6,
+          ...ipRange.localhost.ipv6,
+          ...ipRange.reserved.ipv6
+        ];
+        break;
+      case 'mapped':
+        subnets = ['::ffff:0:0/96'];
+        break;
+      default:
+        subnets = ipRange[kind].ipv6;
+    }
+    specialNetsCache[kind] = createChecker(subnets);
+  }
+  return specialNetsCache[kind];
+}
+
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return isInSubnet(address, ipRange.private.ipv6);
+  return getSpecialChecker('private')(address);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return isInSubnet(address, ipRange.localhost.ipv6);
+  return getSpecialChecker('localhost')(address);
 }
 
 /** Test if the given IP address is an IPv4 address mapped onto IPv6 */
 export function isIPv4MappedAddress(address: string) {
-  if (isInSubnet(address, '::ffff:0:0/96')) {
+  if (getSpecialChecker('mapped')(address)) {
     const matches = address.match(mappedIpv4);
     return Boolean(matches && util.isIPv4(matches[2]));
   }
@@ -142,7 +231,7 @@ export function isIPv4MappedAddress(address: string) {
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return isInSubnet(address, ipRange.reserved.ipv6);
+  return getSpecialChecker('reserved')(address);
 }
 
 /**
@@ -150,5 +239,5 @@ export function isReserved(address: string) {
  * localhost)
  */
 export function isSpecial(address: string) {
-  return isPrivate(address) || isLocalhost(address) || isReserved(address);
+  return getSpecialChecker('special')(address);
 }
