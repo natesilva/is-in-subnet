@@ -81,32 +81,29 @@ function createLongChecker(subnet: string): (addressLong: number) => boolean {
 
 // cache these special subnet checkers
 const specialNetsCache: Record<string, (address: string) => boolean> = {};
-function getSpecialChecker(
-  kind: 'private' | 'localhost' | 'reserved' | 'special'
-): (address: string) => boolean {
-  if (kind in specialNetsCache === false) {
-    const subnets =
-      kind === 'special'
-        ? [...ipRange.private.ipv4, ...ipRange.localhost.ipv4, ...ipRange.reserved.ipv4]
-        : ipRange[kind].ipv4;
-    specialNetsCache[kind] = createChecker(subnets);
-  }
-  return specialNetsCache[kind];
-}
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return getSpecialChecker('private')(address);
+  if ('private' in specialNetsCache === false) {
+    specialNetsCache['private'] = createChecker(ipRange.private.ipv4);
+  }
+  return specialNetsCache['private'](address);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return getSpecialChecker('localhost')(address);
+  if ('localhost' in specialNetsCache === false) {
+    specialNetsCache['localhost'] = createChecker(ipRange.localhost.ipv4);
+  }
+  return specialNetsCache['localhost'](address);
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return getSpecialChecker('reserved')(address);
+  if ('reserved' in specialNetsCache === false) {
+    specialNetsCache['reserved'] = createChecker(ipRange.reserved.ipv4);
+  }
+  return specialNetsCache['reserved'](address);
 }
 
 /**
@@ -114,5 +111,12 @@ export function isReserved(address: string) {
  * localhost)
  */
 export function isSpecial(address: string) {
-  return getSpecialChecker('special')(address);
+  if ('special' in specialNetsCache === false) {
+    specialNetsCache['special'] = createChecker([
+      ...ipRange.private.ipv4,
+      ...ipRange.localhost.ipv4,
+      ...ipRange.reserved.ipv4
+    ]);
+  }
+  return specialNetsCache['special'](address);
 }

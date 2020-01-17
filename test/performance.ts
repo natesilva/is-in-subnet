@@ -15,6 +15,13 @@ describe('performance', function() {
   // tests in this suite can take a moment, don’t warn about that
   this.slow(4000);
 
+  // we keep this cache outside the tests, as it should be global
+  // but we reset it each time.
+  let checkerCache: Map<string, ReturnType<typeof createChecker>>;
+  this.beforeEach(() => {
+    checkerCache = new Map();
+  });
+
   it('should be able to test 100,000 ipv4 addresses in less than 4 seconds', () => {
     // approximately 100K test runs
     const cycleCount = Math.floor(100_000 / ipv4fixtures.length);
@@ -50,9 +57,6 @@ describe('performance', function() {
     const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);
     console.log(`average IPv6 performance was ${average.toLocaleString()} per second`);
   });
-
-  // we keep this cache outside the tests, as it should be global
-  const checkerCache = new Map<string, ReturnType<typeof createChecker>>();
 
   it('should be able to test 100,000 ipv4 addresses in less than 4 seconds using `createChecker`', () => {
     // approximately 100K test runs

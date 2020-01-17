@@ -79,46 +79,7 @@ function getIpv6Segments(ip: string): string[] {
  *  is not valid
  */
 export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
-  if (Array.isArray(subnetOrSubnets)) {
-    return subnetOrSubnets.some(subnet => isInSubnet(address, subnet));
-  }
-
-  const subnet = subnetOrSubnets;
-
-  const [subnetAddress, prefixLengthString] = subnet.split('/');
-  const prefixLength = parseInt(prefixLengthString, 10);
-
-  if (!subnetAddress || !Number.isInteger(prefixLength)) {
-    throw new Error(`not a valid IPv6 CIDR subnet: ${subnet}`);
-  }
-
-  if (prefixLength < 0 || prefixLength > 128) {
-    throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
-  }
-
-  // the next two lines throw if the addresses are not valid IPv6 addresses
-  const addressSegments = getIpv6Segments(address);
-  const subnetSegments = getIpv6Segments(subnetAddress);
-
-  for (let i = 0; i < 8; ++i) {
-    const bitCount = Math.min(prefixLength - i * 16, 16);
-
-    if (bitCount <= 0) {
-      break;
-    }
-
-    const subnetPrefix =
-      ((subnetSegments[i] && parseInt(subnetSegments[i], 16)) || 0) >> (16 - bitCount);
-
-    const addressPrefix =
-      ((addressSegments[i] && parseInt(addressSegments[i], 16)) || 0) >> (16 - bitCount);
-
-    if (subnetPrefix !== addressPrefix) {
-      return false;
-    }
-  }
-
-  return true;
+  return createChecker(subnetOrSubnets)(address);
 }
 
 /**
@@ -186,43 +147,29 @@ function createSegmentChecker(subnet: string): (segments: string[]) => boolean {
 
 // cache these special subnet checkers
 const specialNetsCache: Record<string, (address: string) => boolean> = {};
-function getSpecialChecker(
-  kind: 'private' | 'localhost' | 'reserved' | 'special' | 'mapped'
-): (address: string) => boolean {
-  if (kind in specialNetsCache === false) {
-    let subnets;
-    switch (kind) {
-      case 'special':
-        subnets = [
-          ...ipRange.private.ipv6,
-          ...ipRange.localhost.ipv6,
-          ...ipRange.reserved.ipv6
-        ];
-        break;
-      case 'mapped':
-        subnets = ['::ffff:0:0/96'];
-        break;
-      default:
-        subnets = ipRange[kind].ipv6;
-    }
-    specialNetsCache[kind] = createChecker(subnets);
-  }
-  return specialNetsCache[kind];
-}
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return getSpecialChecker('private')(address);
+  if ('private' in specialNetsCache === false) {
+    specialNetsCache['private'] = createChecker(ipRange.private.ipv6);
+  }
+  return specialNetsCache['private'](address);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return getSpecialChecker('localhost')(address);
+  if ('localhost' in specialNetsCache === false) {
+    specialNetsCache['localhost'] = createChecker(ipRange.localhost.ipv6);
+  }
+  return specialNetsCache['localhost'](address);
 }
 
 /** Test if the given IP address is an IPv4 address mapped onto IPv6 */
 export function isIPv4MappedAddress(address: string) {
-  if (getSpecialChecker('mapped')(address)) {
+  if ('mapped' in specialNetsCache === false) {
+    specialNetsCache['mapped'] = createChecker('::ffff:0:0/96');
+  }
+  if (specialNetsCache['mapped'](address)) {
     const matches = address.match(mappedIpv4);
     return Boolean(matches && util.isIPv4(matches[2]));
   }
@@ -231,7 +178,10 @@ export function isIPv4MappedAddress(address: string) {
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return getSpecialChecker('reserved')(address);
+  if ('reserved' in specialNetsCache === false) {
+    specialNetsCache['reserved'] = createChecker(ipRange.reserved.ipv6);
+  }
+  return specialNetsCache['reserved'](address);
 }
 
 /**
@@ -239,5 +189,12 @@ export function isReserved(address: string) {
  * localhost)
  */
 export function isSpecial(address: string) {
-  return getSpecialChecker('special')(address);
+  if ('special' in specialNetsCache === false) {
+    specialNetsCache['special'] = createChecker([
+      ...ipRange.private.ipv6,
+      ...ipRange.localhost.ipv6,
+      ...ipRange.reserved.ipv6
+    ]);
+  }
+  return specialNetsCache['special'](address);
 }
