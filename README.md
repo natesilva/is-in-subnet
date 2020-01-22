@@ -22,8 +22,8 @@ See the 📖 [Reference](doc/reference.md) page for complete documentation.
 
 This module is compatible with Browserify and other bundling tools. If you prefer to load it as a single file from a CDN:
 
-- <https://cdn.jsdelivr.net/npm/is-in-subnet@3.0.1/browser/isInSubnet.js>
-- <https://cdn.jsdelivr.net/npm/is-in-subnet@3.0.1/browser/isInSubnet.min.js>
+- <https://cdn.jsdelivr.net/npm/is-in-subnet@3/browser/isInSubnet.js>
+- <https://cdn.jsdelivr.net/npm/is-in-subnet@3/browser/isInSubnet.min.js>
 
 The module is loaded as a global named `isInSubnet`.
 
