@@ -79,12 +79,34 @@ function getIpv6Segments(ip: string): string[] {
  *  is not valid
  */
 export function isInSubnet(address: string, subnetOrSubnets: string | string[]): boolean {
+  return createChecker(subnetOrSubnets)(address);
+}
+
+/**
+ * Create a function to test if a given IPv6 address is contained in the specified subnet.
+ * @param subnet the IPv6 CIDR to test (or an array of them)
+ * @throws if the subnet(s) are not valid IP addresses, or the CIDR prefix lengths
+ *  are not valid
+ */
+export function createChecker(
+  subnetOrSubnets: string | string[]
+): (address: string) => boolean {
   if (Array.isArray(subnetOrSubnets)) {
-    return subnetOrSubnets.some(subnet => isInSubnet(address, subnet));
+    const checks = subnetOrSubnets.map(subnet => createSegmentChecker(subnet));
+    return address => {
+      const segments = getIpv6Segments(address);
+      return checks.some(check => check(segments));
+    };
   }
+  const check = createSegmentChecker(subnetOrSubnets);
+  return address => {
+    const segments = getIpv6Segments(address);
+    return check(segments);
+  };
+}
 
-  const subnet = subnetOrSubnets;
-
+// This creates the last function that works on the most deconstructed data
+function createSegmentChecker(subnet: string): (segments: string[]) => boolean {
   const [subnetAddress, prefixLengthString] = subnet.split('/');
   const prefixLength = parseInt(prefixLengthString, 10);
 
@@ -96,44 +118,58 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
     throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
-  // the next two lines throw if the addresses are not valid IPv6 addresses
-  const addressSegments = getIpv6Segments(address);
+  // the next line throws if the address is not a valid IPv6 addresse
   const subnetSegments = getIpv6Segments(subnetAddress);
 
-  for (let i = 0; i < 8; ++i) {
-    const bitCount = Math.min(prefixLength - i * 16, 16);
+  return addressSegments => {
+    for (let i = 0; i < 8; ++i) {
+      const bitCount = Math.min(prefixLength - i * 16, 16);
 
-    if (bitCount <= 0) {
-      break;
+      if (bitCount <= 0) {
+        break;
+      }
+
+      const subnetPrefix =
+        ((subnetSegments[i] && parseInt(subnetSegments[i], 16)) || 0) >> (16 - bitCount);
+
+      const addressPrefix =
+        ((addressSegments[i] && parseInt(addressSegments[i], 16)) || 0) >>
+        (16 - bitCount);
+
+      if (subnetPrefix !== addressPrefix) {
+        return false;
+      }
     }
 
-    const subnetPrefix =
-      ((subnetSegments[i] && parseInt(subnetSegments[i], 16)) || 0) >> (16 - bitCount);
-
-    const addressPrefix =
-      ((addressSegments[i] && parseInt(addressSegments[i], 16)) || 0) >> (16 - bitCount);
-
-    if (subnetPrefix !== addressPrefix) {
-      return false;
-    }
-  }
-
-  return true;
+    return true;
+  };
 }
+
+// cache these special subnet checkers
+const specialNetsCache: Record<string, (address: string) => boolean> = {};
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  return isInSubnet(address, ipRange.private.ipv6);
+  if ('private' in specialNetsCache === false) {
+    specialNetsCache['private'] = createChecker(ipRange.private.ipv6);
+  }
+  return specialNetsCache['private'](address);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  return isInSubnet(address, ipRange.localhost.ipv6);
+  if ('localhost' in specialNetsCache === false) {
+    specialNetsCache['localhost'] = createChecker(ipRange.localhost.ipv6);
+  }
+  return specialNetsCache['localhost'](address);
 }
 
 /** Test if the given IP address is an IPv4 address mapped onto IPv6 */
 export function isIPv4MappedAddress(address: string) {
-  if (isInSubnet(address, '::ffff:0:0/96')) {
+  if ('mapped' in specialNetsCache === false) {
+    specialNetsCache['mapped'] = createChecker('::ffff:0:0/96');
+  }
+  if (specialNetsCache['mapped'](address)) {
     const matches = address.match(mappedIpv4);
     return Boolean(matches && util.isIPv4(matches[2]));
   }
@@ -142,7 +178,10 @@ export function isIPv4MappedAddress(address: string) {
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  return isInSubnet(address, ipRange.reserved.ipv6);
+  if ('reserved' in specialNetsCache === false) {
+    specialNetsCache['reserved'] = createChecker(ipRange.reserved.ipv6);
+  }
+  return specialNetsCache['reserved'](address);
 }
 
 /**
@@ -150,5 +189,12 @@ export function isReserved(address: string) {
  * localhost)
  */
 export function isSpecial(address: string) {
-  return isPrivate(address) || isLocalhost(address) || isReserved(address);
+  if ('special' in specialNetsCache === false) {
+    specialNetsCache['special'] = createChecker([
+      ...ipRange.private.ipv6,
+      ...ipRange.localhost.ipv6,
+      ...ipRange.reserved.ipv6
+    ]);
+  }
+  return specialNetsCache['special'](address);
 }

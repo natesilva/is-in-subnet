@@ -59,6 +59,15 @@ console.log(isInSubnet.check('10.5.0.1', '10.4.5.0/16'));
 const inAnySubnet = isInSubnet('10.5.0.1', ['10.4.5.0/16', '192.168.1.0/24']);
 ```
 
+### Amortise the parsing cost using a functional version
+
+- `createChecker(subnetOrSubnets)` returns a function used to check an address
+
+```javascript
+const checker = createChecker(['10.4.5.0/16', '192.168.1.0/24']);
+console.log(checker('10.5.0.1')); // true
+```
+
 ### Test for special types of addresses
 
 - `isPrivate(address)` — Private addresses (like `192.168.0.0`)

@@ -13,6 +13,16 @@ Test if the given IP address is contained in the specified subnet.
 
 Will `throw` an `Error` if the address or subnet are not valid IP addresses, or the CIDR prefix length is not valid.
 
+Or the functional version:
+
+`createChecker(subnetOrSubnets: string | string[]): (address: string) => boolean`
+
+Create a function from one or more subnet, to check an if an address belongs to any of them.
+
+When checking many subnets together many times, it pays to amortise as much of the upfront processing as possible. 
+
+This functional version will `throw` an `Error` if the subnet(s) given are invalid, and the returned function will `throw` an if the given address is not valid.
+
 ## Checking if a string represents a valid IP address
 
 * `isIPv4(s: string): boolean`
