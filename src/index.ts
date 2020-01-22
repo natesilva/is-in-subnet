@@ -48,6 +48,7 @@ export function createChecker(
     if (!util.isIP(address)) {
       throw new Error(`not a valid IPv4 or IPv6 address: ${address}`);
     }
+
     // for mapped IPv4 addresses, compare against both IPv6 and IPv4 subnets
     if (util.isIPv6(address) && IPv6.isIPv4MappedAddress(address)) {
       return check6(address) || check4(IPv6.extractMappedIpv4(address));
