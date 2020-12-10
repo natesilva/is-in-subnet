@@ -1,7 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript';
-import { uglify } from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 
 export default [
   // browser-friendly UMD build
@@ -12,9 +12,9 @@ export default [
       file: 'browser/isInSubnet.js',
       format: 'umd',
       noConflict: true,
-      sourcemap: true
+      sourcemap: true,
     },
-    plugins: [resolve(), commonjs(), typescript()]
+    plugins: [resolve(), commonjs(), typescript()],
   },
 
   // browser-friendly UMD build (minified)
@@ -25,8 +25,8 @@ export default [
       file: 'browser/isInSubnet.min.js',
       format: 'umd',
       noConflict: true,
-      sourcemap: true
+      sourcemap: true,
     },
-    plugins: [resolve(), commonjs(), typescript(), uglify()]
-  }
+    plugins: [resolve(), commonjs(), typescript(), terser()],
+  },
 ];
