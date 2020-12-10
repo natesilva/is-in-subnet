@@ -15,7 +15,7 @@
     "coverage": "nyc --reporter lcov --reporter text --extension .ts mocha \"./test/**/*.ts\""
   },
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=10.23.0"
   },
   "repository": "natesilva/is-in-subnet",
   "keywords": [
