@@ -33,6 +33,8 @@ describe('IPv4 tests', () => {
     assert.throws(() => IPv4.isInSubnet('10.5.0.1', '10.5.0.1'));
     assert.throws(() => IPv4.isInSubnet('10.5.0.1', '0.0.0.0/-1'));
     assert.throws(() => IPv4.isInSubnet('10.5.0.1', '0.0.0.0/33'));
+    // first segment of subnet is octal-like, should throw
+    assert.throws(() => IPv4.isInSubnet('10.5.0.1', '010.0.0.0/8'));
   });
 
   it('should throw on invalid ipv4', () => {

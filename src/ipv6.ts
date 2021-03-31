@@ -118,7 +118,7 @@ function createSegmentChecker(subnet: string): (segments: string[]) => boolean {
     throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
   }
 
-  // the next line throws if the address is not a valid IPv6 addresse
+  // the next line throws if the address is not a valid IPv6 address
   const subnetSegments = getIpv6Segments(subnetAddress);
 
   return addressSegments => {

@@ -36,7 +36,10 @@ describe('util', () => {
       true,
       {},
       { toString: () => '127.0.0.1' },
-      { toString: () => 'bla' }
+      { toString: () => 'bla' },
+      '8.8.8.08', // IPv4, last segment is octal-like, should throw
+      '0127.0.0.1', // IPv4, first segment is octal-like, should throw
+      '::ffff:0127.0.0.1', // mapped IPv4, first segment is octal-like, should throw
     ];
 
     it('should recognize valid ipv6 addresses', () => {
@@ -82,7 +85,9 @@ describe('util', () => {
       {},
       { toString: () => '::2001:252:1:255.255.255.255' },
       { toString: () => 'bla' },
-      '2001:252:0:1::2008:6'
+      '2001:252:0:1::2008:6',
+      '8.8.8.08', // last segment is octal-like, should throw
+      '0127.0.0.1', // first segment is octal-like, should throw
     ];
 
     it('should recognize valid ipv4 addresses', () => {
