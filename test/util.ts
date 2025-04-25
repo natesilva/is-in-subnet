@@ -1,9 +1,9 @@
-import * as assert from "assert";
-import { describe } from "mocha";
+import { expect } from "vitest";
+import { suite, test } from "vitest";
 import * as util from "../src/util";
 
-describe("util", () => {
-  describe("isIPv6", () => {
+suite("util", () => {
+  suite("isIPv6", () => {
     const valid = [
       "0000:0000:0000:0000:0000:0000:0000:0000",
       "1050:0:0:0:5:600:300c:326b",
@@ -42,30 +42,30 @@ describe("util", () => {
       "::ffff:0127.0.0.1", // mapped IPv4, first segment is octal-like, should throw
     ];
 
-    it("should recognize valid ipv6 addresses", () => {
+    test("should recognize valid ipv6 addresses", () => {
       valid.forEach((ip) => {
         // `as any` so we can test values convertible to string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        assert.strictEqual(util.isIPv6(ip as any), true, `testing ${ip}`);
+        expect(util.isIPv6(ip as any)).toBe(true);
       });
     });
 
-    it("should not recognize invalid ipv6 addresses", () => {
+    test("should not recognize invalid ipv6 addresses", () => {
       invalid.forEach((ip) => {
         // `as any` so we can test non-string values
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        assert.strictEqual(util.isIPv6(ip as any), false, `testing ${ip}`);
+        expect(util.isIPv6(ip as any)).toBe(false);
       });
     });
 
-    it("should return false if no address is provided", () => {
+    test("should return false if no address is provided", () => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      assert.strictEqual((util.isIPv6 as any)(), false);
+      expect((util.isIPv6 as any)()).toBe(false);
     });
   });
 
-  describe("isIPv4", () => {
+  suite("isIPv4", () => {
     const valid = [
       "0.0.0.0",
       "255.255.255.255",
@@ -90,30 +90,30 @@ describe("util", () => {
       "0127.0.0.1", // first segment is octal-like, should throw
     ];
 
-    it("should recognize valid ipv4 addresses", () => {
+    test("should recognize valid ipv4 addresses", () => {
       valid.forEach((ip) => {
         // `as any` so we can test values convertible to string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        assert.strictEqual(util.isIPv4(ip as any), true, `testing ${ip}`);
+        expect(util.isIPv4(ip as any)).toBe(true);
       });
     });
 
-    it("should not recognize invalid ipv4 addresses", () => {
+    test("should not recognize invalid ipv4 addresses", () => {
       invalid.forEach((ip) => {
         // `as any` so we can test non-string values
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        assert.strictEqual(util.isIPv4(ip as any), false, `testing ${ip}`);
+        expect(util.isIPv4(ip as any)).toBe(false);
       });
     });
 
-    it("should return false if no address is provided", () => {
+    test("should return false if no address is provided", () => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      assert.strictEqual((util.isIPv4 as any)(), false);
+      expect((util.isIPv4 as any)()).toBe(false);
     });
   });
 
-  describe("isIP", () => {
+  suite("isIP", () => {
     const valid: [string | { toString: () => string }, number][] = [
       ["127.0.0.1", 4],
       ["0000:0000:0000:0000:0000:0000:0000:0000", 6],
@@ -154,26 +154,26 @@ describe("util", () => {
       { toString: () => "bla" },
     ];
 
-    it("should recognize valid addresses", () => {
+    test("should recognize valid addresses", () => {
       valid.forEach(([ip, version]) => {
         // `as any` so we can test values convertible to string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        assert.strictEqual(util.isIP(ip as any), version, `testing ${ip}`);
+        expect(util.isIP(ip as any)).toBe(version);
       });
     });
 
-    it("should not recognize invalid addresses", () => {
+    test("should not recognize invalid addresses", () => {
       invalid.forEach((ip) => {
         // `as any` so we can test non-string values
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        assert.strictEqual(util.isIP(ip as any), 0, `testing ${ip}`);
+        expect(util.isIP(ip as any)).toBe(0);
       });
     });
 
-    it("should return 0 if no address is provided", () => {
+    test("should return 0 if no address is provided", () => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      assert.strictEqual((util.isIP as any)(), 0);
+      expect((util.isIP as any)()).toBe(0);
     });
   });
 });

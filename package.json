@@ -3,14 +3,14 @@
   "version": "4.0.1",
   "description": "Check if an IPv4 or IPv6 address is contained in the given CIDR subnet",
   "scripts": {
-    "clean": "del-cli dist .nyc_output browser",
+    "clean": "del-cli dist coverage browser",
     "build": "tsc",
     "prepublishOnly": "contributors && npm run clean && npm run build",
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\"",
     "lint": "eslint .",
-    "test": "mocha \"./test/**/*.ts\"",
-    "test:watch": "mocha \"./test/**/*.ts\"  -w --watch-extensions ts",
-    "coverage": "nyc --reporter lcov --reporter text --extension .ts mocha \"./test/**/*.ts\""
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "coverage": "vitest run --coverage"
   },
   "engines": {
     "node": ">=10.23.0"
@@ -28,20 +28,17 @@
   "author": "Nate Silva <nate@natesilva.com>",
   "devDependencies": {
     "@eslint/js": "^9.25.1",
-    "@mocha/contributors": "^1.0.4",
     "@tsconfig/node-lts": "^22.0.1",
-    "@types/mocha": "^8.2.0",
     "@types/node": "^22.15.0",
+    "@vitest/coverage-v8": "^3.1.2",
     "del-cli": "^6.0.0",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
-    "mocha": "^8.2.1",
-    "nyc": "^15.1.0",
     "prettier": "^3.5.3",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.31.0"
+    "typescript-eslint": "^8.31.0",
+    "vitest": "^3.1.2"
   },
   "@mocha/contributors": {
     "exclude": [
