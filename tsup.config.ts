@@ -16,6 +16,6 @@ export default defineConfig([
     clean: true,
     format: ["iife"],
     target: "es2015",
-    globalName: "isInSubnet",
+    globalName: "IsInSubnet",
   },
 ]);
