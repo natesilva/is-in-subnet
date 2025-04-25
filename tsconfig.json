@@ -1,15 +1,10 @@
 {
-  "include": ["src/**/*", "test/**/*"],
+  "extends": "@tsconfig/node-lts/tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "build",
-    "target": "ES5",
-    "lib": ["ES5", "ES2015.Core", "ES2015.Promise", "ES2015.Collection"],
-    "module": "commonjs",
+    "outDir": "./dist/esm",
     "sourceMap": true,
-    "noImplicitReturns": true,
     "declaration": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "rootDir": "."
+  },
+  "exclude": ["node_modules", "dist", "website", "**/examples"]
 }

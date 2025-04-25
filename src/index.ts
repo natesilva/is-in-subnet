@@ -1,8 +1,8 @@
-import * as IPv4 from './ipv4';
-import * as IPv6 from './ipv6';
-import * as util from './util';
+import * as IPv4 from "./ipv4";
+import * as IPv6 from "./ipv6";
+import * as util from "./util";
 
-export { isIP, isIPv4, isIPv6 } from './util';
+export { isIP, isIPv4, isIPv6 } from "./util";
 export { IPv4, IPv6 };
 
 /**
@@ -22,7 +22,7 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
  *  prefix length is not valid
  */
 export function createChecker(
-  subnetOrSubnets: string | string[]
+  subnetOrSubnets: string | string[],
 ): (address: string) => boolean {
   if (!Array.isArray(subnetOrSubnets)) {
     return createChecker([subnetOrSubnets]);
@@ -30,11 +30,11 @@ export function createChecker(
 
   const subnetsByVersion = subnetOrSubnets.reduce(
     (acc, subnet) => {
-      const ip = subnet.split('/')[0];
+      const ip = subnet.split("/")[0];
       (acc[util.isIP(ip)] as string[]).push(subnet);
       return acc;
     },
-    { 0: [], 4: [], 6: [] }
+    { 0: [], 4: [], 6: [] },
   );
 
   if (subnetsByVersion[0].length !== 0) {
@@ -44,7 +44,7 @@ export function createChecker(
   const check4 = IPv4.createChecker(subnetsByVersion[4]);
   const check6 = IPv6.createChecker(subnetsByVersion[6]);
 
-  return address => {
+  return (address) => {
     if (!util.isIP(address)) {
       throw new Error(`not a valid IPv4 or IPv6 address: ${address}`);
     }

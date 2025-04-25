@@ -1,5 +1,5 @@
-import * as util from './util';
-import ipRange from './ipRange';
+import * as util from "./util";
+import ipRange from "./ipRange";
 
 /**
  * Given an IPv4 address, convert it to a 32-bit long integer.
@@ -10,7 +10,7 @@ function ipv4ToLong(ip: string) {
   if (!util.isIPv4(ip)) {
     throw new Error(`not a valid IPv4 address: ${ip}`);
   }
-  const octets = ip.split('.');
+  const octets = ip.split(".");
   return (
     ((parseInt(octets[0], 10) << 24) +
       (parseInt(octets[1], 10) << 16) +
@@ -39,17 +39,17 @@ export function isInSubnet(address: string, subnetOrSubnets: string | string[]):
  *  is not valid
  */
 export function createChecker(
-  subnetOrSubnets: string | string[]
+  subnetOrSubnets: string | string[],
 ): (address: string) => boolean {
   if (Array.isArray(subnetOrSubnets)) {
-    const checks = subnetOrSubnets.map(subnet => createLongChecker(subnet));
-    return address => {
+    const checks = subnetOrSubnets.map((subnet) => createLongChecker(subnet));
+    return (address) => {
       const addressLong = ipv4ToLong(address);
-      return checks.some(check => check(addressLong));
+      return checks.some((check) => check(addressLong));
     };
   }
   const check = createLongChecker(subnetOrSubnets);
-  return address => {
+  return (address) => {
     const addressLong = ipv4ToLong(address);
     return check(addressLong);
   };
@@ -57,7 +57,7 @@ export function createChecker(
 
 // this is the most optimised checker.
 function createLongChecker(subnet: string): (addressLong: number) => boolean {
-  const [subnetAddress, prefixLengthString] = subnet.split('/');
+  const [subnetAddress, prefixLengthString] = subnet.split("/");
   const prefixLength = parseInt(prefixLengthString, 10);
   if (!subnetAddress || !Number.isInteger(prefixLength)) {
     throw new Error(`not a valid IPv4 subnet: ${subnet}`);
@@ -68,7 +68,7 @@ function createLongChecker(subnet: string): (addressLong: number) => boolean {
   }
 
   const subnetLong = ipv4ToLong(subnetAddress);
-  return addressLong => {
+  return (addressLong) => {
     if (prefixLength === 0) {
       return true;
     }
@@ -84,26 +84,26 @@ const specialNetsCache: Record<string, (address: string) => boolean> = {};
 
 /** Test if the given IP address is a private/internal IP address. */
 export function isPrivate(address: string) {
-  if ('private' in specialNetsCache === false) {
-    specialNetsCache['private'] = createChecker(ipRange.private.ipv4);
+  if ("private" in specialNetsCache === false) {
+    specialNetsCache["private"] = createChecker(ipRange.private.ipv4);
   }
-  return specialNetsCache['private'](address);
+  return specialNetsCache["private"](address);
 }
 
 /** Test if the given IP address is a localhost address. */
 export function isLocalhost(address: string) {
-  if ('localhost' in specialNetsCache === false) {
-    specialNetsCache['localhost'] = createChecker(ipRange.localhost.ipv4);
+  if ("localhost" in specialNetsCache === false) {
+    specialNetsCache["localhost"] = createChecker(ipRange.localhost.ipv4);
   }
-  return specialNetsCache['localhost'](address);
+  return specialNetsCache["localhost"](address);
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
 export function isReserved(address: string) {
-  if ('reserved' in specialNetsCache === false) {
-    specialNetsCache['reserved'] = createChecker(ipRange.reserved.ipv4);
+  if ("reserved" in specialNetsCache === false) {
+    specialNetsCache["reserved"] = createChecker(ipRange.reserved.ipv4);
   }
-  return specialNetsCache['reserved'](address);
+  return specialNetsCache["reserved"](address);
 }
 
 /**
@@ -111,12 +111,12 @@ export function isReserved(address: string) {
  * localhost)
  */
 export function isSpecial(address: string) {
-  if ('special' in specialNetsCache === false) {
-    specialNetsCache['special'] = createChecker([
+  if ("special" in specialNetsCache === false) {
+    specialNetsCache["special"] = createChecker([
       ...ipRange.private.ipv4,
       ...ipRange.localhost.ipv4,
-      ...ipRange.reserved.ipv4
+      ...ipRange.reserved.ipv4,
     ]);
   }
-  return specialNetsCache['special'](address);
+  return specialNetsCache["special"](address);
 }

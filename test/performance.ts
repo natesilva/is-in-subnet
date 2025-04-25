@@ -1,8 +1,8 @@
-import * as assert from 'assert';
-import { describe, it } from 'mocha';
-import { IPv4, IPv6, createChecker } from '../src/index';
-import ipv4fixtures from './fixtures/ipv4';
-import ipv6fixtures from './fixtures/ipv6';
+import * as assert from "assert";
+import { describe, it } from "mocha";
+import { IPv4, IPv6, createChecker } from "../src/index";
+import ipv4fixtures from "./fixtures/ipv4";
+import ipv6fixtures from "./fixtures/ipv6";
 
 // ***************************************************************************************
 //
@@ -11,7 +11,7 @@ import ipv6fixtures from './fixtures/ipv6';
 //
 // ***************************************************************************************
 
-describe('performance', function() {
+describe("performance", function () {
   // tests in this suite can take a moment, don’t warn about that
   this.slow(4000);
 
@@ -22,7 +22,7 @@ describe('performance', function() {
     checkerCache = new Map();
   });
 
-  it('should be able to test 100,000 ipv4 addresses in less than 4 seconds', () => {
+  it("should be able to test 100,000 ipv4 addresses in less than 4 seconds", () => {
     // approximately 100K test runs
     const cycleCount = Math.floor(100_000 / ipv4fixtures.length);
 
@@ -40,7 +40,7 @@ describe('performance', function() {
     console.log(`average IPv4 performance was ${average.toLocaleString()} per second`);
   });
 
-  it('should be able to test 100,000 ipv6 addresses in less than 4 seconds', () => {
+  it("should be able to test 100,000 ipv6 addresses in less than 4 seconds", () => {
     // approximately 100K test runs
     const cycleCount = Math.floor(100_000 / ipv6fixtures.length);
 
@@ -58,7 +58,7 @@ describe('performance', function() {
     console.log(`average IPv6 performance was ${average.toLocaleString()} per second`);
   });
 
-  it('should be able to test 100,000 ipv4 addresses in less than 4 seconds using `createChecker`', () => {
+  it("should be able to test 100,000 ipv4 addresses in less than 4 seconds using `createChecker`", () => {
     // approximately 100K test runs
     const cycleCount = Math.floor(100_000 / ipv4fixtures.length);
 
@@ -84,11 +84,11 @@ describe('performance', function() {
     const friendlyElapsed = elapsed[0] + elapsed[1] / 1_000_000_000;
     const average = Math.floor((cycleCount * ipv4fixtures.length) / friendlyElapsed);
     console.log(
-      `average IPv4 performance was ${average.toLocaleString()} per second (cached checker)`
+      `average IPv4 performance was ${average.toLocaleString()} per second (cached checker)`,
     );
   });
 
-  it('should be able to test 100,000 ipv6 addresses in less than 4 seconds using `createChecker`', () => {
+  it("should be able to test 100,000 ipv6 addresses in less than 4 seconds using `createChecker`", () => {
     // approximately 100K test runs
     const cycleCount = Math.floor(100_000 / ipv6fixtures.length);
 
@@ -114,7 +114,7 @@ describe('performance', function() {
     const friendlyElapsed = elapsed[0] + elapsed[1] / 1_000_000_000;
     const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);
     console.log(
-      `average IPv6 performance was ${average.toLocaleString()} per second (cached checker)`
+      `average IPv6 performance was ${average.toLocaleString()} per second (cached checker)`,
     );
   });
 });

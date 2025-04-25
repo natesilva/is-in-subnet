@@ -58,6 +58,7 @@ typings/
 .env
 
 build
+dist
 test.ts
 
 *.sublime-workspace
