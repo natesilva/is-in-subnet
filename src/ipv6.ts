@@ -1,5 +1,5 @@
-import * as util from "./util";
-import ipRange from "./ipRange";
+import ipRange from "./ipRange.js";
+import * as util from "./util.js";
 
 // Note: Profiling shows that on recent versions of Node, string.split(RegExp) is faster
 // than string.split(string).

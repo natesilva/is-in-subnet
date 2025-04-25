@@ -1,5 +1,4 @@
-import { expect } from "vitest";
-import { suite, test } from "vitest";
+import { expect, suite, test } from "vitest";
 import {
   isInSubnet,
   isIPv4MappedAddress,
@@ -7,9 +6,9 @@ import {
   isPrivate,
   isReserved,
   isSpecial,
-} from "../src/index";
-import ipv4fixtures from "./fixtures/ipv4";
-import ipv6fixtures from "./fixtures/ipv6";
+} from "../src/index.js";
+import ipv4fixtures from "./fixtures/ipv4.js";
+import ipv6fixtures from "./fixtures/ipv6.js";
 
 const fixtures = ipv4fixtures.slice().concat(ipv6fixtures);
 

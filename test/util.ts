@@ -1,6 +1,5 @@
-import { expect } from "vitest";
-import { suite, test } from "vitest";
-import * as util from "../src/util";
+import { expect, suite, test } from "vitest";
+import * as util from "../src/util.js";
 
 suite("util", () => {
   suite("isIPv6", () => {

@@ -1,7 +1,6 @@
-import { expect } from "vitest";
-import { suite, test } from "vitest";
-import * as IPv4 from "../src/ipv4";
-import ipv4fixtures from "./fixtures/ipv4";
+import { expect, suite, test } from "vitest";
+import * as IPv4 from "../src/ipv4.js";
+import ipv4fixtures from "./fixtures/ipv4.js";
 
 suite("IPv4 tests", () => {
   test("should check ipv4 subnet membership (one-at-a-time)", () => {

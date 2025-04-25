@@ -1,9 +1,9 @@
 import { strict as assert } from "node:assert";
 import { performance } from "node:perf_hooks";
 import { beforeEach, suite, test } from "vitest";
-import { IPv4, IPv6, createChecker } from "../src/index";
-import ipv4fixtures from "./fixtures/ipv4";
-import ipv6fixtures from "./fixtures/ipv6";
+import { IPv4, IPv6, createChecker } from "../src/index.js";
+import ipv4fixtures from "./fixtures/ipv4.js";
+import ipv6fixtures from "./fixtures/ipv6.js";
 
 // ***************************************************************************************
 //

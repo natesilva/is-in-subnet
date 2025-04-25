@@ -1,5 +1,5 @@
-import * as util from "./util";
-import ipRange from "./ipRange";
+import ipRange from "./ipRange.js";
+import * as util from "./util.js";
 
 /**
  * Given an IPv4 address, convert it to a 32-bit long integer.

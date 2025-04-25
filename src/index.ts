@@ -1,8 +1,8 @@
-import * as IPv4 from "./ipv4";
-import * as IPv6 from "./ipv6";
-import * as util from "./util";
+import * as IPv4 from "./ipv4.js";
+import * as IPv6 from "./ipv6.js";
+import * as util from "./util.js";
 
-export { isIP, isIPv4, isIPv6 } from "./util";
+export { isIP, isIPv4, isIPv6 } from "./util.js";
 export { IPv4, IPv6 };
 
 /**

@@ -1,7 +1,7 @@
 import { expect } from "vitest";
 import { suite, test } from "vitest";
-import * as IPv6 from "../src/ipv6";
-import ipv6fixtures from "./fixtures/ipv6";
+import * as IPv6 from "../src/ipv6.js";
+import ipv6fixtures from "./fixtures/ipv6.js";
 
 suite("IPv6 tests", () => {
   test("should check ipv6 subnet membership (one-at-a-time)", () => {
