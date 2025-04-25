@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "del-cli build .nyc_output browser",
     "build": "tsc && rollup --config",
-    "prepare": "contributors && npm run clean && npm run build",
+    "prepublishOnly": "contributors && npm run clean && npm run build",
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\"",
     "lint": "eslint --ext .ts .",
     "test": "mocha \"./test/**/*.ts\"",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@mocha/contributors": "^1.0.4",
     "@types/mocha": "^8.2.0",
-    "@types/node": "^10.17.13",
+    "@types/node": "^22.15.0",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",
     "del-cli": "^3.0.1",
@@ -61,7 +61,6 @@
     "Spencer Wilson <spencer.wilson@optimizely.com>"
   ],
   "volta": {
-    "node": "10.23.0",
-    "npm": "6.14.9"
+    "node": "22.15.0"
   }
 }
