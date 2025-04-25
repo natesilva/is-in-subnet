@@ -38,7 +38,7 @@ suite("performance", () => {
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv4fixtures.length) / friendlyElapsed);
-    console.log(`average IPv4 performance was ${average.toLocaleString()} per second`);
+    console.debug(`average IPv4 performance was ${average.toLocaleString()} per second`);
   });
 
   test("should be able to test 100,000 ipv6 addresses in less than 4 seconds", () => {
@@ -56,7 +56,7 @@ suite("performance", () => {
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);
-    console.log(`average IPv6 performance was ${average.toLocaleString()} per second`);
+    console.debug(`average IPv6 performance was ${average.toLocaleString()} per second`);
   });
 
   test("should be able to test 100,000 ipv4 addresses in less than 4 seconds using `createChecker`", () => {
@@ -84,7 +84,7 @@ suite("performance", () => {
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv4fixtures.length) / friendlyElapsed);
-    console.log(
+    console.debug(
       `average IPv4 performance was ${average.toLocaleString()} per second (cached checker)`,
     );
   });
@@ -114,7 +114,7 @@ suite("performance", () => {
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);
-    console.log(
+    console.debug(
       `average IPv6 performance was ${average.toLocaleString()} per second (cached checker)`,
     );
   });
