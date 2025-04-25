@@ -65,3 +65,4 @@ test.ts
 browser
 *.sublime-project
 .vscode
+.DS_Store
