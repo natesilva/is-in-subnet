@@ -97,4 +97,14 @@ suite("IPv4 tests", () => {
     expect(subnet.isInSubnet(addr1)).toBe(true);
     expect(subnet.isInSubnet(addr2)).toBe(true);
   });
+
+  test("Ipv4Subnet string representation", () => {
+    const subnet = new Ipv4Subnet("192.168.1.1/24");
+    expect(subnet.toString()).toBe("192.168.1.1/24");
+  });
+
+  test("Ipv4Address string representation", () => {
+    const subnet = new Ipv4Address("192.168.1.1");
+    expect(subnet.toString()).toBe("192.168.1.1");
+  });
 });

@@ -18,9 +18,7 @@ export class Ipv6Address {
     const mappedMatches = ip.match(REGEXP_MAPPED_IPV4);
     if (mappedMatches) {
       const ipv4Part = mappedMatches[2];
-      if (!util.isIPv4(ipv4Part)) {
-        throw new Error(`not a valid mapped IPv4 address format: ${ip}`);
-      }
+      // Note: isIPv6 already checks for valid mapped IPv4
       this.#ip = ip;
       this.#mappedIpv4 = ipv4Part;
       this.#segments = Ipv6Address.parseMappedIpv4Segments(ipv4Part);
