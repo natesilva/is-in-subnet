@@ -4,14 +4,16 @@ import { beforeEach, suite, test } from "vitest";
 import { IPv4, IPv6, createChecker } from "../src/index.js";
 import ipv4fixtures from "./fixtures/ipv4.js";
 import ipv6fixtures from "./fixtures/ipv6.js";
+import { Ipv4Subnet } from "../src/ipv4/ipv4-subnet.js";
+import { Ipv6Subnet } from "../src/ipv6/ipv6-subnet.js";
 
 // ***************************************************************************************
 //
 // Speed tests: We’re actually way faster than this, but this is a good low-end target. It
 // also means the tests will pass on old/slow hardware and resource-constrained systems.
 //
-// Note that Node.js’s assert is much faster than Vitest’s expect, so we use assert here
-// as we want to measure the performance of the library, not the test framework.
+// Node.js’s assert is much faster than Vitest’s expect, so we use assert here as we want
+// to measure the performance of the library, not the test framework.
 //
 // ***************************************************************************************
 
@@ -30,11 +32,11 @@ suite("performance", () => {
     const start = performance.now();
     for (let index = 0; index < cycleCount; ++index) {
       ipv4fixtures.forEach(([ip, subnet, expected]) => {
-        assert.strictEqual(IPv4.isInSubnet(ip, subnet), expected);
+        assert.equal(IPv4.isInSubnet(ip, subnet), expected);
       });
     }
     const elapsed = performance.now() - start;
-    assert.strictEqual(elapsed < 4000, true);
+    assert.equal(elapsed < 4000, true);
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv4fixtures.length) / friendlyElapsed);
@@ -48,11 +50,11 @@ suite("performance", () => {
     const start = performance.now();
     for (let index = 0; index < cycleCount; ++index) {
       ipv6fixtures.forEach(([ip, subnet, expected]) => {
-        assert.strictEqual(IPv6.isInSubnet(ip, subnet), expected);
+        assert.equal(IPv6.isInSubnet(ip, subnet), expected);
       });
     }
     const elapsed = performance.now() - start;
-    assert.strictEqual(elapsed < 4000, true);
+    assert.equal(elapsed < 4000, true);
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);
@@ -67,7 +69,7 @@ suite("performance", () => {
     const checkers = ipv4fixtures.map(([, subnet]) => {
       let checker = checkerCache.get(subnet);
       if (!checker) {
-        checker = IPv4.createChecker(subnet);
+        checker = IPv4.createChecker([new Ipv4Subnet(subnet)]);
         checkerCache.set(subnet, checker);
       }
       return checker;
@@ -76,11 +78,11 @@ suite("performance", () => {
     const start = performance.now();
     for (let index = 0; index < cycleCount; ++index) {
       ipv4fixtures.forEach(([ip, , expected], i) => {
-        assert.strictEqual(checkers[i](ip), expected);
+        assert.equal(checkers[i](ip), expected);
       });
     }
     const elapsed = performance.now() - start;
-    assert.strictEqual(elapsed < 4000, true);
+    assert.equal(elapsed < 4000, true);
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv4fixtures.length) / friendlyElapsed);
@@ -97,7 +99,7 @@ suite("performance", () => {
     const checkers = ipv6fixtures.map(([, subnet]) => {
       let checker = checkerCache.get(subnet);
       if (!checker) {
-        checker = IPv6.createChecker(subnet);
+        checker = IPv6.createChecker([new Ipv6Subnet(subnet)]);
         checkerCache.set(subnet, checker);
       }
       return checker;
@@ -106,11 +108,11 @@ suite("performance", () => {
     const start = performance.now();
     for (let index = 0; index < cycleCount; ++index) {
       ipv6fixtures.forEach(([ip, , expected], i) => {
-        assert.strictEqual(checkers[i](ip), expected);
+        assert.equal(checkers[i](ip), expected);
       });
     }
     const elapsed = performance.now() - start;
-    assert.strictEqual(elapsed < 4000, true);
+    assert.equal(elapsed < 4000, true);
 
     const friendlyElapsed = elapsed / 1000;
     const average = Math.floor((cycleCount * ipv6fixtures.length) / friendlyElapsed);

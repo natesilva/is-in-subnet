@@ -1,4 +1,4 @@
-const fixtures: [string, string, boolean][] = [
+const fixtures = [
   ["2001:db8:f53a::1", "::/0", true],
   ["2001:db8:f53a::1", "2001:db8:f53a::1:1/64", true],
   ["2001:db8:f53a::1", "2001:db8:f53b::1:1/48", false],
@@ -19,6 +19,6 @@ const fixtures: [string, string, boolean][] = [
   ["2001:db8:f53a::1", "2001:db8:f53a::1/128", true],
   ["2001:db8:f53a::2", "2001:db8:f53a::1/128", false],
   ["2002:db8:f53a::1", "2001:db8:f53a::1/128", false],
-];
+] as const;
 
 export default fixtures;

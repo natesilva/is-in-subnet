@@ -39,3 +39,7 @@ export function isIP(s: string) {
   if (isIPv6(s)) return 6;
   return 0;
 }
+
+export function arrayify<T>(arr: T | readonly T[]): readonly T[] {
+  return Array.isArray(arr) ? arr : [arr as T];
+}

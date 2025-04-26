@@ -1,4 +1,4 @@
-const fixtures: [string, string, boolean][] = [
+const fixtures = [
   ["10.5.0.1", "0.0.0.0/0", true],
   ["10.5.0.1", "11.0.0.0/8", false],
   ["10.5.0.1", "10.0.0.0/8", true],
@@ -21,6 +21,6 @@ const fixtures: [string, string, boolean][] = [
   ["172.30.0.0", "172.30.0.0/16", true],
   ["172.30.255.255", "172.30.0.0/16", true],
   ["172.31.0.0", "172.30.0.0/16", false],
-];
+] as const;
 
 export default fixtures;

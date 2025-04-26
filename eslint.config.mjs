@@ -19,4 +19,9 @@ export default tseslint.config(
       },
     },
   },
+  {
+    rules: {
+      "no-unused-vars": ["warn", { args: "after-used" }],
+    },
+  },
 );

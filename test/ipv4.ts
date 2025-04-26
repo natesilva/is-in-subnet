@@ -1,13 +1,16 @@
 import { expect, suite, test } from "vitest";
-import * as IPv4 from "../src/ipv4.js";
+import { IPv4 } from "../src/ipv4/ipv4.js";
+import { Ipv4Address } from "../src/ipv4/ipv4-address.js";
+import { Ipv4Subnet } from "../src/ipv4/ipv4-subnet.js";
 import ipv4fixtures from "./fixtures/ipv4.js";
 
 suite("IPv4 tests", () => {
-  test("should check ipv4 subnet membership (one-at-a-time)", () => {
-    ipv4fixtures.forEach(([ip, subnet, expected]) => {
+  test.each(ipv4fixtures)(
+    "should check ipv4 subnet membership (one-at-a-time) (%s, %s)",
+    (ip, subnet, expected) => {
       expect(IPv4.isInSubnet(ip, subnet)).toBe(expected);
-    });
-  });
+    },
+  );
 
   test("should check ipv4 subnet membership (array)", () => {
     const uniqueIps = new Set<string>(ipv4fixtures.map((f) => f[0]));
@@ -70,5 +73,28 @@ suite("IPv4 tests", () => {
     expect(IPv4.isSpecial("192.168.0.1")).toBe(true);
     expect(IPv4.isSpecial("169.254.100.200")).toBe(true);
     expect(IPv4.isSpecial("8.8.8.8")).toBe(false);
+  });
+
+  test("Ipv4Address constructor throws on invalid IP", () => {
+    expect(() => new Ipv4Address("not.an.ip")).toThrow();
+    expect(() => new Ipv4Address("256.256.256.256")).toThrow();
+    expect(() => new Ipv4Address("")).toThrow();
+  });
+
+  test("Ipv4Address.toLong covers all code paths", () => {
+    // Normal case
+    expect(Ipv4Address["toLong"]("192.168.1.1")).toBe(0xc0a80101);
+    // Edge case: 0.0.0.0
+    expect(Ipv4Address["toLong"]("0.0.0.0")).toBe(0);
+    // Edge case: 255.255.255.255
+    expect(Ipv4Address["toLong"]("255.255.255.255")).toBe(0xffffffff);
+  });
+
+  test("Ipv4Subnet isInSubnet returns true for /0 prefix", () => {
+    const subnet = new Ipv4Subnet("0.0.0.0/0");
+    const addr1 = new Ipv4Address("1.2.3.4");
+    const addr2 = new Ipv4Address("255.255.255.255");
+    expect(subnet.isInSubnet(addr1)).toBe(true);
+    expect(subnet.isInSubnet(addr2)).toBe(true);
   });
 });

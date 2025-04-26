@@ -1,14 +1,17 @@
 import { expect } from "vitest";
 import { suite, test } from "vitest";
-import * as IPv6 from "../src/ipv6.js";
+import { IPv6 } from "../src/ipv6/ipv6.js";
+import { Ipv6Address } from "../src/ipv6/ipv6-address.js";
+import { Ipv6Subnet } from "../src/ipv6/ipv6-subnet.js";
 import ipv6fixtures from "./fixtures/ipv6.js";
 
 suite("IPv6 tests", () => {
-  test("should check ipv6 subnet membership (one-at-a-time)", () => {
-    ipv6fixtures.forEach(([ip, subnet, expected]) => {
+  test.each(ipv6fixtures)(
+    "should check ipv6 subnet membership (one-at-a-time) (%s, %s)",
+    (ip, subnet, expected) => {
       expect(IPv6.isInSubnet(ip, subnet)).toBe(expected);
-    });
-  });
+    },
+  );
 
   test("should check ipv6 subnet membership (array)", () => {
     const uniqueIps = new Set<string>(ipv6fixtures.map((f) => f[0]));
@@ -79,13 +82,42 @@ suite("IPv6 tests", () => {
     expect(IPv6.isSpecial("2001:db8:f53a::1")).toBe(true);
   });
 
-  test("should extract mapped ipv4", () => {
-    expect(IPv6.extractMappedIpv4("::ffff:127.0.0.1")).toBe("127.0.0.1");
+  test("Ipv6Address throws on invalid mapped IPv4", () => {
+    // ::ffff:999.999.999.999 is not a valid IPv4
+    expect(() => new Ipv6Address("::ffff:999.999.999.999")).toThrow();
+  });
 
-    // bogus IP should throw
-    expect(() => IPv6.extractMappedIpv4("::ffff:444.333.2.1")).toThrow();
+  test("Ipv6Address throws on obsolete IPv4-mapped IPv6 format", () => {
+    // ::192.168.0.1 is obsolete and should throw
+    expect(() => new Ipv6Address("::192.168.0.1")).toThrow();
+  });
 
-    // invalid address format should throw
-    expect(() => IPv6.extractMappedIpv4("::192.168.0.1")).toThrow();
+  test("Ipv6Address parses valid mapped IPv4", () => {
+    const addr = new Ipv6Address("::ffff:192.168.0.1");
+    expect(addr.isIpv4Mapped).toBe(true);
+    expect(addr.mappedIpv4).toBe("192.168.0.1");
+    expect(Array.from(addr.segments)).toEqual([0, 0, 0, 0, 0, 65535, 49320, 1]);
+  });
+
+  test("Ipv6Subnet isInSubnet returns true for /0 prefix", () => {
+    const subnet = new Ipv6Subnet("::/0");
+    const addr1 = new Ipv6Address("2001:db8::1");
+    const addr2 = new Ipv6Address("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+    expect(subnet.isInSubnet(addr1)).toBe(true);
+    expect(subnet.isInSubnet(addr2)).toBe(true);
+  });
+
+  test("Ipv6Subnet string representation", () => {
+    const subnet = new Ipv6Subnet("2001:db8::/32");
+    expect(subnet.toString()).toBe("2001:db8::/32");
+  });
+
+  test("Ipv6Address string representation", () => {
+    const subnet = new Ipv6Address("2001:db8::1");
+    expect(subnet.toString()).toBe("2001:db8::1");
+  });
+
+  test("Ipv6Address throws on invalid mapped IPv4", () => {
+    expect(() => new Ipv6Address("::ffff:999.999.999.999")).toThrow();
   });
 });

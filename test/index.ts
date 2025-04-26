@@ -6,18 +6,20 @@ import {
   isPrivate,
   isReserved,
   isSpecial,
+  check,
 } from "../src/index.js";
 import ipv4fixtures from "./fixtures/ipv4.js";
 import ipv6fixtures from "./fixtures/ipv6.js";
 
-const fixtures = ipv4fixtures.slice().concat(ipv6fixtures);
+const fixtures = [...ipv4fixtures, ...ipv6fixtures];
 
 suite("general tests", () => {
-  test("should check subnet membership (one-at-a-time)", () => {
-    fixtures.forEach(([ip, subnet, expected]) => {
+  test.each(fixtures)(
+    "should check subnet membership (one-at-a-time) (%s, %s)",
+    (ip, subnet, expected) => {
       expect(isInSubnet(ip, subnet)).toBe(expected);
-    });
-  });
+    },
+  );
 
   test("should check subnet membership (array)", () => {
     const uniqueIps = new Set<string>(fixtures.map((f) => f[0]));
@@ -69,15 +71,20 @@ suite("general tests", () => {
   });
 
   test("should recognize reserved addresses", () => {
-    expect(isReserved("169.254.100.200")).toBe(true);
-    expect(isReserved("2001:db8:f53a::1")).toBe(true);
-    expect(isReserved("::ffff:169.254.100.200")).toBe(true);
+    expect(isReserved("169.254.100.200")).toBe(true); // IPv4 Link-local (APIPA)
+    expect(isReserved("2001:db8:f53a::1")).toBe(true); // IPv6 Documentation prefix
+    expect(isReserved("::ffff:169.254.100.200")).toBe(true); // Mapped IPv4 Link-local
+    expect(isReserved("::")).toBe(true); // IPv6 Unspecified
   });
 
   test("should recognize special addresses", () => {
-    expect(isSpecial("127.0.0.1")).toBe(true);
-    expect(isSpecial("::")).toBe(true);
-    expect(isSpecial("::ffff:127.0.0.1")).toBe(true);
+    expect(isSpecial("127.0.0.1")).toBe(true); // Localhost, Private, Reserved
+    expect(isSpecial("::")).toBe(true); // Reserved
+    expect(isSpecial("192.168.1.1")).toBe(true); // Private
+    expect(isSpecial("169.254.1.1")).toBe(true); // Reserved
+    expect(isSpecial("::ffff:127.0.0.1")).toBe(true); // Localhost, Private, Mapped, Reserved
+    expect(isSpecial("8.8.8.8")).toBe(false); // Public
+    expect(isSpecial("2001:4860:4860::8888")).toBe(false); // Public
   });
 
   test("should throw on invalid IPs", () => {
@@ -100,5 +107,10 @@ suite("general tests", () => {
         "11:22:33:44:55:66:77:88:99:1010/32",
       ),
     ).toThrow();
+  });
+
+  test("should cover the 'check' export alias", () => {
+    expect(check("127.0.0.1", "127.0.0.0/8")).toBe(true);
+    expect(check("8.8.8.8", "127.0.0.0/8")).toBe(false);
   });
 });
