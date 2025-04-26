@@ -6,6 +6,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, "test/fixtures/**/*.ts", "src/types/**/*.ts"],
     coverage: {
       include: ["src/**/*.ts"],
+      exclude: ["src/types/**/*.ts"],
     },
   },
 });
