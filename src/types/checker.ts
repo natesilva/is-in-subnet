@@ -1,1 +1,1 @@
-export type CheckFunction = (address: string) => boolean;
+export type CheckFunction = (address_: string) => boolean;

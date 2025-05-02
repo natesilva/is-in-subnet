@@ -7,7 +7,7 @@ import globals from "globals";
 
 export default tseslint.config(
   {
-    ignores: ["**/dist/**", "**/coverage/**", "build.mjs"],
+    ignores: ["**/dist/**", "**/coverage/**", "build.mjs", "build/**", "browser/**"],
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -21,7 +21,7 @@ export default tseslint.config(
   },
   {
     rules: {
-      "no-unused-vars": ["warn", { args: "after-used" }],
+      "no-unused-vars": ["warn", { args: "after-used", argsIgnorePattern: "_$" }],
     },
   },
 );
