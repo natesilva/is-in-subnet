@@ -1,5 +1,4 @@
 import { IP_CATEGORY } from "../ip-category.js";
-import type { CheckFunction } from "../types/checker.js";
 import * as util from "../util.js";
 import { Ipv6Address } from "./ipv6-address.js";
 import { Ipv6Subnet } from "./ipv6-subnet.js";
@@ -26,8 +25,8 @@ function isInSubnet(
  * @throws if the subnet(s) are not valid IP addresses, or the CIDR prefix lengths
  *  are not valid
  */
-function createChecker(subnets: readonly Ipv6Subnet[]): CheckFunction {
-  return (address) => {
+function createChecker(subnets: readonly Ipv6Subnet[]) {
+  return (address: string) => {
     const ip = new Ipv6Address(address);
     return subnets.some((subnet) => subnet.isInSubnet(ip));
   };

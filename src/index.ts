@@ -1,11 +1,10 @@
+import { Ipv4Address } from "./ipv4/ipv4-address.js";
 import { Ipv4Subnet } from "./ipv4/ipv4-subnet.js";
 import { IPv4 } from "./ipv4/ipv4.js";
-import { IPv6 } from "./ipv6/ipv6.js";
-import { Ipv6Subnet } from "./ipv6/ipv6-subnet.js";
-import type { CheckFunction } from "./types/checker.js";
-import * as util from "./util.js";
 import { Ipv6Address } from "./ipv6/ipv6-address.js";
-import { Ipv4Address } from "./ipv4/ipv4-address.js";
+import { Ipv6Subnet } from "./ipv6/ipv6-subnet.js";
+import { IPv6 } from "./ipv6/ipv6.js";
+import * as util from "./util.js";
 
 export { isIP, isIPv4, isIPv6 } from "./util.js";
 export { IPv4, IPv6 };
@@ -30,9 +29,7 @@ export function isInSubnet(
  * @throws if any of the subnet(s) are not valid IP addresses, or the CIDR
  *  prefix length is not valid
  */
-export function createChecker(
-  subnetOrSubnets: string | readonly string[],
-): CheckFunction {
+export function createChecker(subnetOrSubnets: string | readonly string[]) {
   const subnetsByVersion = {
     0: new Set<string>(),
     4: new Set<string>(),

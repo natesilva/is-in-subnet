@@ -1,8 +1,7 @@
 import { IP_CATEGORY } from "../ip-category.js";
+import * as util from "../util.js";
 import { Ipv4Address } from "./ipv4-address.js";
 import { Ipv4Subnet } from "./ipv4-subnet.js";
-import type { CheckFunction } from "../types/checker.js";
-import * as util from "../util.js";
 
 /**
  * Test if the given IPv4 address is contained in the specified subnet.
@@ -27,8 +26,8 @@ function isInSubnet(
  * @throws if the subnet is not a valid IP addresses, or the CIDR prefix length
  *  is not valid
  */
-function createChecker(subnets: readonly Ipv4Subnet[]): CheckFunction {
-  return (address) => {
+function createChecker(subnets: readonly Ipv4Subnet[]) {
+  return (address: string) => {
     const ip = new Ipv4Address(address);
     return subnets.some((subnet) => subnet.isInSubnet(ip));
   };
