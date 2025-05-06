@@ -1,10 +1,11 @@
+import type { IpAddress } from "../interfaces/ip-address.ts";
 import * as util from "../util.js";
 
 const REGEXP_DOT = /\./;
 const REGEXP_MAPPED_IPV4 = /^(.+:ffff:)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:%.+)?$/;
 const REGEXP_COLON = /:/;
 
-export class Ipv6Address {
+export class Ipv6Address implements IpAddress {
   readonly #ip: string;
   readonly #mappedIpv4: string | undefined;
   readonly #segments: Readonly<Uint16Array>;

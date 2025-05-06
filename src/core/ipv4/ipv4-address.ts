@@ -1,6 +1,7 @@
+import type { IpAddress } from "../interfaces/ip-address.ts";
 import * as util from "../util.js";
 
-export class Ipv4Address {
+export class Ipv4Address implements IpAddress {
   readonly #long: number;
   readonly #ip: string;
 

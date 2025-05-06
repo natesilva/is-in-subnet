@@ -1,13 +1,17 @@
-import { Ipv4Address } from "./ipv4/ipv4-address.js";
-import { Ipv4Subnet } from "./ipv4/ipv4-subnet.js";
-import { IPv4 } from "./ipv4/ipv4.js";
-import { Ipv6Address } from "./ipv6/ipv6-address.js";
-import { Ipv6Subnet } from "./ipv6/ipv6-subnet.js";
-import { IPv6 } from "./ipv6/ipv6.js";
-import * as util from "./util.js";
+import { IP_CATEGORY } from "./address-ranges/ip-category.ts";
+import { getIpRanges } from "./util/get-ip-ranges.js";
+import { Ipv4Address } from "./core/ipv4/ipv4-address.js";
+import { Ipv4Subnet } from "./core/ipv4/ipv4-subnet.js";
+import { Ipv6Address } from "./core/ipv6/ipv6-address.js";
+import { Ipv6Subnet } from "./core/ipv6/ipv6-subnet.js";
+import { IPv4 } from "./legacy/ipv4.js";
+import { IPv6 } from "./legacy/ipv6.js";
+import { makeIpAddress } from "./util/make-ip-address.ts";
+import { SubnetGroup } from "./util/subnet-group.ts";
+import * as util from "./util/net.ts";
 
-export { isIP, isIPv4, isIPv6 } from "./util.js";
-export { IPv4, IPv6 };
+export { isIP, isIPv4, isIPv6 } from "./net.ts";
+export { getIpRanges, IPv4, IPv6 };
 
 /**
  * Test if the given IP address is contained in the specified subnet.
@@ -24,7 +28,8 @@ export function isInSubnet(
 }
 
 /**
- * Create a function to test if the given IP address is contained in the specified subnet.
+ * Create a function to test if the given IP address is contained in the specified subnet
+ * or subnets.
  * @param subnet the IPv4 or IPv6 CIDR to test (or an array of them)
  * @throws if any of the subnet(s) are not valid IP addresses, or the CIDR
  *  prefix length is not valid
@@ -50,27 +55,18 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
   const ipv4Subnets = [...subnetsByVersion[4]].map((s) => new Ipv4Subnet(s));
   const ipv6Subnets = [...subnetsByVersion[6]].map((s) => new Ipv6Subnet(s));
 
-  return (address: string) => {
-    if (!util.isIP(address)) {
-      throw new Error(`not a valid IPv4 or IPv6 address: ${address}`);
+  const subnetGroup = new SubnetGroup(...ipv4Subnets, ...ipv6Subnets);
+
+  return (input: string) => {
+    const address = makeIpAddress(input);
+
+    if (subnetGroup.isInSubnet(address)) {
+      return true;
     }
 
-    const ipv6 = util.isIPv6(address) ? new Ipv6Address(address) : undefined;
-    const ipv4 = util.isIPv4(address) ? new Ipv4Address(address) : undefined;
-
-    if (ipv6) {
-      // for mapped IPv4 addresses, compare against both IPv6 and IPv4 subnets
-      if (ipv6.mappedIpv4) {
-        return (
-          ipv4Subnets.some((subnet) =>
-            subnet.isInSubnet(new Ipv4Address(ipv6.mappedIpv4!)),
-          ) || ipv6Subnets.some((subnet) => subnet.isInSubnet(ipv6))
-        );
-      } else {
-        return ipv6Subnets.some((subnet) => subnet.isInSubnet(ipv6));
-      }
-    } else if (ipv4) {
-      return ipv4Subnets.some((subnet) => subnet.isInSubnet(ipv4));
+    if (address instanceof Ipv6Address && address.mappedIpv4) {
+      // for mapped IPv4 addresses, compare against the IPv4 subnets too
+      return subnetGroup.isInSubnet(new Ipv4Address(address.mappedIpv4));
     }
 
     return false;
@@ -78,58 +74,30 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
 }
 
 /** Test if the given IP address is a private/internal IP address. */
-export function isPrivate(address: string) {
-  if (util.isIPv6(address)) {
-    const ip = new Ipv6Address(address);
-    if (ip.isIpv4Mapped) {
-      return IPv4.isPrivate(ip.mappedIpv4!);
-    }
-    return IPv6.isPrivate(address);
-  } else {
-    return IPv4.isPrivate(address);
-  }
+export function isPrivate(input: string) {
+  const address = makeIpAddress(input);
+  return IP_CATEGORY.PRIVATE.isInSubnet(address);
 }
 
 /** Test if the given IP address is a localhost address. */
-export function isLocalhost(address: string) {
-  if (util.isIPv6(address)) {
-    const ip = new Ipv6Address(address);
-    if (ip.isIpv4Mapped) {
-      return IPv4.isLocalhost(ip.mappedIpv4!);
-    }
-    return IPv6.isLocalhost(address);
-  } else {
-    return IPv4.isLocalhost(address);
-  }
+export function isLocalhost(input: string) {
+  const address = makeIpAddress(input);
+  return IP_CATEGORY.LOCALHOST.isInSubnet(address);
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
-export function isReserved(address: string) {
-  if (util.isIPv6(address)) {
-    const ip = new Ipv6Address(address);
-    if (ip.isIpv4Mapped) {
-      return IPv4.isReserved(ip.mappedIpv4!);
-    }
-    return IPv6.isReserved(address);
-  } else {
-    return IPv4.isReserved(address);
-  }
+export function isReserved(input: string) {
+  const address = makeIpAddress(input);
+  return IP_CATEGORY.RESERVED.isInSubnet(address);
 }
 
 /**
  * Test if the given IP address is a special address of any kind (private, reserved,
  * localhost)
  */
-export function isSpecial(address: string) {
-  if (util.isIPv6(address)) {
-    const ip = new Ipv6Address(address);
-    if (ip.isIpv4Mapped) {
-      return IPv4.isSpecial(ip.mappedIpv4!);
-    }
-    return IPv6.isSpecial(address);
-  } else {
-    return IPv4.isSpecial(address);
-  }
+export function isSpecial(input: string) {
+  const address = makeIpAddress(input);
+  return IP_CATEGORY.RESERVED.isInSubnet(address);
 }
 
 export function isIPv4MappedAddress(address: string) {

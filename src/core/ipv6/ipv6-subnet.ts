@@ -1,6 +1,9 @@
+import type { IpAddress } from "../interfaces/ip-address.ts";
+import type { Subnet } from "../interfaces/subnet.ts";
 import { Ipv6Address } from "./ipv6-address.js";
 
-export class Ipv6Subnet extends Ipv6Address {
+export class Ipv6Subnet implements Subnet {
+  readonly #subnetIp: Ipv6Address;
   readonly #prefixLength: number;
 
   constructor(subnet: string) {
@@ -15,15 +18,19 @@ export class Ipv6Subnet extends Ipv6Address {
       throw new Error(`not a valid IPv6 prefix length: ${prefixLength} (from ${subnet})`);
     }
 
-    super(ip);
+    this.#subnetIp = new Ipv6Address(ip);
     this.#prefixLength = prefixLength;
   }
 
   toString(): string {
-    return `${this.ip}/${this.#prefixLength}`;
+    return `${this.#subnetIp}/${this.#prefixLength}`;
   }
 
-  isInSubnet(other: Ipv6Address): boolean {
+  isInSubnet(other: IpAddress): boolean {
+    if (!(other instanceof Ipv6Address)) {
+      return false;
+    }
+
     if (this.#prefixLength === 0) {
       return true;
     }
@@ -37,7 +44,7 @@ export class Ipv6Subnet extends Ipv6Address {
         break;
       }
 
-      const subnetSegment = this.segments[i];
+      const subnetSegment = this.#subnetIp.segments[i];
       const addressSegment = other.segments[i];
 
       const shiftAmount = 16 - bitCount;
