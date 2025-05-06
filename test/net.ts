@@ -1,7 +1,7 @@
 import { expect, suite, test } from "vitest";
 import * as net from "../src/util/net.js";
 
-suite("util", () => {
+suite("net", () => {
   suite("isIPv6", () => {
     test.each([
       "0000:0000:0000:0000:0000:0000:0000:0000",

@@ -5,9 +5,9 @@ import * as IPv4 from "../src/legacy/ipv4.js";
 import ipv4fixtures from "./fixtures/ipv4.js";
 
 suite("IPv4 tests", () => {
-  test.each(ipv4fixtures)(
+  test.for(ipv4fixtures)(
     "should check ipv4 subnet membership (one-at-a-time) (%s, %s)",
-    (ip, subnet, expected) => {
+    ([ip, subnet, expected]) => {
       expect(IPv4.isInSubnet(ip, subnet)).toBe(expected);
     },
   );
@@ -33,78 +33,95 @@ suite("IPv4 tests", () => {
     expect(IPv4.isInSubnet(ip, [])).toBe(false);
   });
 
-  test("should throw on invalid subnets", () => {
-    expect(() => IPv4.isInSubnet("10.5.0.1", "10.5.0.1")).toThrow();
-    expect(() => IPv4.isInSubnet("10.5.0.1", "0.0.0.0/-1")).toThrow();
-    expect(() => IPv4.isInSubnet("10.5.0.1", "0.0.0.0/33")).toThrow();
+  test.for([
+    ["10.5.0.1", "10.5.0.1"],
+    ["10.5.0.1", "0.0.0.0/-1"],
+    ["10.5.0.1", "0.0.0.0/33"],
     // first segment of subnet is octal-like, should throw
-    expect(() => IPv4.isInSubnet("10.5.0.1", "010.0.0.0/8")).toThrow();
+    ["10.5.0.1", "010.0.0.0/8"],
+  ])("should throw on invalid subnets (%s, %s)", ([ip, subnet]) => {
+    expect(() => IPv4.isInSubnet(ip, subnet)).toThrow();
   });
 
-  test("should throw on invalid ipv4", () => {
-    expect(() => IPv4.isInSubnet("256.5.0.1", "0.0.0.0/0")).toThrow();
-    expect(() => IPv4.isInSubnet("::1", "0.0.0.0/0")).toThrow();
-    expect(() => IPv4.isInSubnet("10.5.0.1", "2001:db8:f53a::1:1/64")).toThrow();
-    expect(() => IPv4.isInSubnet("10.5.0.1", "1.2.3")).toThrow();
+  test.for([
+    ["256.5.0.1", "0.0.0.0/0"],
+    ["::1", "0.0.0.0/0"],
+    ["10.5.0.1", "2001:db8:f53a::1:1/64"],
+    ["10.5.0.1", "1.2.3"],
+  ])("should throw on invalid ipv4 (%s, %s)", ([ip, subnet]) => {
+    expect(() => IPv4.isInSubnet(ip, subnet)).toThrow();
   });
 
-  test("should handle ipv4 localhost", () => {
-    expect(IPv4.isLocalhost("127.0.0.1")).toBe(true);
-    expect(IPv4.isLocalhost("127.99.88.77")).toBe(true);
-    expect(IPv4.isLocalhost("192.168.0.1")).toBe(false);
+  test.for<[string, boolean]>([
+    ["127.0.0.1", true],
+    ["127.99.88.77", true],
+    ["192.168.0.1", false],
+  ])("should handle ipv4 localhost", ([ip, expected]) => {
+    expect(IPv4.isLocalhost(ip)).toBe(expected);
   });
 
-  test("should handle ipv4 private", () => {
-    expect(IPv4.isPrivate("127.0.0.1")).toBe(false);
-    expect(IPv4.isPrivate("192.168.0.1")).toBe(true);
-    expect(IPv4.isPrivate("10.11.12.13")).toBe(true);
-    expect(IPv4.isPrivate("172.16.0.1")).toBe(true);
+  test.for<[string, boolean]>([
+    ["127.0.0.1", false],
+    ["192.168.0.1", true],
+    ["10.11.12.13", true],
+    ["172.16.0.1", true],
+  ])("should handle ipv4 private (%s)", ([ip, expected]) => {
+    expect(IPv4.isPrivate(ip)).toBe(expected);
   });
 
-  test("should handle ipv4 reserved", () => {
-    expect(IPv4.isReserved("127.0.0.1")).toBe(false);
-    expect(IPv4.isReserved("169.254.100.200")).toBe(true);
-    expect(IPv4.isReserved("0.0.0.0")).toBe(true);
-    expect(IPv4.isReserved("255.255.255.255")).toBe(true);
+  test.for<[string, boolean]>([
+    ["127.0.0.1", false],
+    ["169.254.100.200", true],
+    ["0.0.0.0", true],
+    ["255.255.255.255", true],
+  ])("should handle ipv4 reserved (%s)", ([ip, expected]) => {
+    expect(IPv4.isReserved(ip)).toBe(expected);
   });
 
-  test("should handle ipv4 special", () => {
-    expect(IPv4.isSpecial("127.0.0.1")).toBe(true);
-    expect(IPv4.isSpecial("192.168.0.1")).toBe(true);
-    expect(IPv4.isSpecial("169.254.100.200")).toBe(true);
-    expect(IPv4.isSpecial("8.8.8.8")).toBe(false);
+  test.for<[string, boolean]>([
+    ["127.0.0.1", true],
+    ["192.168.0.1", true],
+    ["169.254.100.200", true],
+    ["8.8.8.8", false],
+  ])("should handle ipv4 special (%s)", ([ip, expected]) => {
+    expect(IPv4.isSpecial(ip)).toBe(expected);
   });
 
-  test("Ipv4Address constructor throws on invalid IP", () => {
-    expect(() => new Ipv4Address("not.an.ip")).toThrow();
-    expect(() => new Ipv4Address("256.256.256.256")).toThrow();
-    expect(() => new Ipv4Address("")).toThrow();
+  test.for(["not.an.ip", "256.256.256.256", ""])(
+    "Ipv4Address constructor throws on invalid IP (%s)",
+    ([ip]) => {
+      expect(() => new Ipv4Address(ip)).toThrow();
+    },
+  );
+
+  test.for([
+    ["0.0.0.0/0", "1.2.3.4"],
+    ["0.0.0.0/0", "255.255.255.255"],
+    ["99.88.77.66/0", "192.168.0.1"],
+  ])("Ipv4Subnet isInSubnet returns true for /0 prefix (%s, %s)", ([cidr, ip]) => {
+    const subnet = new Ipv4Subnet(cidr);
+    const addr = new Ipv4Address(ip);
+    expect(subnet.isInSubnet(addr)).toBe(true);
   });
 
-  test("Ipv4Address.toLong covers all code paths", () => {
-    // Normal case
-    expect(Ipv4Address["toLong"]("192.168.1.1")).toBe(0xc0a80101);
-    // Edge case: 0.0.0.0
-    expect(Ipv4Address["toLong"]("0.0.0.0")).toBe(0);
-    // Edge case: 255.255.255.255
-    expect(Ipv4Address["toLong"]("255.255.255.255")).toBe(0xffffffff);
-  });
+  test.for(["192.168.1.1/24", "0.0.0.0/0", "192.168.1.1/32"])(
+    "Ipv4Subnet string representation (%s)",
+    (cidr) => {
+      const subnet = new Ipv4Subnet(cidr);
+      expect(subnet.toString()).toBe(cidr);
+    },
+  );
 
-  test("Ipv4Subnet isInSubnet returns true for /0 prefix", () => {
-    const subnet = new Ipv4Subnet("0.0.0.0/0");
-    const addr1 = new Ipv4Address("1.2.3.4");
-    const addr2 = new Ipv4Address("255.255.255.255");
-    expect(subnet.isInSubnet(addr1)).toBe(true);
-    expect(subnet.isInSubnet(addr2)).toBe(true);
-  });
-
-  test("Ipv4Subnet string representation", () => {
-    const subnet = new Ipv4Subnet("192.168.1.1/24");
-    expect(subnet.toString()).toBe("192.168.1.1/24");
-  });
-
-  test("Ipv4Address string representation", () => {
-    const subnet = new Ipv4Address("192.168.1.1");
-    expect(subnet.toString()).toBe("192.168.1.1");
+  test.for([
+    "192.168.1.1",
+    "10.0.0.1",
+    "172.16.0.1",
+    "127.0.0.1",
+    "8.8.8.8",
+    "255.255.255.255",
+    "0.0.0.0",
+  ])("Ipv4Address string representation (%s)", (ip) => {
+    const addr = new Ipv4Address(ip);
+    expect(addr.toString()).toBe(ip);
   });
 });

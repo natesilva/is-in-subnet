@@ -57,20 +57,7 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
 
   const subnetGroup = new SubnetGroup(...ipv4Subnets, ...ipv6Subnets);
 
-  return (input: string) => {
-    const address = makeIpAddress(input);
-
-    if (subnetGroup.isInSubnet(address)) {
-      return true;
-    }
-
-    if (address instanceof Ipv6Address && address.isIpv4Mapped) {
-      // for mapped IPv4 addresses, compare against the IPv4 subnets too
-      return subnetGroup.isInSubnet(address.mappedIpv4);
-    }
-
-    return false;
-  };
+  return (input: string) => subnetGroup.isInSubnet(makeIpAddress(input));
 }
 
 /** Test if the given IP address is a private/internal IP address. */
