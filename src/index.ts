@@ -1,16 +1,17 @@
 import { IP_CATEGORY } from "./address-ranges/ip-category.ts";
-import { getIpRanges } from "./util/get-ip-ranges.js";
 import { Ipv4Address } from "./core/ipv4/ipv4-address.js";
 import { Ipv4Subnet } from "./core/ipv4/ipv4-subnet.js";
 import { Ipv6Address } from "./core/ipv6/ipv6-address.js";
 import { Ipv6Subnet } from "./core/ipv6/ipv6-subnet.js";
-import { IPv4 } from "./legacy/ipv4.js";
-import { IPv6 } from "./legacy/ipv6.js";
+import * as IPv4 from "./legacy/ipv4.js";
+import * as IPv6 from "./legacy/ipv6.js";
+import { arrayify } from "./util/arrayify.ts";
+import { getIpRanges } from "./util/get-ip-ranges.js";
 import { makeIpAddress } from "./util/make-ip-address.ts";
+import * as net from "./util/net.ts";
 import { SubnetGroup } from "./util/subnet-group.ts";
-import * as util from "./util/net.ts";
 
-export { isIP, isIPv4, isIPv6 } from "./net.ts";
+export { isIP, isIPv4, isIPv6 } from "./util/net.ts";
 export { getIpRanges, IPv4, IPv6 };
 
 /**
@@ -41,9 +42,9 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
     6: new Set<string>(),
   };
 
-  for (const subnet of util.arrayify(subnetOrSubnets)) {
+  for (const subnet of arrayify(subnetOrSubnets)) {
     const ip = subnet.split("/")[0];
-    subnetsByVersion[util.isIP(ip)].add(subnet);
+    subnetsByVersion[net.isIP(ip)].add(subnet);
   }
 
   if (subnetsByVersion[0].size !== 0) {
@@ -64,9 +65,9 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
       return true;
     }
 
-    if (address instanceof Ipv6Address && address.mappedIpv4) {
+    if (address instanceof Ipv6Address && address.isIpv4Mapped) {
       // for mapped IPv4 addresses, compare against the IPv4 subnets too
-      return subnetGroup.isInSubnet(new Ipv4Address(address.mappedIpv4));
+      return subnetGroup.isInSubnet(address.mappedIpv4);
     }
 
     return false;
@@ -97,11 +98,11 @@ export function isReserved(input: string) {
  */
 export function isSpecial(input: string) {
   const address = makeIpAddress(input);
-  return IP_CATEGORY.RESERVED.isInSubnet(address);
+  return IP_CATEGORY.SPECIAL.isInSubnet(address);
 }
 
 export function isIPv4MappedAddress(address: string) {
-  if (!util.isIPv6(address)) {
+  if (!net.isIPv6(address)) {
     return false;
   }
   const ip = new Ipv6Address(address);

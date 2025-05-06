@@ -1,9 +1,12 @@
-import { SubnetGroup } from "../subnet-group.ts";
+import { SubnetGroup } from "../util/subnet-group.ts";
 import { IPV4_ADDRESS_RANGE } from "./ipv4-address-range.ts";
 import { IPV6_ADDRESS_RANGE } from "./ipv6-address-range.ts";
 
 // Define the categories first
-const LOCALHOST = new SubnetGroup(IPV4_ADDRESS_RANGE.LOOPBACK, IPV6_ADDRESS_RANGE.LOOPBACK);
+const LOCALHOST = new SubnetGroup(
+  IPV4_ADDRESS_RANGE.LOOPBACK,
+  IPV6_ADDRESS_RANGE.LOOPBACK,
+);
 
 const PRIVATE = new SubnetGroup(
   IPV4_ADDRESS_RANGE.PRIVATE_IP,

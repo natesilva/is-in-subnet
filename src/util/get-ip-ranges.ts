@@ -39,10 +39,9 @@ export function getIpRanges(input: string | IpAddress) {
     }
 
     // If this is an IPv4-mapped IPv6 address, also check IPv4 ranges
-    if (ipAddress.isIpv4Mapped && ipAddress.mappedIpv4) {
-      const ipv4Address = new Ipv4Address(ipAddress.mappedIpv4);
+    if (ipAddress.isIpv4Mapped) {
       for (const [rangeName, subnet] of Object.entries(IPV4_ADDRESS_RANGE)) {
-        if (subnet.isInSubnet(ipv4Address)) {
+        if (subnet.isInSubnet(ipAddress.mappedIpv4)) {
           matchedRanges.push(rangeName);
         }
       }

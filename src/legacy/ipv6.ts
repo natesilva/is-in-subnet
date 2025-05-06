@@ -1,7 +1,7 @@
 import { IP_CATEGORY } from "../address-ranges/ip-category.ts";
-import * as util from "../util.ts";
-import { Ipv6Address } from "../ipv6/ipv6-address.ts";
-import { Ipv6Subnet } from "../ipv6/ipv6-subnet.ts";
+import { Ipv6Address } from "../core/ipv6/ipv6-address.ts";
+import { Ipv6Subnet } from "../core/ipv6/ipv6-subnet.ts";
+import { arrayify } from "../util/arrayify.ts";
 
 //
 // Legacy compatibility with the undocumented, but previously-exported, IPv6 class.
@@ -20,7 +20,7 @@ export function isInSubnet(
   subnetOrSubnets: string | readonly string[],
 ): boolean {
   const ip = new Ipv6Address(address);
-  const subnets = util.arrayify(subnetOrSubnets).map((subnet) => new Ipv6Subnet(subnet));
+  const subnets = arrayify(subnetOrSubnets).map((subnet) => new Ipv6Subnet(subnet));
   return subnets.some((subnet) => subnet.isInSubnet(ip));
 }
 
@@ -31,7 +31,7 @@ export function isInSubnet(
  *  are not valid
  */
 export function createChecker(subnetOrSubnets: string | string[]) {
-  const subnets = util.arrayify(subnetOrSubnets).map((subnet) => new Ipv6Subnet(subnet));
+  const subnets = arrayify(subnetOrSubnets).map((subnet) => new Ipv6Subnet(subnet));
   return (address: string) => {
     const ip = new Ipv6Address(address);
     return subnets.some((subnet) => subnet.isInSubnet(ip));
@@ -55,5 +55,10 @@ export function isReserved(input: string) {
 
 export function isSpecial(input: string) {
   const address = new Ipv6Address(input);
-  return IP_CATEGORY.RESERVED.isInSubnet(address);
+  return IP_CATEGORY.SPECIAL.isInSubnet(address);
+}
+
+export function isIPv4MappedAddress(input: string) {
+  const address = new Ipv6Address(input);
+  return address.isIpv4Mapped;
 }

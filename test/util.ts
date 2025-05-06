@@ -1,5 +1,5 @@
 import { expect, suite, test } from "vitest";
-import * as util from "../src/util.js";
+import * as net from "../src/util/net.js";
 
 suite("util", () => {
   suite("isIPv6", () => {
@@ -24,7 +24,7 @@ suite("util", () => {
     ])("should recognize valid ipv6 addresses (%s)", (input) => {
       // `as any` so we can test values convertible to string
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(util.isIPv6(input as any)).toBe(true);
+      expect(net.isIPv6(input as any)).toBe(true);
     });
 
     test.each([
@@ -48,13 +48,13 @@ suite("util", () => {
     ])("should not recognize invalid ipv6 addresses (%s)", (input) => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(util.isIPv6(input as any)).toBe(false);
+      expect(net.isIPv6(input as any)).toBe(false);
     });
 
     test("should return false if no address is provided", () => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((util.isIPv6 as any)()).toBe(false);
+      expect((net.isIPv6 as any)()).toBe(false);
     });
   });
 
@@ -68,7 +68,7 @@ suite("util", () => {
     ])("should recognize valid ipv4 addresses (%s)", (input) => {
       // `as any` so we can test values convertible to string
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(util.isIPv4(input as any)).toBe(true);
+      expect(net.isIPv4(input as any)).toBe(true);
     });
 
     test.each([
@@ -88,13 +88,13 @@ suite("util", () => {
     ])("should not recognize invalid ipv4 addresses (%s)", (input) => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(util.isIPv4(input as any)).toBe(false);
+      expect(net.isIPv4(input as any)).toBe(false);
     });
 
     test("should return false if no address is provided", () => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((util.isIPv4 as any)()).toBe(false);
+      expect((net.isIPv4 as any)()).toBe(false);
     });
   });
 
@@ -120,7 +120,7 @@ suite("util", () => {
     ])("should recognize valid addresses (%s, IPv%i)", (input, expected) => {
       // `as any` so we can test values convertible to string
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(util.isIP(input as any)).toBe(expected);
+      expect(net.isIP(input as any)).toBe(expected);
     });
 
     test.each([
@@ -144,13 +144,13 @@ suite("util", () => {
     ])("should not recognize invalid addresses (%s)", (input) => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(util.isIP(input as any)).toBe(0);
+      expect(net.isIP(input as any)).toBe(0);
     });
 
     test("should return 0 if no address is provided", () => {
       // `as any` so we can test non-string values
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((util.isIP as any)()).toBe(0);
+      expect((net.isIP as any)()).toBe(0);
     });
   });
 });

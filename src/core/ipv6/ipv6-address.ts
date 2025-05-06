@@ -1,5 +1,6 @@
+import * as net from "../../util/net.js";
 import type { IpAddress } from "../interfaces/ip-address.ts";
-import * as util from "../util.js";
+import { Ipv4Address } from "../ipv4/ipv4-address.js";
 
 const REGEXP_DOT = /\./;
 const REGEXP_MAPPED_IPV4 = /^(.+:ffff:)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:%.+)?$/;
@@ -9,9 +10,10 @@ export class Ipv6Address implements IpAddress {
   readonly #ip: string;
   readonly #mappedIpv4: string | undefined;
   readonly #segments: Readonly<Uint16Array>;
+  #mappedIpv4Address: Ipv4Address | undefined;
 
   constructor(ip: string) {
-    if (!util.isIPv6(ip)) {
+    if (!net.isIPv6(ip)) {
       throw new Error(`not a valid IPv6 address: ${ip}`);
     }
 
@@ -50,7 +52,13 @@ export class Ipv6Address implements IpAddress {
   }
 
   get mappedIpv4() {
-    return this.#mappedIpv4;
+    if (!this.#mappedIpv4) {
+      throw new Error(`not an IPv4-mapped IPv6 address: ${this.#ip}`);
+    }
+    if (!this.#mappedIpv4Address) {
+      this.#mappedIpv4Address = new Ipv4Address(this.#mappedIpv4);
+    }
+    return this.#mappedIpv4Address;
   }
 
   /**

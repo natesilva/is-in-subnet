@@ -1,5 +1,6 @@
 import type { IpAddress } from "../core/interfaces/ip-address.ts";
 import type { Subnet } from "../core/interfaces/subnet.ts";
+import { Ipv6Address } from "../core/ipv6/ipv6-address.ts";
 
 /**
  * An aggregate subnet group. Checks if an IP address is in any of the subnets that make
@@ -18,7 +19,14 @@ export class SubnetGroup implements Subnet {
     throw new Error("Method not implemented.");
   }
 
-  isInSubnet(input: IpAddress, visited = new Set<symbol>()) {
+  isInSubnet(input: IpAddress) {
+    if (input instanceof Ipv6Address && input.isIpv4Mapped) {
+      return this._isInSubnet(input) || this._isInSubnet(input.mappedIpv4);
+    }
+    return this._isInSubnet(input);
+  }
+
+  _isInSubnet(input: IpAddress, visited = new Set<symbol>()): boolean {
     // If this group has already been visited, stop to prevent infinite recursion
     if (visited.has(this.#id)) {
       return false;
@@ -31,7 +39,7 @@ export class SubnetGroup implements Subnet {
     for (const range of this.#ranges) {
       if (range instanceof SubnetGroup) {
         // If the range is another SubnetGroup, pass the visited set
-        if (range.isInSubnet(input, visited)) {
+        if (range._isInSubnet(input, visited)) {
           return true;
         }
       } else if (range.isInSubnet(input)) {

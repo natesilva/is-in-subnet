@@ -24,7 +24,7 @@
     "prettier": "prettier --write \"{src,test}/**/*.?(ts|json)\"",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest --watch",
+    "test:watch": "vitest --watch --ui",
     "coverage": "vitest run --coverage"
   },
   "engines": {

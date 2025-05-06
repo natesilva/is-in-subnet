@@ -1,7 +1,7 @@
 import type { IpAddress } from "../core/interfaces/ip-address.ts";
 import { Ipv4Address } from "../core/ipv4/ipv4-address.ts";
 import { Ipv6Address } from "../core/ipv6/ipv6-address.ts";
-import * as util from "./net.js";
+import * as net from "./net.js";
 
 /**
  * Given input which can be a string, an Ipv4Address, or an Ipv6Address, normalize to an
@@ -12,14 +12,13 @@ import * as util from "./net.js";
  */
 export function makeIpAddress(input: string | IpAddress) {
   if (typeof input === "string") {
-    if (!util.isIP(input)) {
-      throw new Error(`not a valid IPv4 or IPv6 address: ${input}`);
-    }
-    if (util.isIPv4(input)) {
+    const ipVersion = net.isIP(input);
+    if (ipVersion === 4) {
       return new Ipv4Address(input);
-    } else {
+    } else if (ipVersion === 6) {
       return new Ipv6Address(input);
     }
+    throw new Error(`not a valid IPv4 or IPv6 address: ${input}`);
   } else {
     return input;
   }

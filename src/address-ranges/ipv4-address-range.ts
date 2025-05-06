@@ -1,5 +1,5 @@
-import { Ipv4Subnet } from "../ipv4/ipv4-subnet.ts";
-import { SubnetGroup } from "../subnet-group.ts";
+import { Ipv4Subnet } from "../core/ipv4/ipv4-subnet.ts";
+import { SubnetGroup } from "../util/subnet-group.ts";
 
 /**
  * Special-use IPv4 address ranges

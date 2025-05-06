@@ -4,8 +4,6 @@ import { beforeEach, suite, test } from "vitest";
 import { IPv4, IPv6, createChecker } from "../src/index.js";
 import ipv4fixtures from "./fixtures/ipv4.js";
 import ipv6fixtures from "./fixtures/ipv6.js";
-import { Ipv4Subnet } from "../src/ipv4/ipv4-subnet.js";
-import { Ipv6Subnet } from "../src/ipv6/ipv6-subnet.js";
 
 // ***************************************************************************************
 //
@@ -69,7 +67,7 @@ suite("performance", () => {
     const checkers = ipv4fixtures.map(([, subnet]) => {
       let checker = checkerCache.get(subnet);
       if (!checker) {
-        checker = IPv4.createChecker([new Ipv4Subnet(subnet)]);
+        checker = IPv4.createChecker(subnet);
         checkerCache.set(subnet, checker);
       }
       return checker;
@@ -99,7 +97,7 @@ suite("performance", () => {
     const checkers = ipv6fixtures.map(([, subnet]) => {
       let checker = checkerCache.get(subnet);
       if (!checker) {
-        checker = IPv6.createChecker([new Ipv6Subnet(subnet)]);
+        checker = IPv6.createChecker(subnet);
         checkerCache.set(subnet, checker);
       }
       return checker;

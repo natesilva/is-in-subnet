@@ -1,12 +1,12 @@
+import * as net from "../../util/net.js";
 import type { IpAddress } from "../interfaces/ip-address.ts";
-import * as util from "../util.js";
 
 export class Ipv4Address implements IpAddress {
   readonly #long: number;
   readonly #ip: string;
 
   constructor(ip: string) {
-    if (!util.isIPv4(ip)) {
+    if (!net.isIPv4(ip)) {
       throw new Error(`not a valid IPv4 address: ${ip}`);
     }
     this.#ip = ip;

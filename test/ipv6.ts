@@ -1,8 +1,7 @@
-import { expect } from "vitest";
-import { suite, test } from "vitest";
-import { IPv6 } from "../src/ipv6/ipv6.js";
-import { Ipv6Address } from "../src/ipv6/ipv6-address.js";
-import { Ipv6Subnet } from "../src/ipv6/ipv6-subnet.js";
+import { expect, suite, test } from "vitest";
+import { Ipv6Address } from "../src/core/ipv6/ipv6-address.js";
+import { Ipv6Subnet } from "../src/core/ipv6/ipv6-subnet.js";
+import * as IPv6 from "../src/legacy/ipv6.js";
 import ipv6fixtures from "./fixtures/ipv6.js";
 
 suite("IPv6 tests", () => {
@@ -95,7 +94,7 @@ suite("IPv6 tests", () => {
   test("Ipv6Address parses valid mapped IPv4", () => {
     const addr = new Ipv6Address("::ffff:192.168.0.1");
     expect(addr.isIpv4Mapped).toBe(true);
-    expect(addr.mappedIpv4).toBe("192.168.0.1");
+    expect(addr.mappedIpv4.ip).toBe("192.168.0.1");
     expect(Array.from(addr.segments)).toEqual([0, 0, 0, 0, 0, 65535, 49320, 1]);
   });
 

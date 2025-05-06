@@ -1,4 +1,4 @@
-import { Ipv6Subnet } from "../ipv6/ipv6-subnet.js";
+import { Ipv6Subnet } from "../core/ipv6/ipv6-subnet.js";
 
 /**
  * Special-use IPv6 address ranges
