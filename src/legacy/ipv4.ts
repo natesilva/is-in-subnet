@@ -27,20 +27,20 @@ export function createChecker(subnetOrSubnets: string | string[]) {
 
 export function isPrivate(input: string) {
   const address = new Ipv4Address(input);
-  return IP_CATEGORY.PRIVATE.isInSubnet(address);
+  return IP_CATEGORY.PRIVATE_V4.isInSubnet(address);
 }
 
 export function isLocalhost(input: string) {
   const address = new Ipv4Address(input);
-  return IP_CATEGORY.LOCALHOST.isInSubnet(address);
+  return IP_CATEGORY.LOCALHOST_V4.isInSubnet(address);
 }
 
 export function isReserved(input: string) {
   const address = new Ipv4Address(input);
-  return IP_CATEGORY.RESERVED.isInSubnet(address);
+  return IP_CATEGORY.RESERVED_V4.isInSubnet(address);
 }
 
 export function isSpecial(input: string) {
   const address = new Ipv4Address(input);
-  return IP_CATEGORY.SPECIAL.isInSubnet(address);
+  return IP_CATEGORY.SPECIAL_V4.isInSubnet(address);
 }

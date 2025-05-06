@@ -3,18 +3,18 @@ import { IPV4_ADDRESS_RANGE } from "./ipv4-address-range.ts";
 import { IPV6_ADDRESS_RANGE } from "./ipv6-address-range.ts";
 
 // Define the categories first
-const LOCALHOST = new SubnetGroup(
-  IPV4_ADDRESS_RANGE.LOOPBACK,
-  IPV6_ADDRESS_RANGE.LOOPBACK,
-);
+const LOCALHOST_V4 = new SubnetGroup(IPV4_ADDRESS_RANGE.LOOPBACK);
+const LOCALHOST_V6 = new SubnetGroup(IPV6_ADDRESS_RANGE.LOOPBACK);
+const LOCALHOST = new SubnetGroup(LOCALHOST_V4, LOCALHOST_V6);
 
-const PRIVATE = new SubnetGroup(
-  IPV4_ADDRESS_RANGE.PRIVATE_IP,
+const PRIVATE_V4 = new SubnetGroup(IPV4_ADDRESS_RANGE.PRIVATE_IP);
+const PRIVATE_V6 = new SubnetGroup(
   IPV6_ADDRESS_RANGE.LINK_SCOPED_UNICAST,
   IPV6_ADDRESS_RANGE.UNIQUE_LOCAL,
 );
+const PRIVATE = new SubnetGroup(PRIVATE_V4, PRIVATE_V6);
 
-const RESERVED = new SubnetGroup(
+const RESERVED_V4 = new SubnetGroup(
   IPV4_ADDRESS_RANGE.BROADCAST_THIS,
   IPV4_ADDRESS_RANGE.CARRIER_GRADE_NAT,
   IPV4_ADDRESS_RANGE.LINK_LOCAL,
@@ -28,6 +28,9 @@ const RESERVED = new SubnetGroup(
   IPV4_ADDRESS_RANGE.MULTICAST,
   IPV4_ADDRESS_RANGE.RESERVED_1,
   IPV4_ADDRESS_RANGE.LIMITED_BROADCAST,
+);
+
+const RESERVED_V6 = new SubnetGroup(
   IPV6_ADDRESS_RANGE.UNSPECIFIED,
   IPV6_ADDRESS_RANGE.IPV4_IPV6_TRANSLATION,
   IPV6_ADDRESS_RANGE.DISCARD_ONLY,
@@ -38,13 +41,28 @@ const RESERVED = new SubnetGroup(
   IPV6_ADDRESS_RANGE.ORCHIDV2,
 );
 
+const RESERVED = new SubnetGroup(RESERVED_V4, RESERVED_V6);
+
 // Define the SPECIAL category using the above variables
-const SPECIAL = new SubnetGroup(LOCALHOST, PRIVATE, RESERVED);
+const SPECIAL_V4 = new SubnetGroup(LOCALHOST_V4, PRIVATE_V4, RESERVED_V4);
+const SPECIAL_V6 = new SubnetGroup(LOCALHOST_V6, PRIVATE_V6, RESERVED_V6);
+const SPECIAL = new SubnetGroup(SPECIAL_V4, SPECIAL_V6);
 
 // Create the final object with all categories
 export const IP_CATEGORY = {
+  LOCALHOST_V4,
+  LOCALHOST_V6,
   LOCALHOST,
+
+  PRIVATE_V4,
+  PRIVATE_V6,
   PRIVATE,
+
+  RESERVED_V4,
+  RESERVED_V6,
   RESERVED,
+
+  SPECIAL_V4,
+  SPECIAL_V6,
   SPECIAL,
 } as const;

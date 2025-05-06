@@ -1,5 +1,4 @@
 import { IP_CATEGORY } from "./address-ranges/ip-category.ts";
-import { Ipv4Address } from "./core/ipv4/ipv4-address.js";
 import { Ipv4Subnet } from "./core/ipv4/ipv4-subnet.js";
 import { Ipv6Address } from "./core/ipv6/ipv6-address.js";
 import { Ipv6Subnet } from "./core/ipv6/ipv6-subnet.js";
