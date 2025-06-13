@@ -1,11 +1,11 @@
 import { IP_CATEGORY } from "./address-ranges/ip-category.ts";
-import { Ipv4Subnet } from "./core/ipv4/ipv4-subnet.js";
-import { Ipv6Address } from "./core/ipv6/ipv6-address.js";
-import { Ipv6Subnet } from "./core/ipv6/ipv6-subnet.js";
-import * as IPv4 from "./legacy/ipv4.js";
-import * as IPv6 from "./legacy/ipv6.js";
+import { Ipv4Subnet } from "./core/ipv4/ipv4-subnet.ts";
+import { Ipv6Address } from "./core/ipv6/ipv6-address.ts";
+import { Ipv6Subnet } from "./core/ipv6/ipv6-subnet.ts";
+import * as IPv4 from "./legacy/ipv4.ts";
+import * as IPv6 from "./legacy/ipv6.ts";
 import { arrayify } from "./util/arrayify.ts";
-import { getIpRanges } from "./util/get-ip-ranges.js";
+import { getIpRanges } from "./util/get-ip-ranges.ts";
 import { makeIpAddress } from "./util/make-ip-address.ts";
 import * as net from "./util/net.ts";
 import { SubnetGroup } from "./util/subnet-group.ts";

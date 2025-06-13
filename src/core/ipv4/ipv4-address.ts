@@ -47,7 +47,12 @@ export class Ipv4Address implements IpAddress {
         isNewOctet = true;
       } else if (char >= 48 && char <= 57) {
         // Check for leading zero
-        if (isNewOctet && char === 48 && i + 1 < ip.length && ip.charCodeAt(i + 1) !== 46) {
+        if (
+          isNewOctet &&
+          char === 48 &&
+          i + 1 < ip.length &&
+          ip.charCodeAt(i + 1) !== 46
+        ) {
           return [false, 0]; // Leading zero detected
         }
         octet = octet * 10 + (char - 48);

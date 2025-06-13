@@ -7,7 +7,7 @@ import {
   isReserved,
   isSpecial,
   check,
-} from "../src/index.js";
+} from "../src/index.ts";
 import ipv4fixtures from "./fixtures/ipv4.js";
 import ipv6fixtures from "./fixtures/ipv6.js";
 

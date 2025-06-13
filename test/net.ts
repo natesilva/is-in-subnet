@@ -1,5 +1,5 @@
 import { expect, suite, test } from "vitest";
-import * as net from "../src/util/net.js";
+import * as net from "../src/util/net.ts";
 
 suite("net", () => {
   suite("isIPv6", () => {

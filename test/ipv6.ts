@@ -1,7 +1,7 @@
 import { expect, suite, test } from "vitest";
-import { Ipv6Address } from "../src/core/ipv6/ipv6-address.js";
-import { Ipv6Subnet } from "../src/core/ipv6/ipv6-subnet.js";
-import * as IPv6 from "../src/legacy/ipv6.js";
+import { Ipv6Address } from "../src/core/ipv6/ipv6-address.ts";
+import { Ipv6Subnet } from "../src/core/ipv6/ipv6-subnet.ts";
+import * as IPv6 from "../src/legacy/ipv6.ts";
 import ipv6fixtures from "./fixtures/ipv6.js";
 
 suite("IPv6 tests", () => {

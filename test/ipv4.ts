@@ -1,6 +1,6 @@
 import { expect, suite, test } from "vitest";
-import { Ipv4Address } from "../src/core/ipv4/ipv4-address.js";
-import { Ipv4Subnet } from "../src/core/ipv4/ipv4-subnet.js";
+import { Ipv4Address } from "../src/core/ipv4/ipv4-address.ts";
+import { Ipv4Subnet } from "../src/core/ipv4/ipv4-subnet.ts";
 import * as IPv4 from "../src/legacy/ipv4.js";
 import ipv4fixtures from "./fixtures/ipv4.js";
 

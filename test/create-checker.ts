@@ -1,6 +1,6 @@
 import { expect, suite, test, vi } from "vitest";
-import { createChecker } from "../src/index.js";
-import * as net from "../src/util/net.js";
+import { createChecker } from "../src/index.ts";
+import * as net from "../src/util/net.ts";
 
 suite("createChecker", () => {
   test("createChecker should handle invalid IP addresses", () => {

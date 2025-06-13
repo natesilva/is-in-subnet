@@ -1,7 +1,7 @@
 import type { IpAddress } from "../core/interfaces/ip-address.ts";
 import { Ipv4Address } from "../core/ipv4/ipv4-address.ts";
 import { Ipv6Address } from "../core/ipv6/ipv6-address.ts";
-import * as net from "./net.js";
+import * as net from "./net.ts";
 
 /**
  * Given input which can be a string, an Ipv4Address, or an Ipv6Address, normalize to an

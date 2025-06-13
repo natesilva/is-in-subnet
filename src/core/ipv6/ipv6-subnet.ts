@@ -1,6 +1,6 @@
 import type { IpAddress } from "../interfaces/ip-address.ts";
 import type { Subnet } from "../interfaces/subnet.ts";
-import { Ipv6Address } from "./ipv6-address.js";
+import { Ipv6Address } from "./ipv6-address.ts";
 
 export class Ipv6Subnet implements Subnet {
   readonly #subnetIp: Ipv6Address;
