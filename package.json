@@ -25,7 +25,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest --watch --ui",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "bench": "vitest bench --run"
   },
   "engines": {
     "node": ">=20"
