@@ -32,33 +32,33 @@ export function isInSubnet(
  */
 export function createChecker(subnetOrSubnets: string | string[]) {
   const subnets = arrayify(subnetOrSubnets).map((subnet) => new Ipv6Subnet(subnet));
-  return (address: string) => {
+  return (address: string): boolean => {
     const ip = new Ipv6Address(address);
     return subnets.some((subnet) => subnet.isInSubnet(ip));
   };
 }
 
-export function isPrivate(input: string) {
+export function isPrivate(input: string): boolean {
   const address = new Ipv6Address(input);
   return IP_CATEGORY.PRIVATE_V6.isInSubnet(address);
 }
 
-export function isLocalhost(input: string) {
+export function isLocalhost(input: string): boolean {
   const address = new Ipv6Address(input);
   return IP_CATEGORY.LOCALHOST_V6.isInSubnet(address);
 }
 
-export function isReserved(input: string) {
+export function isReserved(input: string): boolean {
   const address = new Ipv6Address(input);
   return IP_CATEGORY.RESERVED_V6.isInSubnet(address);
 }
 
-export function isSpecial(input: string) {
+export function isSpecial(input: string): boolean {
   const address = new Ipv6Address(input);
   return IP_CATEGORY.SPECIAL_V6.isInSubnet(address);
 }
 
-export function isIPv4MappedAddress(input: string) {
+export function isIPv4MappedAddress(input: string): boolean {
   const address = new Ipv6Address(input);
   return address.isIpv4Mapped;
 }

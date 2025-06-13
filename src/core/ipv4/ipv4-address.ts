@@ -13,15 +13,15 @@ export class Ipv4Address implements IpAddress {
     this.#long = longValue;
   }
 
-  get ip() {
+  get ip(): string {
     return this.#ip;
   }
 
-  get long() {
+  get long(): number {
     return this.#long;
   }
 
-  toString() {
+  toString(): string {
     return this.#ip;
   }
 

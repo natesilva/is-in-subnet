@@ -57,23 +57,23 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
 
   const subnetGroup = new SubnetGroup(...ipv4Subnets, ...ipv6Subnets);
 
-  return (input: string) => subnetGroup.isInSubnet(makeIpAddress(input));
+  return (input: string): boolean => subnetGroup.isInSubnet(makeIpAddress(input));
 }
 
 /** Test if the given IP address is a private/internal IP address. */
-export function isPrivate(input: string) {
+export function isPrivate(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.PRIVATE.isInSubnet(address);
 }
 
 /** Test if the given IP address is a localhost address. */
-export function isLocalhost(input: string) {
+export function isLocalhost(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.LOCALHOST.isInSubnet(address);
 }
 
 /** Test if the given IP address is in a known reserved range and not a normal host IP */
-export function isReserved(input: string) {
+export function isReserved(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.RESERVED.isInSubnet(address);
 }
@@ -82,12 +82,12 @@ export function isReserved(input: string) {
  * Test if the given IP address is a special address of any kind (private, reserved,
  * localhost)
  */
-export function isSpecial(input: string) {
+export function isSpecial(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.SPECIAL.isInSubnet(address);
 }
 
-export function isIPv4MappedAddress(address: string) {
+export function isIPv4MappedAddress(address: string): boolean {
   if (!net.isIPv6(address)) {
     return false;
   }
@@ -95,4 +95,4 @@ export function isIPv4MappedAddress(address: string) {
   return ip.isIpv4Mapped;
 }
 
-export const check = isInSubnet;
+export const check: typeof isInSubnet = isInSubnet;

@@ -49,7 +49,7 @@ const SPECIAL_V6 = new SubnetGroup(LOCALHOST_V6, PRIVATE_V6, RESERVED_V6);
 const SPECIAL = new SubnetGroup(SPECIAL_V4, SPECIAL_V6);
 
 // Create the final object with all categories
-export const IP_CATEGORY = {
+export const IP_CATEGORY: Readonly<Record<string, SubnetGroup>> = {
   LOCALHOST_V4,
   LOCALHOST_V6,
   LOCALHOST,

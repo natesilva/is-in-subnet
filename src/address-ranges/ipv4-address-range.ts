@@ -5,7 +5,7 @@ import { SubnetGroup } from "../util/subnet-group.ts";
  * Special-use IPv4 address ranges
  * RFC 6890: https://www.rfc-editor.org/rfc/rfc6890.html
  */
-export const IPV4_ADDRESS_RANGE = Object.freeze({
+export const IPV4_ADDRESS_RANGE: Readonly<Record<string, Ipv4Subnet | SubnetGroup>> = {
   /** "This host on this network" */
   BROADCAST_THIS: new Ipv4Subnet("0.0.0.0/8"),
   /** Loopback (localhost) */
@@ -41,4 +41,4 @@ export const IPV4_ADDRESS_RANGE = Object.freeze({
 
   /** Multicast: no longer documented in RFC 6890; found in RFC 5735 */
   MULTICAST: new Ipv4Subnet("224.0.0.0/4"),
-} as const);
+};

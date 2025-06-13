@@ -19,28 +19,28 @@ export function isInSubnet(
 
 export function createChecker(subnetOrSubnets: string | string[]) {
   const subnets = arrayify(subnetOrSubnets).map((subnet) => new Ipv4Subnet(subnet));
-  return (address: string) => {
+  return (address: string): boolean => {
     const ip = new Ipv4Address(address);
     return subnets.some((subnet) => subnet.isInSubnet(ip));
   };
 }
 
-export function isPrivate(input: string) {
+export function isPrivate(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.PRIVATE_V4.isInSubnet(address);
 }
 
-export function isLocalhost(input: string) {
+export function isLocalhost(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.LOCALHOST_V4.isInSubnet(address);
 }
 
-export function isReserved(input: string) {
+export function isReserved(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.RESERVED_V4.isInSubnet(address);
 }
 
-export function isSpecial(input: string) {
+export function isSpecial(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.SPECIAL_V4.isInSubnet(address);
 }

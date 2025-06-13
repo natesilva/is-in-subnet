@@ -59,11 +59,6 @@
     "typescript-eslint": "^8.31.0",
     "vitest": "^3.1.2"
   },
-  "@mocha/contributors": {
-    "exclude": [
-      "Nate Silva <natesilva@users.noreply.github.com>"
-    ]
-  },
   "contributors": [
     "Chris Walker <chris@thechriswalker.net>",
     "dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",

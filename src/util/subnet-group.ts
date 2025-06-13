@@ -19,14 +19,14 @@ export class SubnetGroup implements Subnet {
     throw new Error("Method not implemented.");
   }
 
-  isInSubnet(input: IpAddress) {
+  isInSubnet(input: IpAddress): boolean {
     if (input instanceof Ipv6Address && input.isIpv4Mapped) {
       return this._isInSubnet(input) || this._isInSubnet(input.mappedIpv4);
     }
     return this._isInSubnet(input);
   }
 
-  _isInSubnet(input: IpAddress, visited = new Set<symbol>()): boolean {
+  _isInSubnet(input: IpAddress, visited: Set<symbol> = new Set()): boolean {
     // If this group has already been visited, stop to prevent infinite recursion
     if (visited.has(this.#id)) {
       return false;

@@ -10,7 +10,7 @@ import * as net from "./net.ts";
  * @returns an IpAddress object
  * @throws Error if the input is not a valid IP address
  */
-export function makeIpAddress(input: string | IpAddress) {
+export function makeIpAddress(input: string | IpAddress): IpAddress {
   if (typeof input === "string") {
     const ipVersion = net.isIP(input);
     if (ipVersion === 4) {

@@ -10,7 +10,7 @@ import { makeIpAddress } from "./make-ip-address.ts";
  * @param address The IP address to check (string or IpAddress object)
  * @returns An array of range names that the address belongs to
  */
-export function getIpRanges(input: string | IpAddress) {
+export function getIpRanges(input: string | IpAddress): string[] {
   // Convert string addresses to proper IpAddress objects
   const ipAddress = makeIpAddress(input);
 

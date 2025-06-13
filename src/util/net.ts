@@ -25,7 +25,7 @@ const IPv6Reg = new RegExp(
  * Returns true if the string represents an IPv4 address. Matches Node.js net.isIPv4
  * functionality.
  */
-export function isIPv4(s: string) {
+export function isIPv4(s: string): boolean {
   return IPv4Reg.test(s);
 }
 
@@ -33,7 +33,7 @@ export function isIPv4(s: string) {
  * Returns true if the string represents an IPv6 address. Matches Node.js net.isIPv6
  * functionality.
  */
-export function isIPv6(s: string) {
+export function isIPv6(s: string): boolean {
   return IPv6Reg.test(s);
 }
 
@@ -42,7 +42,7 @@ export function isIPv6(s: string) {
  * dot-decimal notation with no leading zeroes. Otherwise, returns 0. Matches Node.js
  * net.isIP functionality.
  */
-export function isIP(s: string) {
+export function isIP(s: string): 4 | 6 | 0 {
   if (isIPv4(s)) return 4;
   if (isIPv6(s)) return 6;
   return 0;

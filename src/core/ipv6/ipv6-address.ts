@@ -35,23 +35,23 @@ export class Ipv6Address implements IpAddress {
     }
   }
 
-  get ip() {
+  get ip(): string {
     return this.#ip;
   }
 
-  get segments() {
+  get segments(): Readonly<Uint16Array> {
     return this.#segments;
   }
 
-  toString() {
+  toString(): string {
     return this.#ip;
   }
 
-  get isIpv4Mapped() {
+  get isIpv4Mapped(): boolean {
     return Boolean(this.#mappedIpv4);
   }
 
-  get mappedIpv4() {
+  get mappedIpv4(): Ipv4Address {
     if (!this.#mappedIpv4) {
       throw new Error(`not an IPv4-mapped IPv6 address: ${this.#ip}`);
     }
