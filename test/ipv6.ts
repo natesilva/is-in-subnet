@@ -119,4 +119,14 @@ suite("IPv6 tests", () => {
   test("Ipv6Address throws on invalid mapped IPv4", () => {
     expect(() => new Ipv6Address("::ffff:999.999.999.999")).toThrow();
   });
+
+  test("Ipv6Address returns the correct string representation", () => {
+    const addr = new Ipv6Address("2001:4860:4860::8888");
+    expect(addr.ip).toBe("2001:4860:4860::8888");
+  });
+
+  test("Ipv6Address mappedIpv4 property throws if mapped IPv4 is invalid", () => {
+    const addr = new Ipv6Address("2001:4860:4860::8888");
+    expect(() => addr.mappedIpv4).toThrow();
+  });
 });
