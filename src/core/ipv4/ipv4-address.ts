@@ -5,7 +5,7 @@ export class Ipv4Address implements IpAddress {
   readonly #ip: string;
 
   constructor(ip: string) {
-    const [isValid, longValue] = Ipv4Address.validateAndConvert(ip);
+    const [isValid, longValue] = Ipv4Address.#validateAndConvert(ip);
     if (!isValid) {
       throw new Error(`not a valid IPv4 address: ${ip}`);
     }
@@ -25,7 +25,7 @@ export class Ipv4Address implements IpAddress {
     return this.#ip;
   }
 
-  protected static validateAndConvert(ip: string): [boolean, number] {
+  static #validateAndConvert(ip: string): [boolean, number] {
     if (ip.length < 7 || ip.length > 15) return [false, 0];
 
     let result = 0;
