@@ -68,6 +68,6 @@
     "Spencer Wilson <spencer.wilson@optimizely.com>"
   ],
   "volta": {
-    "node": "20.19.1"
+    "node": "22.16.0"
   }
 }

@@ -10,6 +10,7 @@ export class Ipv6Address implements IpAddress {
   readonly #ip: string;
   readonly #mappedIpv4: string | undefined;
   readonly #segments: Readonly<Uint16Array>;
+  readonly #bigint: bigint;
   #mappedIpv4Address: Ipv4Address | undefined;
 
   constructor(ip: string) {
@@ -24,23 +25,25 @@ export class Ipv6Address implements IpAddress {
       // Note: isIPv6 already checks for valid mapped IPv4
       this.#ip = ip;
       this.#mappedIpv4 = ipv4Part;
-      this.#segments = Ipv6Address.parseMappedIpv4Segments(ipv4Part);
+      this.#segments = Ipv6Address.#parseMappedIpv4Segments(ipv4Part);
     } else if (ip.match(REGEXP_DOT)) {
       // Obsolete IPv4-mapped IPv6 address format
       throw new Error(`not a valid IPv6 address: ${ip}`);
     } else {
       this.#ip = ip;
       this.#mappedIpv4 = undefined;
-      this.#segments = Ipv6Address.parseSegments(this.#ip);
+      this.#segments = Ipv6Address.#parseSegments(this.#ip);
     }
+
+    this.#bigint = Ipv6Address.#segmentsToBigInt(this.#segments);
   }
 
   get ip(): string {
     return this.#ip;
   }
 
-  get segments(): Readonly<Uint16Array> {
-    return this.#segments;
+  get bigint(): bigint {
+    return this.#bigint;
   }
 
   toString(): string {
@@ -66,7 +69,7 @@ export class Ipv6Address implements IpAddress {
    * segments.
    * @param ip
    */
-  private static parseSegments(ip: string): Uint16Array {
+  static #parseSegments(ip: string): Uint16Array {
     const segments = new Uint16Array(8);
     const doubleColonIndex = ip.indexOf("::");
 
@@ -109,7 +112,7 @@ export class Ipv6Address implements IpAddress {
    * numeric (16-bit) segments.
    * @param ipv4
    */
-  private static parseMappedIpv4Segments(ipv4: string): Uint16Array {
+  static #parseMappedIpv4Segments(ipv4: string): Uint16Array {
     const parts = ipv4.split(REGEXP_DOT).map((part) => parseInt(part, 10));
 
     const segments = new Uint16Array(8);
@@ -122,5 +125,17 @@ export class Ipv6Address implements IpAddress {
     segments[7] = (parts[2] << 8) + parts[3];
 
     return segments;
+  }
+
+  /**
+   * Converts IPv6 segments to a single BigInt representation.
+   * @param segments Array of 8 16-bit segments
+   */
+  static #segmentsToBigInt(segments: Uint16Array): bigint {
+    let result = 0n;
+    for (let i = 0; i < 8; i++) {
+      result = (result << 16n) + BigInt(segments[i]);
+    }
+    return result;
   }
 }

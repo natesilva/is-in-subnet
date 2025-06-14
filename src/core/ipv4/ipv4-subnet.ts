@@ -10,6 +10,7 @@ export class Ipv4Subnet implements Subnet {
   constructor(subnet: string) {
     const [ip, prefixLengthString] = subnet.split("/");
     const prefixLength = +prefixLengthString;
+
     if (!ip || !Number.isInteger(prefixLength)) {
       throw new Error(`not a valid IPv4 subnet: ${subnet}`);
     }
@@ -30,10 +31,6 @@ export class Ipv4Subnet implements Subnet {
   isInSubnet(other: IpAddress): boolean {
     if (!(other instanceof Ipv4Address)) {
       return false;
-    }
-
-    if (this.#prefixLength === 0) {
-      return true;
     }
 
     const addressPrefix = other.long >> (32 - this.#prefixLength);
