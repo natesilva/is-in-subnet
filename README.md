@@ -21,9 +21,9 @@ Key Features:
 Install the package:
 
 ```shell
-deno add @natesilva/is-in-subnet
-pnpm add @natesilva/is-in-subnet
-yarn add @natesilva/is-in-subnet
+deno add jsr:@natesilva/is-in-subnet
+pnpm add jsr:@natesilva/is-in-subnet
+yarn add jsr:@natesilva/is-in-subnet
 
 # for NPM:
 npx jsr add @natesilva/is-in-subnet

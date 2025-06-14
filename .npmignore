@@ -23,4 +23,3 @@ tsconfig.json
 .mocharc.json
 *.sublime-*
 rollup.config.js
-dist

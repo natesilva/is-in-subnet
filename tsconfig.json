@@ -5,6 +5,5 @@
     "declaration": true,
     "isolatedDeclarations": true
   },
-  "include": ["src/**/*.ts", "test"],
-  "exclude": ["test"]
+  "include": ["src/**/*.ts", "test"]
 }
