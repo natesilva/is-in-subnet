@@ -2,9 +2,10 @@ import { Ipv6Subnet } from "../core/ipv6/ipv6-subnet.ts";
 
 /**
  * Special-use IPv6 address ranges
- * RFC 6890: https://www.rfc-editor.org/rfc/rfc6890.html
+ * @internal
+ * @category Address Ranges
  */
-export const IPV6_ADDRESS_RANGE: Record<string, Ipv6Subnet> = {
+export const IPV6_ADDRESS_RANGE: Readonly<Record<string, Ipv6Subnet>> = {
   /** Loopback address */
   LOOPBACK: new Ipv6Subnet("::1/128"),
   /** Unspecified address */
@@ -35,4 +36,4 @@ export const IPV6_ADDRESS_RANGE: Record<string, Ipv6Subnet> = {
 
   /** Overlay Routable Cryptographic Hash Identifiers v2 (ORCHIDv2) (RFC 7343) */
   ORCHIDV2: new Ipv6Subnet("2001:20::/28"),
-};
+} as const;

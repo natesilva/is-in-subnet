@@ -1,3 +1,11 @@
+/**
+ * This module is included for legacy compatibility with the undocumented, but
+ * previously-exported, IPv4 class.
+ *
+ * @deprecated Use the main functions from the base module.
+ * @module
+ * @category Deprecated
+ */
 import { IP_CATEGORY } from "../address-ranges/ip-category.ts";
 import { Ipv4Address } from "../core/ipv4/ipv4-address.ts";
 import { Ipv4Subnet } from "../core/ipv4/ipv4-subnet.ts";

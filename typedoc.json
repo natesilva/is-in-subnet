@@ -1,0 +1,23 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true,
+    "compactFolders": false,
+    "excludeReferences": true
+  },
+  "includeVersion": true,
+  "readme": "none",
+  "navigationLinks": {
+    "Github": "https://github.com/natesilva/is-in-subnet"
+  },
+  "categoryOrder": [
+    "General Use",
+    "Address Classification",
+    "Address Ranges",
+    "In-Browser Use",
+    "Utilities",
+    "Deprecated"
+  ]
+}

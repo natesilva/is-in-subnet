@@ -7,7 +7,14 @@ import globals from "globals";
 
 export default tseslint.config(
   {
-    ignores: ["**/dist/**", "**/coverage/**", "build.mjs", "build/**", "browser/**"],
+    ignores: [
+      "**/dist/**",
+      "**/coverage/**",
+      "build.mjs",
+      "build/**",
+      "browser/**",
+      "docs/**",
+    ],
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,

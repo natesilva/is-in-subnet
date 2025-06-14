@@ -1,24 +1,80 @@
+/**
+ * A library for checking if an IPv4 or IPv6 address is contained in a given CIDR subnet.
+ *
+ * @example Basic usage
+ * ```ts
+ * import { isInSubnet } from "is-in-subnet";
+ *
+ * isInSubnet("192.168.1.1", "192.168.1.0/24"); // true
+ * isInSubnet("2001:db8::1", "2001:db8::/32"); // true
+ * isInSubnet("10.5.0.1", "10.4.5.0/16"); // false
+ * ```
+ *
+ * @example Amortize the parsing cost using a functional version
+ * ```ts
+ * import { createChecker } from "is-in-subnet";
+ *
+ * // Once the checker is created, the parsing cost is amortized.
+ * // The checker can be used multiple times.
+ * const checker = createChecker(["10.4.5.0/16", "192.168.1.0/24"]);
+ * console.log(checker("10.5.0.1")); // true
+ * ```
+ *
+ * @example Test multiple subnets at once
+ * ```ts
+ * import { isInSubnet } from "is-in-subnet";
+ *
+ * const inAnySubnet = isInSubnet("10.5.0.1", ["10.4.5.0/16", "192.168.1.0/24"]); // true
+ * ```
+ *
+ * @example Test for special types of addresses
+ * ```ts
+ * import { isPrivate, isLocalhost } from "is-in-subnet";
+ *
+ * isPrivate("127.0.0.1", "127.0.0.0/8"); // true
+ * isLocalhost("::1", "::1/128"); // true
+ * ```
+ *
+ * @module
+ */
+
 import { IP_CATEGORY } from "./address-ranges/ip-category.ts";
 import { Ipv4Subnet } from "./core/ipv4/ipv4-subnet.ts";
 import { Ipv6Address } from "./core/ipv6/ipv6-address.ts";
 import { Ipv6Subnet } from "./core/ipv6/ipv6-subnet.ts";
-import * as IPv4 from "./legacy/ipv4.ts";
-import * as IPv6 from "./legacy/ipv6.ts";
 import { arrayify } from "./util/arrayify.ts";
 import { getIpRanges } from "./util/get-ip-ranges.ts";
 import { makeIpAddress } from "./util/make-ip-address.ts";
 import * as net from "./util/net.ts";
 import { SubnetGroup } from "./util/subnet-group.ts";
 
+export { IPV4_ADDRESS_RANGE, IPV6_ADDRESS_RANGE } from "./address-ranges/index.ts";
+export * as IPv4 from "./legacy/ipv4.ts";
+export * as IPv6 from "./legacy/ipv6.ts";
 export { isIP, isIPv4, isIPv6 } from "./util/net.ts";
-export { getIpRanges, IPv4, IPv6 };
+export { getIpRanges };
 
 /**
- * Test if the given IP address is contained in the specified subnet.
- * @param address the IPv4 or IPv6 address to check
- * @param subnet the IPv4 or IPv6 CIDR to test (or an array of them)
- * @throws if any of the address or subnet(s) are not valid IP addresses, or the CIDR
- *  prefix length is not valid
+ * Test if the given IP address is contained in a subnet. If an array of subnets is
+ * provided, it will return true if the address is contained in any of the subnets.
+ *
+ * @param address The IPv4 or IPv6 address to check.
+ * @param subnetOrSubnets The IPv4 or IPv6 CIDR to test (or an array of them).
+ * @throws Will throw an `Error` if any of the address or subnet(s) are not valid IP
+ *  addresses, or the CIDR prefix length is not valid.
+ * @category General Use
+ *
+ * @example Basic usage
+ * ```ts
+ * import { isInSubnet } from "is-in-subnet";
+ *
+ * // Test if the address is contained in a given subnet
+ * isInSubnet("2001:db8::1", "2001:db8::/32"); // true
+ * isInSubnet("10.5.0.1", "10.4.5.0/16"); // false
+ *
+ * // Test for membership in any of a list of subnets
+ * isInSubnet("10.5.0.1", ["10.4.5.0/16", "192.168.1.0/24"]); // true
+ * ```
  */
 export function isInSubnet(
   address: string,
@@ -28,11 +84,31 @@ export function isInSubnet(
 }
 
 /**
- * Create a function to test if the given IP address is contained in the specified subnet
- * or subnets.
- * @param subnet the IPv4 or IPv6 CIDR to test (or an array of them)
- * @throws if any of the subnet(s) are not valid IP addresses, or the CIDR
- *  prefix length is not valid
+ * Create a function to test if the given IP address is contained in the specified subnet.
+ * If an array of subnets is provided, it will return true if the address is contained in
+ * any of the subnets.
+ *
+ * This is an alternative to the {@linkcode isInSubnet} function. Use this if you need to
+ * do many or repeated checks. It’s faster than calling {@linkcode isInSubnet} multiple
+ * times.
+ *
+ * @param subnetOrSubnets The IPv4 or IPv6 CIDR to test (or an array of them).
+ * @returns Returns a function that takes an IP address as a string and returns `true` if the
+ *  address is contained in any of the provided subnets, or `false` otherwise.
+ * @throws Will throw an `Error` if any of the subnet(s) are not valid IP addresses, or
+ *  the CIDR prefix length is not valid.
+ * @category General Use
+ *
+ * @example Using createChecker to create a re-usable checker function
+ * ```ts
+ * import { createChecker } from "is-in-subnet";
+ *
+ * // Once the checker is created, the parsing cost is amortized.
+ * // The checker can be used multiple times.
+ * const checker = createChecker(["10.4.5.0/16", "192.168.1.0/24"]);
+ * console.log(checker("10.5.0.1")); // true
+ * ```
+
  */
 export function createChecker(subnetOrSubnets: string | readonly string[]) {
   const subnetsByVersion = {
@@ -60,19 +136,37 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
   return (input: string): boolean => subnetGroup.isInSubnet(makeIpAddress(input));
 }
 
-/** Test if the given IP address is a private/internal IP address. */
+/**
+ * Test if the given IP address is a private/internal IP address.
+ *
+ * @param input - The IP address to test.
+ * @returns `true` if the IP address is private/internal, false otherwise.
+ * @category Address Classification
+ */
 export function isPrivate(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.PRIVATE.isInSubnet(address);
 }
 
-/** Test if the given IP address is a localhost address. */
+/**
+ * Test if the given IP address is a localhost address.
+ *
+ * @param input - The IP address to test.
+ * @returns `true` if the IP address is a localhost address, false otherwise.
+ * @category Address Classification
+ */
 export function isLocalhost(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.LOCALHOST.isInSubnet(address);
 }
 
-/** Test if the given IP address is in a known reserved range and not a normal host IP */
+/**
+ * Test if the given IP address is in a known reserved range and not a normal host IP.
+ *
+ * @param input - The IP address to test.
+ * @returns `true` if the IP address is in a reserved range, false otherwise.
+ * @category Address Classification
+ */
 export function isReserved(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.RESERVED.isInSubnet(address);
@@ -80,13 +174,24 @@ export function isReserved(input: string): boolean {
 
 /**
  * Test if the given IP address is a special address of any kind (private, reserved,
- * localhost)
+ * localhost).
+ *
+ * @param input - The IP address to test.
+ * @returns `true` if the IP address is a special address, false otherwise.
+ * @category Address Classification
  */
 export function isSpecial(input: string): boolean {
   const address = makeIpAddress(input);
   return IP_CATEGORY.SPECIAL.isInSubnet(address);
 }
 
+/**
+ * Test if an IP address is an IPv4 mapped address.
+ *
+ * @param address - The IP address to test.
+ * @returns `true` if the IP address is an IPv4 mapped address, false otherwise.
+ * @category Address Classification
+ */
 export function isIPv4MappedAddress(address: string): boolean {
   if (!net.isIPv6(address)) {
     return false;
@@ -95,4 +200,10 @@ export function isIPv4MappedAddress(address: string): boolean {
   return ip.isIpv4Mapped;
 }
 
+/**
+ * This is an alias for the {@linkcode isInSubnet} function. It may be more legible in
+ * a browser environment to use `IsInSubnet.check(…)` instead of
+ * `IsInSubnet.isInSubnet(…)`.
+ * @category In-Browser Use
+ */
 export const check: typeof isInSubnet = isInSubnet;

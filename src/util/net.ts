@@ -1,5 +1,8 @@
-// Utilities implementing a subset of the functionality of the Node.js
-// net module
+/**
+ * Utilities implementing a subset of the functionality of the Node.js `net` module.
+ *
+ * @module
+ */
 
 // RegExp for testing if a string represents an IPv4 address
 const v4Seg = "(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
@@ -22,25 +25,41 @@ const IPv6Reg = new RegExp(
 );
 
 /**
- * Returns true if the string represents an IPv4 address. Matches Node.js net.isIPv4
+ * Test if the string represents an IPv4 address. Matches Node.js net.isIPv4
  * functionality.
+ *
+ * @param s The string to test.
+ * @returns `true` if the string represents an IPv4 address.
+ * @category Utilities
  */
 export function isIPv4(s: string): boolean {
   return IPv4Reg.test(s);
 }
 
 /**
- * Returns true if the string represents an IPv6 address. Matches Node.js net.isIPv6
+ * Test if the string represents an IPv6 address. Matches Node.js net.isIPv6
  * functionality.
+ *
+ * @param s The string to test.
+ * @returns `true` if the string represents an IPv6 address.
+ * @category Utilities
  */
 export function isIPv6(s: string): boolean {
   return IPv6Reg.test(s);
 }
 
 /**
- * Returns 6 if input is an IPv6 address. Returns 4 if input is an IPv4 address in
- * dot-decimal notation with no leading zeroes. Otherwise, returns 0. Matches Node.js
- * net.isIP functionality.
+ * Returns the version of the IP address if the string represents an IP address,
+ * otherwise returns `0`
+ *
+ * Returns `6` if input is an IPv6 address. Returns `4` if input is an IPv4 address in
+ * dot-decimal notation with no leading zeroes. Otherwise, returns `0`. Matches Node.js
+ * `net.isIP` functionality.
+ *
+ * @param s The string to test.
+ * @returns `4` if the string represents an IPv4 address, `6` if it represents an IPv6
+ *  address, and `0` otherwise.
+ * @category Utilities
  */
 export function isIP(s: string): 4 | 6 | 0 {
   if (isIPv4(s)) return 4;
