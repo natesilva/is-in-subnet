@@ -33,6 +33,10 @@ export class Ipv4Subnet implements Subnet {
       return false;
     }
 
+    if (this.#prefixLength === 0) {
+      return true;
+    }
+
     const addressPrefix = other.long >> (32 - this.#prefixLength);
     return this.#subnetPrefix === addressPrefix;
   }

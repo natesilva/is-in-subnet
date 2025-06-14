@@ -33,6 +33,10 @@ export class Ipv6Subnet implements Subnet {
       return false;
     }
 
+    if (this.#prefixLength === 0) {
+      return true;
+    }
+
     const addressPrefix = other.bigint >> BigInt(128 - this.#prefixLength);
     return this.#subnetPrefix === addressPrefix;
   }
