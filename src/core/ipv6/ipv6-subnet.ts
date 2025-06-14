@@ -35,6 +35,11 @@ export class Ipv6Subnet implements Subnet {
       return true;
     }
 
+    if (this.#prefixLength === 128) {
+      // Exact match - compare all segments directly
+      return this.#subnetIp.segments.every((seg, i) => seg === other.segments[i]);
+    }
+
     // Compare segment by segment, based on the prefix length.
     for (let i = 0; i < 8; ++i) {
       // Calculate how many bits from the current segment are part of the prefix.

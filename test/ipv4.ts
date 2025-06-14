@@ -48,6 +48,7 @@ suite("IPv4 tests", () => {
     ["::1", "0.0.0.0/0"],
     ["10.5.0.1", "2001:db8:f53a::1:1/64"],
     ["10.5.0.1", "1.2.3"],
+    ["1.2.3.4a", "1.2.3.0/16"],
   ])("should throw on invalid ipv4 (%s, %s)", ([ip, subnet]) => {
     expect(() => IPv4.isInSubnet(ip, subnet)).toThrow();
   });
