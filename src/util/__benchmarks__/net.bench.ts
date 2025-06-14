@@ -1,5 +1,5 @@
 import { bench, describe } from "vitest";
-import { isIPv4, isIPv6, isIP } from "../src/util/net.ts";
+import { isIPv4, isIPv6, isIP } from "../net.ts";
 
 const validIPv4 = [
   "127.0.0.1",

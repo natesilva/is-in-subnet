@@ -5,9 +5,9 @@ import * as IPv6 from "../src/legacy/ipv6.ts";
 import ipv6fixtures from "./fixtures/ipv6.js";
 
 suite("IPv6 tests", () => {
-  test.each(ipv6fixtures)(
+  test.for(ipv6fixtures)(
     "should check ipv6 subnet membership (one-at-a-time) (%s, %s)",
-    (ip, subnet, expected) => {
+    ([ip, subnet, expected]) => {
       expect(IPv6.isInSubnet(ip, subnet)).toBe(expected);
     },
   );
@@ -33,62 +33,74 @@ suite("IPv6 tests", () => {
     expect(IPv6.isInSubnet(ip, [])).toBe(false);
   });
 
-  test("should throw on invalid subnets", () => {
-    expect(() => IPv6.isInSubnet("2001:db8:f53a::1", "2001:db8:f53a::1")).toThrow();
-    expect(() => IPv6.isInSubnet("2001:db8:f53a::1", "2001:db8:f53a::1/-1")).toThrow();
-    expect(() => IPv6.isInSubnet("2001:db8:f53a::1", "2001:db8:f53a::1/129")).toThrow();
+  test.for([
+    ["2001:db8:f53a::1", "2001:db8:f53a::1"],
+    ["2001:db8:f53a::1", "2001:db8:f53a::1/-1"],
+    ["2001:db8:f53a::1", "2001:db8:f53a::1/129"],
+  ])("should throw on invalid subnets (%s, %s)", ([ip, subnet]) => {
+    expect(() => IPv6.isInSubnet(ip, subnet)).toThrow();
   });
 
-  test("should throw on invalid ipv6", () => {
-    expect(() => IPv6.isInSubnet("10.5.0.1", "2001:db8:f53a::1:1/64")).toThrow();
-    expect(() => IPv6.isInSubnet("::ffff:22.33", "2001:db8:f53a::1:1/64")).toThrow();
-    expect(() =>
-      IPv6.isInSubnet("::ffff:192.168.0.256", "2001:db8:f53a::1:1/64"),
-    ).toThrow();
+  test.for([
+    ["10.5.0.1", "2001:db8:f53a::1:1/64"],
+    ["::ffff:22.33", "2001:db8:f53a::1:1/64"],
+    ["::ffff:192.168.0.256", "2001:db8:f53a::1:1/64"],
+  ])("should throw on invalid ipv6 (%s, %s)", ([ip, subnet]) => {
+    expect(() => IPv6.isInSubnet(ip, subnet)).toThrow();
   });
 
-  test("should handle ipv6 localhost", () => {
-    expect(IPv6.isLocalhost("::1")).toBe(true);
-    expect(IPv6.isLocalhost("::2")).toBe(false);
+  test.for<[string, boolean]>([
+    ["::1", true],
+    ["::2", false],
+  ])("should handle ipv6 localhost (%s)", ([ip, expected]) => {
+    expect(IPv6.isLocalhost(ip)).toBe(expected);
   });
 
-  test("should handle ipv6 private", () => {
-    expect(IPv6.isPrivate("::1")).toBe(false);
-    expect(IPv6.isPrivate("fe80::5555:1111:2222:7777%utun2")).toBe(true);
-    expect(IPv6.isPrivate("fdc5:3c04:80bf:d9ee::1")).toBe(true);
+  test.for<[string, boolean]>([
+    ["::1", false],
+    ["fe80::5555:1111:2222:7777%utun2", true],
+    ["fdc5:3c04:80bf:d9ee::1", true],
+  ])("should handle ipv6 private (%s)", ([ip, expected]) => {
+    expect(IPv6.isPrivate(ip)).toBe(expected);
   });
 
-  test("should handle ipv6 mapped", () => {
-    expect(IPv6.isIPv4MappedAddress("::1")).toBe(false);
-    expect(IPv6.isIPv4MappedAddress("fe80::5555:1111:2222:7777%utun2")).toBe(false);
-    expect(IPv6.isIPv4MappedAddress("::ffff:192.168.0.1")).toBe(true);
+  test.for<[string, boolean]>([
+    ["::1", false],
+    ["fe80::5555:1111:2222:7777%utun2", false],
+    ["::ffff:192.168.0.1", true],
+    ["0:0::0:ffff:192.168.0.1", true],
+  ])("should handle ipv6 mapped (%s)", ([ip, expected]) => {
+    expect(IPv6.isIPv4MappedAddress(ip)).toBe(expected);
+  });
 
+  test("should throw on deprecated IPv4-mapped IPv6 format", () => {
     // THIS FORMAT IS DEPRECATED AND WE DO NOT SUPPORT IT: SEE RFC4291 SECTION 2.5.5.1
     // https://tools.ietf.org/html/rfc4291#section-2.5.5.1
     expect(() => IPv6.isIPv4MappedAddress("::192.168.0.1")).toThrow();
   });
 
-  test("should handle ipv6 reserved", () => {
-    expect(IPv6.isReserved("2001:db8:f53a::1")).toBe(true);
-    expect(IPv6.isReserved("2001:4860:4860::8888")).toBe(false);
-    expect(IPv6.isReserved("::")).toBe(true);
+  test.for<[string, boolean]>([
+    ["2001:db8:f53a::1", true],
+    ["2001:4860:4860::8888", false],
+    ["::", true],
+  ])("should handle ipv6 reserved (%s)", ([ip, expected]) => {
+    expect(IPv6.isReserved(ip)).toBe(expected);
   });
 
-  test("should handle ipv6 special", () => {
-    expect(IPv6.isSpecial("2001:4860:4860::8888")).toBe(false);
-    expect(IPv6.isSpecial("::1")).toBe(true);
-    expect(IPv6.isSpecial("::ffff:192.168.0.1")).toBe(false);
-    expect(IPv6.isSpecial("2001:db8:f53a::1")).toBe(true);
+  test.for<[string, boolean]>([
+    ["2001:4860:4860::8888", false],
+    ["::1", true],
+    ["::ffff:192.168.0.1", false],
+    ["2001:db8:f53a::1", true],
+  ])("should handle ipv6 special (%s)", ([ip, expected]) => {
+    expect(IPv6.isSpecial(ip)).toBe(expected);
   });
 
-  test("Ipv6Address throws on invalid mapped IPv4", () => {
-    // ::ffff:999.999.999.999 is not a valid IPv4
-    expect(() => new Ipv6Address("::ffff:999.999.999.999")).toThrow();
-  });
-
-  test("Ipv6Address throws on obsolete IPv4-mapped IPv6 format", () => {
-    // ::192.168.0.1 is obsolete and should throw
-    expect(() => new Ipv6Address("::192.168.0.1")).toThrow();
+  test.for([
+    "::ffff:999.999.999.999", // not a valid IPv4
+    "::192.168.0.1", // obsolete format and should throw
+  ])("Ipv6Address throws on invalid IPv6 (%s)", (ip) => {
+    expect(() => new Ipv6Address(ip)).toThrow();
   });
 
   test("Ipv6Address parses valid mapped IPv4", () => {
@@ -97,26 +109,32 @@ suite("IPv6 tests", () => {
     expect(addr.mappedIpv4.ip).toBe("192.168.0.1");
   });
 
-  test("Ipv6Subnet isInSubnet returns true for /0 prefix", () => {
-    const subnet = new Ipv6Subnet("::/0");
-    const addr1 = new Ipv6Address("2001:db8::1");
-    const addr2 = new Ipv6Address("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
-    expect(subnet.isInSubnet(addr1)).toBe(true);
-    expect(subnet.isInSubnet(addr2)).toBe(true);
+  test.for([
+    ["::/0", "2001:db8::1"],
+    ["::/0", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"],
+  ])("Ipv6Subnet isInSubnet returns true for /0 prefix (%s, %s)", ([cidr, ip]) => {
+    const subnet = new Ipv6Subnet(cidr);
+    const addr = new Ipv6Address(ip);
+    expect(subnet.isInSubnet(addr)).toBe(true);
   });
 
-  test("Ipv6Subnet string representation", () => {
-    const subnet = new Ipv6Subnet("2001:db8::/32");
-    expect(subnet.toString()).toBe("2001:db8::/32");
-  });
+  test.for(["2001:db8::/32", "::/0", "fe80::/10"])(
+    "Ipv6Subnet string representation (%s)",
+    (cidr) => {
+      const subnet = new Ipv6Subnet(cidr);
+      expect(subnet.toString()).toBe(cidr);
+    },
+  );
 
-  test("Ipv6Address string representation", () => {
-    const subnet = new Ipv6Address("2001:db8::1");
-    expect(subnet.toString()).toBe("2001:db8::1");
-  });
-
-  test("Ipv6Address throws on invalid mapped IPv4", () => {
-    expect(() => new Ipv6Address("::ffff:999.999.999.999")).toThrow();
+  test.for([
+    "2001:db8::1",
+    "::1",
+    "fe80::1",
+    "::ffff:192.168.0.1",
+    "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+  ])("Ipv6Address string representation (%s)", (ip) => {
+    const addr = new Ipv6Address(ip);
+    expect(addr.toString()).toBe(ip);
   });
 
   test("Ipv6Address returns the correct string representation", () => {
@@ -127,5 +145,25 @@ suite("IPv6 tests", () => {
   test("Ipv6Address mappedIpv4 property throws if mapped IPv4 is invalid", () => {
     const addr = new Ipv6Address("2001:4860:4860::8888");
     expect(() => addr.mappedIpv4).toThrow();
+  });
+
+  suite("IPv6 legacy createChecker tests", () => {
+    test("createChecker with single subnet", () => {
+      const checker = IPv6.createChecker("2001:db8::/32");
+      expect(checker("2001:db8::1")).toBe(true);
+      expect(checker("2001:db9::1")).toBe(false);
+    });
+
+    test("createChecker with multiple subnets", () => {
+      const checker = IPv6.createChecker(["2001:db8::/32", "fe80::/10"]);
+      expect(checker("2001:db8::1")).toBe(true);
+      expect(checker("fe80::1")).toBe(true);
+      expect(checker("2001:4860:4860::8888")).toBe(false);
+    });
+
+    test("createChecker with empty subnets", () => {
+      const checker = IPv6.createChecker([]);
+      expect(checker("2001:db8::1")).toBe(false);
+    });
   });
 });

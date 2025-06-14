@@ -49,6 +49,7 @@ suite("IPv4 tests", () => {
     ["10.5.0.1", "2001:db8:f53a::1:1/64"],
     ["10.5.0.1", "1.2.3"],
     ["1.2.3.4a", "1.2.3.0/16"],
+    ["192.168.1.300", "192.168.1.0/24"],
   ])("should throw on invalid ipv4 (%s, %s)", ([ip, subnet]) => {
     expect(() => IPv4.isInSubnet(ip, subnet)).toThrow();
   });
@@ -124,5 +125,25 @@ suite("IPv4 tests", () => {
   ])("Ipv4Address string representation (%s)", (ip) => {
     const addr = new Ipv4Address(ip);
     expect(addr.toString()).toBe(ip);
+  });
+
+  suite("IPv4 legacy createChecker tests", () => {
+    test("createChecker with single subnet", () => {
+      const checker = IPv4.createChecker("192.168.1.0/24");
+      expect(checker("192.168.1.1")).toBe(true);
+      expect(checker("192.168.2.1")).toBe(false);
+    });
+
+    test("createChecker with multiple subnets", () => {
+      const checker = IPv4.createChecker(["192.168.1.0/24", "10.0.0.0/8"]);
+      expect(checker("192.168.1.1")).toBe(true);
+      expect(checker("10.0.0.1")).toBe(true);
+      expect(checker("172.16.0.1")).toBe(false);
+    });
+
+    test("createChecker with empty subnets", () => {
+      const checker = IPv4.createChecker([]);
+      expect(checker("192.168.1.1")).toBe(false);
+    });
   });
 });

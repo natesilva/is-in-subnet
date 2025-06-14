@@ -28,6 +28,9 @@ export class Ipv4Address implements IpAddress {
   static #validateAndConvert(ip: string): [boolean, number] {
     if (ip.length < 7 || ip.length > 15) return [false, 0];
 
+    // Reject addresses that start or end with a dot
+    if (ip.startsWith(".") || ip.endsWith(".")) return [false, 0];
+
     let result = 0;
     let octet = 0;
     let shift = 24;

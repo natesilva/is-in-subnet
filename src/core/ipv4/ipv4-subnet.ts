@@ -8,10 +8,36 @@ export class Ipv4Subnet implements Subnet {
   readonly #subnetPrefix: number;
 
   constructor(subnet: string) {
-    const [ip, prefixLengthString] = subnet.split("/");
-    const prefixLength = +prefixLengthString;
+    const parts = subnet.split("/");
 
-    if (!ip || !Number.isInteger(prefixLength)) {
+    // Must have exactly 2 parts: IP and prefix length
+    if (parts.length !== 2) {
+      throw new Error(`not a valid IPv4 subnet: ${subnet}`);
+    }
+
+    const [ip, prefixLengthString] = parts;
+
+    // IP part cannot be empty
+    if (!ip || ip.trim() !== ip) {
+      throw new Error(`not a valid IPv4 subnet: ${subnet}`);
+    }
+
+    // Prefix length string cannot be empty or contain whitespace
+    if (!prefixLengthString || prefixLengthString.trim() !== prefixLengthString) {
+      throw new Error(`not a valid IPv4 subnet: ${subnet}`);
+    }
+
+    // Parse prefix length - must be a valid integer without leading zeros (except "0")
+    if (prefixLengthString !== "0" && prefixLengthString.startsWith("0")) {
+      throw new Error(`not a valid IPv4 subnet: ${subnet}`);
+    }
+
+    const prefixLength = parseInt(prefixLengthString, 10);
+
+    if (
+      !Number.isInteger(prefixLength) ||
+      prefixLength.toString() !== prefixLengthString
+    ) {
       throw new Error(`not a valid IPv4 subnet: ${subnet}`);
     }
 

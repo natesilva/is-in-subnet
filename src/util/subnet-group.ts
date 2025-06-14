@@ -13,10 +13,6 @@ export class SubnetGroup implements Subnet {
     this.#ranges = ranges;
   }
 
-  toString(): string {
-    throw new Error("Method not implemented.");
-  }
-
   isInSubnet(input: IpAddress): boolean {
     if (this.#ranges.some((range) => range.isInSubnet(input))) {
       return true;
