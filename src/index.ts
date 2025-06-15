@@ -1,6 +1,10 @@
 /**
  * A library for checking if an IPv4 or IPv6 address is contained in a given CIDR subnet.
  *
+ * - Accurately handles both IPv4 and IPv6 addresses.
+ * - Thorough tests.
+ * - Fast and efficient: millions of checks per second on typical hardware.
+ *
  * @example Basic usage
  * ```ts
  * import { isInSubnet } from "is-in-subnet";
@@ -10,21 +14,24 @@
  * isInSubnet("10.5.0.1", "10.4.5.0/16"); // false
  * ```
  *
- * @example Amortize the parsing cost using a functional version
- * ```ts
- * import { createChecker } from "is-in-subnet";
- *
- * // Once the checker is created, the parsing cost is amortized.
- * // The checker can be used multiple times.
- * const checker = createChecker(["10.4.5.0/16", "192.168.1.0/24"]);
- * console.log(checker("10.5.0.1")); // true
- * ```
- *
  * @example Test multiple subnets at once
  * ```ts
  * import { isInSubnet } from "is-in-subnet";
  *
- * const inAnySubnet = isInSubnet("10.5.0.1", ["10.4.5.0/16", "192.168.1.0/24"]); // true
+ * // Returns true if the address is contained in any of the subnets
+ * isInSubnet("10.5.0.1", ["10.4.5.0/16", "192.168.1.0/24"]); // true
+ * ```
+ *
+ * @example Create a fast, reusable subnet check function
+ * ```ts
+ * import { createChecker } from "is-in-subnet";
+ *
+ * // When you need to check many addresses against the same subnets,
+ * // it is more efficient to create a checker function.
+ * // This avoids the overhead of parsing the subnets each time.
+ * // The checker can be used multiple times.
+ * const checker = createChecker(["10.4.5.0/16", "192.168.1.0/24"]);
+ * console.log(checker("10.5.0.1")); // true
  * ```
  *
  * @example Test for special types of addresses
