@@ -25,7 +25,9 @@ export function isInSubnet(
   return subnets.some((subnet) => subnet.isInSubnet(ip));
 }
 
-export function createChecker(subnetOrSubnets: string | string[]) {
+export function createChecker(
+  subnetOrSubnets: string | string[],
+): (address: string) => boolean {
   const subnets = arrayify(subnetOrSubnets).map((subnet) => new Ipv4Subnet(subnet));
   return (address: string): boolean => {
     const ip = new Ipv4Address(address);

@@ -119,7 +119,9 @@ export function isInSubnet(
  * ```
 
  */
-export function createChecker(subnetOrSubnets: string | readonly string[]) {
+export function createChecker(
+  subnetOrSubnets: string | readonly string[],
+): (input: string) => boolean {
   const subnetsByVersion = {
     0: new Set<string>(),
     4: new Set<string>(),
