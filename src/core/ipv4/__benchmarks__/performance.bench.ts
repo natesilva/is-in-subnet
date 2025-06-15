@@ -1,6 +1,6 @@
 import { bench, describe } from "vitest";
-import { createChecker, isInSubnet } from "../src/index.ts";
-import ipv4fixtures from "./fixtures/ipv4.ts";
+import { createChecker, isInSubnet } from "../../../index.ts";
+import ipv4fixtures from "../__fixtures__/ipv4.ts";
 
 describe.for(ipv4fixtures)("Performance Benchmarks: IPv4 (%s, %s)", ([ip, subnet]) => {
   const cachedChecker = createChecker(subnet);
