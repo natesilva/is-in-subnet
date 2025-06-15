@@ -2,6 +2,7 @@ import { expect, suite, test } from "vitest";
 import { Ipv4Subnet } from "../ipv4-subnet.ts";
 import { Ipv4Address } from "../ipv4-address.ts";
 import { Ipv6Address } from "../../ipv6/ipv6-address.ts";
+import ipv4fixtures from "../__fixtures__/ipv4.ts";
 
 suite("Ipv4Subnet", () => {
   suite("constructor", () => {
@@ -309,5 +310,16 @@ suite("Ipv4Subnet", () => {
       expect(subnet.isInSubnet(new Ipv4Address("192.168.1.255"))).toBe(true); // last in range
       expect(subnet.isInSubnet(new Ipv4Address("192.168.2.0"))).toBe(false); // just after
     });
+  });
+
+  suite("fixture-based tests", () => {
+    test.for(ipv4fixtures)(
+      "isInSubnet(%s, %s) should be %s",
+      ([ip, subnet, expected]) => {
+        const ipObj = new Ipv4Address(ip);
+        const subnetObj = new Ipv4Subnet(subnet);
+        expect(subnetObj.isInSubnet(ipObj)).toBe(expected);
+      },
+    );
   });
 });

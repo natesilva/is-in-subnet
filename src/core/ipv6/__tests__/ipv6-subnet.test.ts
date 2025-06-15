@@ -2,6 +2,7 @@ import { expect, suite, test } from "vitest";
 import { Ipv6Subnet } from "../ipv6-subnet.ts";
 import { Ipv6Address } from "../ipv6-address.ts";
 import { Ipv4Address } from "../../ipv4/ipv4-address.ts";
+import ipv6fixtures from "../__fixtures__/ipv6.ts";
 
 suite("Ipv6Subnet", () => {
   suite("constructor", () => {
@@ -414,5 +415,16 @@ suite("Ipv6Subnet", () => {
       ).toBe(true);
       expect(subnet.isInSubnet(new Ipv6Address("2001:db9::"))).toBe(false);
     });
+  });
+
+  suite("fixture-based tests", () => {
+    test.for(ipv6fixtures)(
+      "isInSubnet(%s, %s) should be %s",
+      ([ip, subnet, expected]) => {
+        const ipObj = new Ipv6Address(ip);
+        const subnetObj = new Ipv6Subnet(subnet);
+        expect(subnetObj.isInSubnet(ipObj)).toBe(expected);
+      },
+    );
   });
 });
