@@ -1,3 +1,10 @@
+/**
+ * IP Category Definitions
+ *
+ * @internal
+ * @category Address Ranges
+ */
+
 import { SubnetGroup } from "../util/subnet-group.ts";
 import { IPV4_ADDRESS_RANGE } from "./ipv4-address-range.ts";
 import { IPV6_ADDRESS_RANGE } from "./ipv6-address-range.ts";

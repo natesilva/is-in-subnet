@@ -3,7 +3,7 @@
  *
  * - Accurately handles both IPv4 and IPv6 addresses.
  * - Thorough tests.
- * - Fast and efficient: millions of checks per second on typical hardware.
+ * - Fast and efficient: hundreds of thousands of checks per second on low-end hardware.
  *
  * @example Basic usage
  * ```ts
@@ -20,6 +20,8 @@
  *
  * // Returns true if the address is contained in any of the subnets
  * isInSubnet("10.5.0.1", ["10.4.5.0/16", "192.168.1.0/24"]); // true
+ * // You can mix IPv4 and IPv6
+ * isInSubnet("2001:db8::1", ["2001:db8::/32", "172.16.1.0/12"]); // true
  * ```
  *
  * @example Create a fast, reusable subnet check function
@@ -144,10 +146,13 @@ export function createChecker(subnetOrSubnets: string | readonly string[]) {
 }
 
 /**
- * Test if the given IP address is a private/internal IP address.
+ * Test if the given IP address is a `PRIVATE` IP address.
  *
  * @param input - The IP address to test.
  * @returns `true` if the IP address is private/internal, false otherwise.
+ *
+ * {@include ./address-ranges/__docs__/IP_CATEGORIES.md#private}
+ *
  * @category Address Classification
  */
 export function isPrivate(input: string): boolean {
@@ -156,10 +161,13 @@ export function isPrivate(input: string): boolean {
 }
 
 /**
- * Test if the given IP address is a localhost address.
+ * Test if the given IP address is a `LOCALHOST` address.
  *
  * @param input - The IP address to test.
  * @returns `true` if the IP address is a localhost address, false otherwise.
+ *
+ * {@include ./address-ranges/__docs__/IP_CATEGORIES.md#localhost}
+ *
  * @category Address Classification
  */
 export function isLocalhost(input: string): boolean {
@@ -168,10 +176,13 @@ export function isLocalhost(input: string): boolean {
 }
 
 /**
- * Test if the given IP address is in a known reserved range and not a normal host IP.
+ * Test if the given IP address is in a known `RESERVED` range and not a normal host IP.
  *
  * @param input - The IP address to test.
  * @returns `true` if the IP address is in a reserved range, false otherwise.
+ *
+ * {@include ./address-ranges/__docs__/IP_CATEGORIES.md#reserved}
+ *
  * @category Address Classification
  */
 export function isReserved(input: string): boolean {
@@ -180,8 +191,11 @@ export function isReserved(input: string): boolean {
 }
 
 /**
- * Test if the given IP address is a special address of any kind (private, reserved,
- * localhost).
+ * Test if the given IP address is a special address in one of the following categories:
+ *
+ * - localhost
+ * - private
+ * - reserved
  *
  * @param input - The IP address to test.
  * @returns `true` if the IP address is a special address, false otherwise.
@@ -193,7 +207,7 @@ export function isSpecial(input: string): boolean {
 }
 
 /**
- * Test if an IP address is an IPv4 mapped address.
+ * Test if an IPv6 address is an IPv4 mapped address. (Example: `::ffff:192.168.1.1`)
  *
  * @param address - The IP address to test.
  * @returns `true` if the IP address is an IPv4 mapped address, false otherwise.

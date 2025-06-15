@@ -15,7 +15,7 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     format: ["iife"],
-    target: "es2015",
+    target: "es2020",
     globalName: "IsInSubnet",
   },
 ]);
