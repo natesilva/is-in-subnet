@@ -1,22 +1,18 @@
 import { expect, suite, test } from "vitest";
 import {
-  isInSubnet,
+  check,
   createChecker,
-  isPrivate,
+  isInSubnet,
+  isIPv4MappedAddress,
   isLocalhost,
+  isPrivate,
   isReserved,
   isSpecial,
-  isIPv4MappedAddress,
-  check,
-  isIP,
-  isIPv4,
-  isIPv6,
-  getIpRanges,
-  IPv4,
-  IPv6,
-  IPV4_ADDRESS_RANGE,
-  IPV6_ADDRESS_RANGE,
 } from "../index.ts";
+import { isIP, isIPv4, isIPv6 } from "../../util/net.ts";
+import { getIpRanges } from "../../util/get-ip-ranges.ts";
+import { IPV4_ADDRESS_RANGE } from "../../address-ranges/ipv4-address-range.ts";
+import { IPV6_ADDRESS_RANGE } from "../../address-ranges/ipv6-address-range.ts";
 
 suite("index.ts", () => {
   suite("exports", () => {
@@ -36,10 +32,6 @@ suite("index.ts", () => {
       expect(isIPv4).toBeTypeOf("function");
       expect(isIPv6).toBeTypeOf("function");
       expect(getIpRanges).toBeTypeOf("function");
-
-      // Namespaces
-      expect(IPv4).toBeTypeOf("object");
-      expect(IPv6).toBeTypeOf("object");
 
       // Constants
       expect(IPV4_ADDRESS_RANGE).toBeTypeOf("object");

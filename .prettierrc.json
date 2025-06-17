@@ -1,3 +1,11 @@
 {
-  "printWidth": 90
+  "printWidth": 90,
+  "overrides": [
+    {
+      "files": "*.jsonc",
+      "options": {
+        "trailingComma": false
+      }
+    }
+  ]
 }
