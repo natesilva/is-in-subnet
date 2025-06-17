@@ -14,6 +14,10 @@ Key Features:
 - ESM and CommonJS compatibility
 - Works in Node.js and browsers
 
+## Docs
+
+[Full documentation](./docs/index.html)
+
 ## Getting Started
 
 ### ESM, TypeScript, Node.js, Bundlers
