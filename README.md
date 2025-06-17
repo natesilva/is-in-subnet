@@ -3,37 +3,11 @@
 
 Checks if an IPv4 or IPv6 address is contained within a given [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) subnet.
 
-Key Features:
+- Accurately handles both IPv4 and IPv6 addresses.
+- Thorough tests.
+- Fast and efficient: hundreds of thousands of checks per second on low-end hardware.
 
-- Small footprint
-- Fast performance
-- Simple API
-- Comprehensive test coverage
-- TypeScript support
-- Zero external dependencies
-- ESM and CommonJS compatibility
-- Works in Node.js and browsers
-
-## Docs
-
-[Full documentation](./docs/index.html)
-
-## Getting Started
-
-### ESM, TypeScript, Node.js, Bundlers
-
-Install the package:
-
-```shell
-deno add jsr:@natesilva/is-in-subnet
-pnpm add jsr:@natesilva/is-in-subnet
-yarn add jsr:@natesilva/is-in-subnet
-
-# for NPM:
-npx jsr add @natesilva/is-in-subnet
-```
-
-Then, import and use the `isInSubnet` function:
+## Example
 
 ```javascript
 import { isInSubnet } from "is-in-subnet"; // Node.js
@@ -44,23 +18,4 @@ console.log(isInSubnet("10.5.0.1", "10.4.5.0/15")); // true
 
 console.log(isInSubnet("2001:db8:f53a::1", "2001:db8:f53b::1:1/48")); // false
 console.log(isInSubnet("2001:db8:f53a::1", "2001:db8:f531::1:1/44")); // true
-```
-
-### In a browser (without a bundler)
-
-For direct use in a browser without a bundler, you can use a CDN like unpkg or jsdelivr.
-
-```html
-<!-- From unpkg -->
-<script src="https://unpkg.com/is-in-subnet@latest"></script>
-
-<!-- Or, from jsdelivr -->
-<script src="https://cdn.jsdelivr.net/npm/is-in-subnet@latest"></script>
-
-<script>
-  // The IsInSubnet object is available in the global scope
-  console.log(IsInSubnet.isInSubnet("10.5.0.1", "10.4.5.0/16"));
-  // Alternatively, use the check alias:
-  console.log(IsInSubnet.check("10.5.0.1", "10.4.5.0/16"));
-</script>
 ```
