@@ -16,6 +16,7 @@ import { arrayify } from "../util/arrayify.ts";
 // Use the IP-version-agnostic versions in ../index.ts instead.
 //
 
+/** @deprecated Use `isInSubnet` from the base module. */
 export function isInSubnet(
   address: string,
   subnetOrSubnets: string | readonly string[],
@@ -25,6 +26,7 @@ export function isInSubnet(
   return subnets.some((subnet) => subnet.isInSubnet(ip));
 }
 
+/** @deprecated Use `createChecker` from the base module. */
 export function createChecker(
   subnetOrSubnets: string | string[],
 ): (address: string) => boolean {
@@ -35,21 +37,25 @@ export function createChecker(
   };
 }
 
+/** @deprecated Use `isPrivate` from the base module. */
 export function isPrivate(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.PRIVATE_V4.isInSubnet(address);
 }
 
+/** @deprecated Use `isLocalhost` from the base module. */
 export function isLocalhost(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.LOCALHOST_V4.isInSubnet(address);
 }
 
+/** @deprecated Use `isReserved` from the base module. */
 export function isReserved(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.RESERVED_V4.isInSubnet(address);
 }
 
+/** @deprecated Use `isSpecial` from the base module. */
 export function isSpecial(input: string): boolean {
   const address = new Ipv4Address(input);
   return IP_CATEGORY.SPECIAL_V4.isInSubnet(address);

@@ -32,7 +32,8 @@ npx jsr add @natesilva/is-in-subnet
 Then, import and use the `isInSubnet` function:
 
 ```javascript
-import { isInSubnet } from "is-in-subnet";
+import { isInSubnet } from "is-in-subnet"; // Node.js
+import { isInSubnet } from "@natesilva/is-in-subnet"; // Deno or Bun
 
 console.log(isInSubnet("10.5.0.1", "10.4.5.0/16")); // false
 console.log(isInSubnet("10.5.0.1", "10.4.5.0/15")); // true

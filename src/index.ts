@@ -7,7 +7,9 @@
  *
  * @example Basic usage
  * ```ts
- * import { isInSubnet } from "is-in-subnet";
+ * import { isInSubnet } from "is-in-subnet"; // Node.js
+ * // Or, with Deno or Bun:
+ * import { isInSubnet } from "@natesilva/is-in-subnet";
  *
  * isInSubnet("192.168.1.1", "192.168.1.0/24"); // true
  * isInSubnet("2001:db8::1", "2001:db8::/32"); // true
@@ -16,8 +18,6 @@
  *
  * @example Test multiple subnets at once
  * ```ts
- * import { isInSubnet } from "is-in-subnet";
- *
  * // Returns true if the address is contained in any of the subnets
  * isInSubnet("10.5.0.1", ["10.4.5.0/16", "192.168.1.0/24"]); // true
  * // You can mix IPv4 and IPv6
@@ -75,8 +75,6 @@ export { getIpRanges };
  *
  * @example Basic usage
  * ```ts
- * import { isInSubnet } from "is-in-subnet";
- *
  * // Test if the address is contained in a given subnet
  * isInSubnet("2001:db8::1", "2001:db8::/32"); // true
  * isInSubnet("10.5.0.1", "10.4.5.0/16"); // false
