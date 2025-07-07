@@ -21,10 +21,9 @@ jobs:
         with:
           node-version-file: "package.json"
           cache: "npm"
-      - run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-      - run: pwd
-      - run: ls
-      - run: cat .npmrc
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@natesilva"
+
       - run: npm ci
       - run: npm test
       - run: npm publish

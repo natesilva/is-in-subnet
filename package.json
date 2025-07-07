@@ -18,7 +18,7 @@
     "dist/**"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
     "clean": "del-cli dist coverage",
