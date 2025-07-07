@@ -22,6 +22,7 @@ jobs:
           node-version-file: "package.json"
           cache: "npm"
       - run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+      - run: cat .npmrc
       - run: npm ci
       - run: npm test
       - run: npm publish
