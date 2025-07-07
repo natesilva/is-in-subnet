@@ -4,15 +4,20 @@ name: Publish
 
 on:
   push:
-    branches:
-      - main
+    branches: ["publish-test"]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
-      id-token: write # The OIDC ID token is used for authentication with JSR.
+      packages: write
+      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - run: npx jsr publish
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Publish package
+        run: npm publish

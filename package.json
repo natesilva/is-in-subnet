@@ -1,5 +1,5 @@
 {
-  "name": "is-in-subnet",
+  "name": "@natesilva/is-in-subnet",
   "version": "5.0.0-beta.4",
   "description": "Check if an IPv4 or IPv6 address is contained in the given CIDR subnet",
   "type": "module",
@@ -17,6 +17,9 @@
   "files": [
     "dist/**"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "clean": "del-cli dist coverage",
     "build": "tsup",
@@ -32,7 +35,10 @@
   "engines": {
     "node": ">=20"
   },
-  "repository": "natesilva/is-in-subnet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natesilva/is-in-subnet.git"
+  },
   "keywords": [
     "ip",
     "address",
